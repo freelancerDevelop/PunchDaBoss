@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/GSMenu/SCN_Menu.unity
+    guid: 36d9b21c9b988d2458c9b95bf0e45301
+  - enabled: 1
+    path: Assets/GSGameplay/SCN_Gameplay.unity
+    guid: 261023b4b4ddd4c4288c41a9ce7c5a4d

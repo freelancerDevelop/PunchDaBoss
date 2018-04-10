@@ -112,6 +112,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1592109945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1592109947}
+  - component: {fileID: 1592109946}
+  m_Layer: 0
+  m_Name: SCR_Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1592109946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1592109945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b388cb136c6794ca7c78cd306ac25a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PFB_Background: {fileID: 1010359996667340, guid: 77ce8fc447f69f2478dc5b370fcd3ac5,
+    type: 2}
+  PFB_BackgroundLoop: {fileID: 1878808560174890, guid: f636be95ea9a6eb489567e232da27c16,
+    type: 2}
+  PFB_Middleground: {fileID: 1128205936271108, guid: 64c1080f4580d744bbe206ecd219f12a,
+    type: 2}
+  PFB_Foreground: {fileID: 1952740570778080, guid: 0dbb6f1776fb8df46862dd21e6d3d883,
+    type: 2}
+--- !u!4 &1592109947
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1592109945}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1967119622
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,34 +187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f51e1a4fd9e68149a712656931edbcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PFB_BACKGROUND: {fileID: 1855894540999910, guid: 2f4e48a754434cc4e9a01774e07a570c,
-    type: 2}
-  PFB_TIMEBAR: {fileID: 1823024540092320, guid: 0c8d266f0ae80764793a58cc6d302ea0,
-    type: 2}
-  PFB_BRICK: {fileID: 1152141870002470, guid: e5336e9da47cd5142a99d5b15f595ceb, type: 2}
-  PFB_BALL: {fileID: 1610738719007492, guid: c52b00e9cff04584c91564b9e2e94923, type: 2}
-  PFB_BALLSHADOW: {fileID: 1610738719007492, guid: 3325ffab34045a24bac3d691a508be0a,
-    type: 2}
-  PFB_BALLGENERATOR: {fileID: 1028586105462940, guid: 357cb0dc0dcc21440ac28799cfe8ad32,
-    type: 2}
-  PFB_EXPLOSION: {fileID: 1517740806883664, guid: 97ca2835d9b4b6347bc0701da2252de7,
-    type: 2}
-  PFB_CONTROLZONE: {fileID: 1190611814152952, guid: ca18aae39a2ef814db800d44524ed847,
-    type: 2}
-  MAT_BRICK:
-  - {fileID: 2100000, guid: 79eb911366f614b428ab101809ae763d, type: 2}
-  - {fileID: 2100000, guid: 6184f75320650654ba68cb9299fa7e3e, type: 2}
-  - {fileID: 2100000, guid: 34c5bdb870a6e944fb733a4e2c2f0927, type: 2}
-  - {fileID: 2100000, guid: dc8ee830c8904114da360cfb20641cd6, type: 2}
-  - {fileID: 2100000, guid: a30cd56f82e564b4ea204804bcd5edc3, type: 2}
-  MAT_BALL:
-  - {fileID: 2100000, guid: 1a32e3aa8d0983541afe14b8868dbb0f, type: 2}
-  - {fileID: 2100000, guid: 0effb769c37aa174bb05d13e7af12d13, type: 2}
-  - {fileID: 2100000, guid: 947fa19c7c202014dad28e7414321136, type: 2}
-  - {fileID: 2100000, guid: 0bc646984f5f42647b9e666c5b3eba5d, type: 2}
-  - {fileID: 2100000, guid: d30a39a362fcd194e8514ddedfd09310, type: 2}
-  - {fileID: 2100000, guid: 57dd1ca0e28067f46a282e60313741a6, type: 2}
-  score: 0
 --- !u!4 &1967119624
 Transform:
   m_ObjectHideFlags: 0
@@ -232,7 +252,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
