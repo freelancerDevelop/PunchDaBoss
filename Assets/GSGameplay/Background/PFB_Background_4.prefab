@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4359414585938914}
   - component: {fileID: 212722408442312534}
   m_Layer: 0
-  m_Name: PFB_BackgroundLoop
+  m_Name: PFB_Background_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

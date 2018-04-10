@@ -139,10 +139,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12b388cb136c6794ca7c78cd306ac25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PFB_Background: {fileID: 1010359996667340, guid: 77ce8fc447f69f2478dc5b370fcd3ac5,
-    type: 2}
-  PFB_BackgroundLoop: {fileID: 1878808560174890, guid: f636be95ea9a6eb489567e232da27c16,
-    type: 2}
+  PFB_Background:
+  - {fileID: 1010359996667340, guid: 77ce8fc447f69f2478dc5b370fcd3ac5, type: 2}
+  - {fileID: 1010359996667340, guid: df4335d70671e7946a940911cea35c90, type: 2}
+  - {fileID: 1010359996667340, guid: 9fecfa4a45730ce4d8dc9577b8ecdb1e, type: 2}
+  - {fileID: 1878808560174890, guid: f636be95ea9a6eb489567e232da27c16, type: 2}
+  - {fileID: 1878808560174890, guid: d4b4001b10f42f947b4fec8cdf3010eb, type: 2}
   PFB_Middleground: {fileID: 1128205936271108, guid: 64c1080f4580d744bbe206ecd219f12a,
     type: 2}
   PFB_Foreground: {fileID: 1952740570778080, guid: 0dbb6f1776fb8df46862dd21e6d3d883,
