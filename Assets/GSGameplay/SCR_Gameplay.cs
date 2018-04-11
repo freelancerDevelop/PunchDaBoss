@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SCR_Gameplay : MonoBehaviour {
+	// Prefab
+	public GameObject PFB_Player			= null;
+	public GameObject PFB_Boss				= null;
+	
 	// Screen
 	public static float SCREEN_RATIO 		= 0;
 	public static float SCREEN_W 			= 0;
@@ -14,6 +18,12 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	// Instance
 	public static SCR_Gameplay instance 	= null;
+	
+	
+	// Object
+	[System.NonSerialized] public GameObject 	player			= null;
+	[System.NonSerialized] public GameObject 	boss			= null;
+	[System.NonSerialized] public float 		cameraHeight	= 0.0f;
 	
 	
 	// Init
@@ -40,6 +50,12 @@ public class SCR_Gameplay : MonoBehaviour {
 		Camera.main.transform.position = new Vector3 (SCREEN_W * 0.5f, SCREEN_H * 0.5f, Camera.main.transform.position.z);
 	}
 	
+	// Start game
+	private void Start () {
+		player	= Instantiate (PFB_Player);
+		boss 	= Instantiate (PFB_Boss);
+	}
+	
 	// Update
 	private void Update () {
 		// Don't do anything if menu state is not the first state
@@ -48,7 +64,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		}
 		
 		float dt = Time.deltaTime;
-		
+		//cameraHeight += dt * 100;
 		
 	}
 }

@@ -15,7 +15,7 @@ public class SCR_Background : MonoBehaviour {
 	private const float FOREGROUND_SCROLL_RATIO		= 1.0f;
 	
 	private const float BACKGROUND_OFFSET			= 200;
-	private const float MIDDLEGROUND_OFFSET			= 0;
+	private const float MIDDLEGROUND_OFFSET			= 100;
 
 	
 	// Prefab
@@ -31,7 +31,6 @@ public class SCR_Background : MonoBehaviour {
 	// Instance
 	public static SCR_Background	instance		= null;
 	
-	private float cameraTempY = 0;
 	
 	// Init
 	private void Start () {
@@ -89,8 +88,7 @@ public class SCR_Background : MonoBehaviour {
 	}
 	
 	private void Update () {
-		//cameraTempY += Time.deltaTime * 50;
-		//SetCameraY (cameraTempY);
+		SetCameraY (SCR_Gameplay.instance.cameraHeight);
 	}
 	
 }

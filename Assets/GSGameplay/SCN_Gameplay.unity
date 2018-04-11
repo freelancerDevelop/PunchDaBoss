@@ -189,6 +189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f51e1a4fd9e68149a712656931edbcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PFB_Player: {fileID: 1379963925943356, guid: 67eab74d95932b54199dd5f1ec141fd9, type: 2}
+  PFB_Boss: {fileID: 1221462245988634, guid: d4b0af8ce9b0fdd4f966072ce8f75f82, type: 2}
 --- !u!4 &1967119624
 Transform:
   m_ObjectHideFlags: 0
