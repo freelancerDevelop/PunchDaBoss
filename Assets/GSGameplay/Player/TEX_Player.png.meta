@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 2b52cc0facd4c444ba39be9bbbb92629
-timeCreated: 1523468042
-licenseType: Free
+timeCreated: 1523865817
+licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: TEX_Player_0
@@ -123,7 +123,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 500
-        y: 1396
+        y: 1400
         width: 500
         height: 700
       alignment: 9
@@ -150,7 +150,7 @@ TextureImporter:
       name: TEX_Player_3
       rect:
         serializedVersion: 2
-        x: 11
+        x: 0
         y: 700
         width: 500
         height: 700
@@ -165,7 +165,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 500
-        y: 696
+        y: 700
         width: 500
         height: 700
       alignment: 9
@@ -206,7 +206,7 @@ TextureImporter:
       name: TEX_Player_7
       rect:
         serializedVersion: 2
-        x: 496
+        x: 500
         y: 0
         width: 500
         height: 700
@@ -220,7 +220,7 @@ TextureImporter:
       name: TEX_Player_8
       rect:
         serializedVersion: 2
-        x: 996
+        x: 1000
         y: 0
         width: 500
         height: 700

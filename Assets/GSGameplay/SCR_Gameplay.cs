@@ -4,6 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+
+
+public enum GameState {
+	TALKING = 0,
+	GRABBING,
+	PUNCHING,
+	LOSING
+}
+
 public class SCR_Gameplay : MonoBehaviour {
 	// Prefab
 	public GameObject PFB_Player			= null;
@@ -16,14 +26,23 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float SCREEN_SCALE		= 0;
 	public static float TOUCH_SCALE			= 0;
 	
+	public static float GRAVITY					= 1500.0f;
+	public static float CAMERA_OFFSET_Y			= 400.0f; // Distance from top of the screen to the boss
+	public static float CAMERA_SPEED_MULTIPLIER = 20.0f;
+	
 	// Instance
 	public static SCR_Gameplay instance 	= null;
-	
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
 	[System.NonSerialized] public GameObject 	boss			= null;
 	[System.NonSerialized] public float 		cameraHeight	= 0.0f;
+	[System.NonSerialized] public float 		cameraTarget	= 0.0f;
+	
+	// Game
+	[System.NonSerialized] public GameState 	gameState		= GameState.TALKING;
+	
+	
 	
 	
 	// Init
@@ -52,8 +71,10 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	// Start game
 	private void Start () {
-		player	= Instantiate (PFB_Player);
-		boss 	= Instantiate (PFB_Boss);
+		gameState	= GameState.TALKING;
+		
+		player		= Instantiate (PFB_Player);
+		boss 		= Instantiate (PFB_Boss);
 	}
 	
 	// Update
@@ -64,7 +85,32 @@ public class SCR_Gameplay : MonoBehaviour {
 		}
 		
 		float dt = Time.deltaTime;
-		//cameraHeight += dt * 100;
+		//cameraHeight += dt * 1000;
+		
+		if (Input.GetMouseButton(0)) {
+			if (gameState == GameState.TALKING) {
+				gameState = GameState.GRABBING;
+				player.GetComponent<SCR_Player>().GoGrabTheBoss();
+			}
+			else if (gameState == GameState.GRABBING) {
+				if (player.GetComponent<SCR_Player>().IsGrabbingTheBoss()) {
+					gameState = GameState.PUNCHING;
+					player.GetComponent<SCR_Player>().ThrowTheBoss();
+				}
+			}
+			else if (gameState == GameState.PUNCHING) {
+				float touchX = Input.mousePosition.x * TOUCH_SCALE;
+				float touchY = Input.mousePosition.y * TOUCH_SCALE;
+				player.GetComponent<SCR_Player>().PerformPunch (touchX, touchY + cameraHeight);
+			}
+		}
+		
+		if (gameState == GameState.PUNCHING) {
+			cameraTarget = boss.GetComponent<SCR_Boss>().y - SCREEN_H + CAMERA_OFFSET_Y;
+			if (cameraTarget > cameraHeight) {
+				cameraHeight += (cameraTarget - cameraHeight) * dt * CAMERA_SPEED_MULTIPLIER;
+			}
+		}
 		
 	}
 }
