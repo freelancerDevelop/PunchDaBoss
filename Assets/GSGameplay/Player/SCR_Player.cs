@@ -123,9 +123,6 @@ public class SCR_Player : MonoBehaviour {
 				if (y > targetY) {
 					speedY -= PLAYER_UP_BRAKE * dt;
 				}
-				else {
-					speedY -= PLAYER_UP_FRICTION * dt;
-				}
 			}
 			else  if (state == PlayerState.FLY_DOWN) {
 				speedY -= SCR_Gameplay.GRAVITY * dt;
