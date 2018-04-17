@@ -26,9 +26,10 @@ public class SCR_Player : MonoBehaviour {
 	public const float PLAYER_CHARGE_TIME	= 0.2f;
 	public const float PLAYER_THROW_TIME	= 0.3f;
 	public const float PLAYER_UP_SPEED		= 5000.0f;
-	public const float PLAYER_UP_OFFSET		= 200;
+	public const float PLAYER_SIZE			= 200;
 	public const float PLAYER_UP_FRICTION	= 5000;
-	public const float PLAYER_UP_BRAKE		= 40000;
+	public const float PLAYER_PUNCH_SPEED	= 5000.0f;
+	public const float PLAYER_PUNCH_RANGE	= 150.0f;
 	// ==================================================
 	// Stuff
 	private Animator 	animator	= null;
@@ -43,6 +44,7 @@ public class SCR_Player : MonoBehaviour {
 	private float	flyAngle	= 0;
 	public 	float	speedX		= 0;
 	public 	float	speedY		= 0;
+	public 	float	targetX		= 0;
 	public 	float	targetY		= 0;
 	// ==================================================
 	
@@ -74,6 +76,10 @@ public class SCR_Player : MonoBehaviour {
 	// ==================================================
 	private void Update () {
 		float dt = Time.deltaTime;
+		
+		if (SCR_Gameplay.instance.gameState == GameState.BOSS_FALLING) {
+			dt = 0;
+		}
 		
 		if (state == PlayerState.WALK || state == PlayerState.GRAB) {
 			x += direction * PLAYER_WALK_SPEED * dt;
@@ -120,8 +126,15 @@ public class SCR_Player : MonoBehaviour {
 		}
 		else if (state == PlayerState.FLY_UP || state == PlayerState.FLY_DOWN) {
 			if (state == PlayerState.FLY_UP) {
-				if (y > targetY) {
-					speedY -= PLAYER_UP_BRAKE * dt;
+				var distance = SCR_Helper.DistanceBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
+				if (distance <= PLAYER_PUNCH_RANGE) {
+					Punch (distance);
+					SwitchState (PlayerState.FLY_DOWN);
+					speedY = 0;
+				}
+				else if (y > targetY) {
+					speedY = 0;
+					SwitchState (PlayerState.FLY_DOWN);
 				}
 			}
 			else  if (state == PlayerState.FLY_DOWN) {
@@ -140,17 +153,24 @@ public class SCR_Player : MonoBehaviour {
 				direction = -1;
 			}
 			
-			if (state == PlayerState.FLY_UP && speedY < 0) {
-				SwitchState (PlayerState.FLY_DOWN);
-			}
-			else if (state == PlayerState.FLY_DOWN && y <= PLAYER_START_Y) {
-				y = PLAYER_START_Y;
-				SwitchState (PlayerState.WALK);
+			if (state == PlayerState.FLY_DOWN) {
+				if (y <= SCR_Gameplay.instance.cameraHeight - PLAYER_SIZE || y <= PLAYER_START_Y) {
+					y = PLAYER_START_Y;
+					SwitchState (PlayerState.WALK);
+				}
 			}
 		}
 		
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
+	}
+	// ==================================================
+	private void Punch (float distance) {
+		float punchAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
+		float punchX = PLAYER_PUNCH_SPEED * SCR_Helper.Sin (punchAngle);
+		float punchY = PLAYER_PUNCH_SPEED * SCR_Helper.Cos (punchAngle);
+		
+		bossScript.Punch (punchX, Mathf.Abs(punchY));
 	}
 	// ==================================================
 	
@@ -175,20 +195,35 @@ public class SCR_Player : MonoBehaviour {
 	}
 	public void PerformPunch (float px, float py) {
 		if (state == PlayerState.WALK) {
-			if (py > y + SCR_Gameplay.SCREEN_H + PLAYER_UP_OFFSET) {
-				y = py - SCR_Gameplay.SCREEN_H - PLAYER_UP_OFFSET;
+			targetX = px;
+			targetY = py + PLAYER_PUNCH_RANGE;
+			
+			if (py > y + SCR_Gameplay.SCREEN_H + PLAYER_SIZE) {
+				y = py - SCR_Gameplay.SCREEN_H - PLAYER_SIZE;
 			}
 			
-			targetY = py;
+			if (px >= x) 	direction = 1;
+			else			direction = -1;
 			
 			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, px - SCR_Gameplay.SCREEN_W * 0.5f, py);
 			speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
 			speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
 			
-			if (speedX >= 0) 	direction = 1;
-			else				direction = -1;
-			
 			SwitchState (PlayerState.FLY_UP);
+		}
+	}
+	public void AddDeltaCameraToTarget (float amount) {
+		if (state == PlayerState.FLY_UP) {
+			targetY += amount;
+			
+			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX - SCR_Gameplay.SCREEN_W * 0.5f, targetY);
+			speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
+			speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
+		}
+	}
+	public void ReAdjustY () {
+		if (y > PLAYER_SIZE + SCR_Gameplay.SCREEN_H) {
+			y = PLAYER_SIZE + SCR_Gameplay.SCREEN_H;
 		}
 	}
 	// ==================================================

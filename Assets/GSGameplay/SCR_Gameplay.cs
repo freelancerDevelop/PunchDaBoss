@@ -11,27 +11,30 @@ public enum GameState {
 	TALKING = 0,
 	GRABBING,
 	PUNCHING,
-	LOSING
+	BOSS_FALLING,
+	BOSS_RUNNING
 }
 
 public class SCR_Gameplay : MonoBehaviour {
 	// Prefab
-	public GameObject PFB_Player			= null;
-	public GameObject PFB_Boss				= null;
+	public GameObject PFB_Player				= null;
+	public GameObject PFB_Boss					= null;
 	
 	// Screen
-	public static float SCREEN_RATIO 		= 0;
-	public static float SCREEN_W 			= 0;
-	public static float SCREEN_H 			= 0;
-	public static float SCREEN_SCALE		= 0;
-	public static float TOUCH_SCALE			= 0;
+	public static float SCREEN_RATIO 			= 0;
+	public static float SCREEN_W 				= 0;
+	public static float SCREEN_H 				= 0;
+	public static float SCREEN_SCALE			= 0;
+	public static float TOUCH_SCALE				= 0;
 	
 	public static float GRAVITY					= 1500.0f;
 	public static float CAMERA_OFFSET_Y			= 400.0f; // Distance from top of the screen to the boss
-	public static float CAMERA_SPEED_MULTIPLIER = 20.0f;
+	public static float CAMERA_SPEED_MULTIPLIER = 5.0f;
+	
+	public static float CAMERA_ENDING_Y			= 100.0f;
 	
 	// Instance
-	public static SCR_Gameplay instance 	= null;
+	public static SCR_Gameplay instance 		= null;
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
@@ -108,9 +111,33 @@ public class SCR_Gameplay : MonoBehaviour {
 		if (gameState == GameState.PUNCHING) {
 			cameraTarget = boss.GetComponent<SCR_Boss>().y - SCREEN_H + CAMERA_OFFSET_Y;
 			if (cameraTarget > cameraHeight) {
-				cameraHeight += (cameraTarget - cameraHeight) * dt * CAMERA_SPEED_MULTIPLIER;
+				float deltaCamera = (cameraTarget - cameraHeight) * dt * CAMERA_SPEED_MULTIPLIER;
+				cameraHeight += deltaCamera;
+				
+				player.GetComponent<SCR_Player>().AddDeltaCameraToTarget (deltaCamera);
 			}
 		}
-		
+		else if (gameState == GameState.BOSS_FALLING) {
+			float deltaCamera = -cameraHeight * dt * CAMERA_SPEED_MULTIPLIER;
+			if (deltaCamera > -1) deltaCamera = -1;
+			cameraHeight += deltaCamera;
+			
+			if (cameraHeight < CAMERA_ENDING_Y) {
+				gameState = GameState.BOSS_RUNNING;
+				player.GetComponent<SCR_Player>().ReAdjustY();
+				boss.GetComponent<SCR_Boss>().ReAdjustY();
+			}
+		}
+		else if (gameState == GameState.BOSS_RUNNING) {
+			float deltaCamera = -cameraHeight * dt * CAMERA_SPEED_MULTIPLIER;
+			if (deltaCamera > -1) deltaCamera = -1;
+			cameraHeight += deltaCamera;
+			if (cameraHeight < 0) cameraHeight = 0;
+		}
+	}
+	
+	
+	public void Lose () {
+		SceneManager.LoadScene("GSMenu/SCN_Menu");
 	}
 }

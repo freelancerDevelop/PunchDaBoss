@@ -18,11 +18,13 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_SCALE			= 0.4f;
 	public const float BOSS_REVERSE_X		= 50.0f;
 	public const float BOSS_THROWN_SPEED_X	= 1000.0f;
-	public const float BOSS_THROWN_SPEED_Y	= 4500.0f;
+	public const float BOSS_THROWN_SPEED_Y	= 2500.0f;
 	public const float BOSS_ROTATE_MIN		= 150.0f;
 	public const float BOSS_ROTATE_MAX		= 800.0f;
 	public const float BOSS_SLIDE_FRICTION	= 700.0f;
 	public const float BOSS_RUN_SPEED		= 600.0f;
+	public const float BOSS_MAX_SPEED_X		= 1000.0f;
+	public const float BOSS_SIZE			= 200;
 	// ==================================================
 	// Stuff
 	private Animator 	animator	= null;
@@ -72,24 +74,33 @@ public class SCR_Boss : MonoBehaviour {
 	// ==================================================
 	private void Update () {
 		float dt = Time.deltaTime;
+		if (SCR_Gameplay.instance.gameState == GameState.BOSS_FALLING) {
+			dt = 0;
+		}
+		
 		if (state == BossState.FLY) {
 			speedY -= SCR_Gameplay.GRAVITY * dt;
 			
-			x += direction * speedX * dt;
+			x += speedX * dt;
 			y += speedY * dt;
 			
 			if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
 				x = -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X);
+				speedX = -speedX;
 				direction = 1;
 				RandomRotate ();
 			}
 			else if (x >= (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
 				x = (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X);
+				speedX = -speedX;
 				direction = -1;
 				RandomRotate ();
 			}
 			
-			if (y < BOSS_START_Y) {
+			if (y <= SCR_Gameplay.instance.cameraHeight - BOSS_SIZE) {
+				SCR_Gameplay.instance.gameState = GameState.BOSS_FALLING;
+			}
+			else if (y <= BOSS_START_Y) {
 				y = BOSS_START_Y;
 				SwitchState (BossState.SLIDE);
 			}
@@ -97,22 +108,32 @@ public class SCR_Boss : MonoBehaviour {
 			rotation += rotateSpeed * dt;
 		}
 		else if (state == BossState.SLIDE) {
-			speedX -= BOSS_SLIDE_FRICTION * dt;
+			if (speedX > 0) {
+				speedX -= BOSS_SLIDE_FRICTION * dt;
+				if (speedX < 0) {
+					speedX = 0;
+					SwitchState (BossState.RUN);
+				}
+			}
+			else {
+				speedX += BOSS_SLIDE_FRICTION * dt;
+				if (speedX > 0) {
+					speedX = 0;
+					SwitchState (BossState.RUN);
+				}
+			}
 			
-			x += direction * speedX * dt;
+			x += speedX * dt;
 			
 			if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
 				x = -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X);
 				direction = 1;
+				speedX = -speedX;
 			}
 			else if (x >= (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
 				x = (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X);
 				direction = -1;
-			}
-			
-			if (speedX <= 0) {
-				speedX = 0;
-				SwitchState (BossState.RUN);
+				speedX = -speedX;
 			}
 			
 			rotation = 0;
@@ -120,11 +141,11 @@ public class SCR_Boss : MonoBehaviour {
 		else if (state == BossState.RUN) {
 			x += direction * BOSS_RUN_SPEED * dt;
 			
-			if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
-				
+			if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X) - BOSS_SIZE) {
+				SCR_Gameplay.instance.Lose();
 			}
-			else if (x >= (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
-				
+			else if (x >= (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X) + BOSS_SIZE) {
+				SCR_Gameplay.instance.Lose();
 			}
 			
 			rotation = 0;
@@ -152,9 +173,8 @@ public class SCR_Boss : MonoBehaviour {
 	}
 	public void Thrown () {
 		if (state == BossState.GRAB) {
-			direction = -direction;
 			y = BOSS_START_Y;
-			speedX = BOSS_THROWN_SPEED_X;
+			speedX = BOSS_THROWN_SPEED_X * -direction;
 			speedY = BOSS_THROWN_SPEED_Y;
 			RandomRotate ();
 			SwitchState (BossState.FLY);
@@ -162,6 +182,24 @@ public class SCR_Boss : MonoBehaviour {
 	}
 	public bool IsFlying () {
 		return state == BossState.FLY;
+	}
+	public void Punch (float px, float py) {
+		if (state == BossState.FLY) {
+			speedX += px;
+			if (speedX > BOSS_MAX_SPEED_X) {
+				speedX = BOSS_MAX_SPEED_X;
+			}
+			else if (speedX < -BOSS_MAX_SPEED_X) {
+				speedX = -BOSS_MAX_SPEED_X;
+			}
+			speedY += py;
+			RandomRotate ();
+		}
+	}
+	public void ReAdjustY () {
+		if (y > BOSS_SIZE + SCR_Gameplay.SCREEN_H) {
+			y = BOSS_SIZE + SCR_Gameplay.SCREEN_H;
+		}
 	}
 	// ==================================================
 }

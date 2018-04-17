@@ -149,6 +149,7 @@ MonoBehaviour:
     type: 2}
   PFB_Foreground: {fileID: 1952740570778080, guid: 0dbb6f1776fb8df46862dd21e6d3d883,
     type: 2}
+  PFB_Cloud: {fileID: 1789302266248206, guid: c083470d9ba810f41bedca934b5a2160, type: 2}
 --- !u!4 &1592109947
 Transform:
   m_ObjectHideFlags: 0

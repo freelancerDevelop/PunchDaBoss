@@ -15,17 +15,24 @@ public class SCR_Background : MonoBehaviour {
 	private const float FOREGROUND_SCROLL_RATIO		= 1.0f;
 	
 	private const float MIDDLEGROUND_OFFSET			= 100;
-
 	
+	private const float	CLOUD_SIZE		 			= 200;
+	private const float	CLOUD_SIZE_SPACING 			= 1000;
+
 	// Prefab
 	public GameObject[] 	PFB_Background			= null;
 	public GameObject		PFB_Middleground		= null;
 	public GameObject		PFB_Foreground			= null;
+	public GameObject		PFB_Cloud				= null;
 	
 	// Object
 	private GameObject[]	background				= null;
 	private GameObject 		middleground			= null;
 	private GameObject 		foreground				= null;
+	private GameObject[]	cloud					= null;
+	
+	// Others
+	private float[]			cloudY					= null;
 	
 	// Instance
 	public static SCR_Background	instance		= null;
@@ -47,6 +54,15 @@ public class SCR_Background : MonoBehaviour {
 		foreground = Instantiate (PFB_Foreground);
 		foreground.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE, 1);
 		
+		cloud = new GameObject[3];
+		cloudY = new float[3];
+		for (var i=0; i<3; i++) {
+			cloud[i] = Instantiate (PFB_Cloud);
+			cloud[i].transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE, 1);
+			cloudY[i] = 0;
+		}
+		
+		DeployCloud ();
 		SetCameraY (0);
 	}
 	
@@ -78,16 +94,36 @@ public class SCR_Background : MonoBehaviour {
 			instance.background[BACKGROUND_PART-1].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + BACKGROUND_HEIGHT, instance.background[BACKGROUND_PART-1].transform.position.z);
 		}
 		
-		
 		float middlegroundY = cameraY * MIDDLEGROUND_SCROLL_RATIO;
 		instance.middleground.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -middlegroundY + MIDDLEGROUND_OFFSET, instance.middleground.transform.position.z);
 		
 		float foregroundY = cameraY * FOREGROUND_SCROLL_RATIO;
 		instance.foreground.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -foregroundY, instance.foreground.transform.position.z);
+		
+		for (int i=0; i<instance.cloudY.Length; i++) {
+			instance.cloud[i].transform.position = new Vector3 (instance.cloud[i].transform.position.x, instance.cloudY[i] - SCR_Gameplay.instance.cameraHeight, instance.cloud[i].transform.position.z);
+		}
+	}
+	
+	private void DeployCloud () {
+		for (int i=0; i<cloudY.Length; i++) {
+			float cloudX = Random.Range (0, SCR_Gameplay.SCREEN_W);
+			cloudY[i] = SCR_Gameplay.SCREEN_H + CLOUD_SIZE + CLOUD_SIZE_SPACING * i;
+			cloud[i].transform.position = new Vector3 (cloudX, cloudY[i] - SCR_Gameplay.instance.cameraHeight, cloud[i].transform.position.z);
+		}
 	}
 	
 	private void Update () {
 		SetCameraY (SCR_Gameplay.instance.cameraHeight);
+		
+		for (int i=0; i<cloudY.Length; i++) {
+			if (cloudY[i] < SCR_Gameplay.instance.cameraHeight - CLOUD_SIZE) {
+				cloudY[i] = SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H + CLOUD_SIZE;
+				
+				float cloudX = Random.Range (0, SCR_Gameplay.SCREEN_W);
+				cloud[i].transform.position = new Vector3 (cloudX, cloudY[i] - SCR_Gameplay.instance.cameraHeight, cloud[i].transform.position.z);
+			}
+		}
 	}
 	
 }
