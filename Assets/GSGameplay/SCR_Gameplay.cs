@@ -29,7 +29,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public static float GRAVITY					= 1500.0f;
 	public static float CAMERA_OFFSET_Y			= 400.0f; // Distance from top of the screen to the boss
-	public static float CAMERA_SPEED_MULTIPLIER = 5.0f;
+	public static float CAMERA_SPEED_MULTIPLIER = 10.0f;
 	
 	public static float CAMERA_ENDING_Y			= 100.0f;
 	

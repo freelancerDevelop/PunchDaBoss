@@ -10,8 +10,8 @@ public class SCR_Background : MonoBehaviour {
 	private const int 	BACKGROUND_HEIGHT 			= 1920;
 	private const int 	BACKGROUND_PART 			= 5;
 	
-	private const float BACKGROUND_SCROLL_RATIO		= 0.1f;
-	private const float MIDDLEGROUND_SCROLL_RATIO	= 0.5f;
+	private const float BACKGROUND_SCROLL_RATIO		= 0.02f;
+	private const float MIDDLEGROUND_SCROLL_RATIO	= 0.4f;
 	private const float FOREGROUND_SCROLL_RATIO		= 1.0f;
 	
 	private const float MIDDLEGROUND_OFFSET			= 100;
