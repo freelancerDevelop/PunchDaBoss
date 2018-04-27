@@ -32,6 +32,8 @@ public class SCR_Player : MonoBehaviour {
 	public const float PLAYER_PUNCH_RANGE	= 150.0f;
 	// ==================================================
 	// Stuff
+	public	GameObject	PFB_Target;
+	
 	private Animator 	animator	= null;
 	private PlayerState state		= PlayerState.TALK;
 	private SCR_Boss	bossScript	= null;
@@ -46,6 +48,8 @@ public class SCR_Player : MonoBehaviour {
 	public 	float	speedY		= 0;
 	public 	float	targetX		= 0;
 	public 	float	targetY		= 0;
+	
+	private	GameObject	target	= null;
 	// ==================================================
 	
 	
@@ -63,6 +67,8 @@ public class SCR_Player : MonoBehaviour {
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 		
 		bossScript = SCR_Gameplay.instance.boss.GetComponent<SCR_Boss>();
+		target = Instantiate (PFB_Target);
+		target.SetActive (false);
 		
 		chargeCount = 0;
 		
@@ -136,9 +142,12 @@ public class SCR_Player : MonoBehaviour {
 					speedY = 0;
 					SwitchState (PlayerState.FLY_DOWN);
 				}
+				target.SetActive (true);
+				target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - PLAYER_PUNCH_RANGE);
 			}
 			else  if (state == PlayerState.FLY_DOWN) {
 				speedY -= SCR_Gameplay.GRAVITY * dt;
+				target.SetActive (false);
 			}
 			
 			x += speedX * dt;
@@ -195,7 +204,7 @@ public class SCR_Player : MonoBehaviour {
 	}
 	public void PerformPunch (float px, float py) {
 		if (state == PlayerState.WALK) {
-			targetX = px;
+			targetX = px - SCR_Gameplay.SCREEN_W * 0.5f;
 			targetY = py + PLAYER_PUNCH_RANGE;
 			
 			if (py > y + SCR_Gameplay.SCREEN_H + PLAYER_SIZE) {
@@ -205,7 +214,7 @@ public class SCR_Player : MonoBehaviour {
 			if (px >= x) 	direction = 1;
 			else			direction = -1;
 			
-			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, px - SCR_Gameplay.SCREEN_W * 0.5f, py);
+			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, py);
 			speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
 			speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
 			
@@ -216,7 +225,7 @@ public class SCR_Player : MonoBehaviour {
 		if (state == PlayerState.FLY_UP) {
 			targetY += amount;
 			
-			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX - SCR_Gameplay.SCREEN_W * 0.5f, targetY);
+			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, targetY);
 			speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
 			speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
 		}
