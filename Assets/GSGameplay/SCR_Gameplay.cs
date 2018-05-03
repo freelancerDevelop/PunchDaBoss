@@ -91,6 +91,13 @@ public class SCR_Gameplay : MonoBehaviour {
 		//cameraHeight += dt * 1000;
 		
 		if (Input.GetMouseButton(0)) {
+			if (gameState == GameState.PUNCHING) {
+				float touchX = Input.mousePosition.x * TOUCH_SCALE;
+				float touchY = Input.mousePosition.y * TOUCH_SCALE;
+				player.GetComponent<SCR_Player>().Aim (touchX, touchY + cameraHeight);
+			}
+		}
+		else if (Input.GetMouseButtonUp(0)) {
 			if (gameState == GameState.TALKING) {
 				gameState = GameState.GRABBING;
 				player.GetComponent<SCR_Player>().GoGrabTheBoss();

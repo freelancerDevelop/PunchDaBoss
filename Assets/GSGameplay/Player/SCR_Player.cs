@@ -138,7 +138,7 @@ public class SCR_Player : MonoBehaviour {
 					SwitchState (PlayerState.FLY_DOWN);
 					speedY = 0;
 				}
-				else if (y > targetY) {
+				else if (y > SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H) {
 					speedY = 0;
 					SwitchState (PlayerState.FLY_DOWN);
 				}
@@ -170,7 +170,7 @@ public class SCR_Player : MonoBehaviour {
 			}
 		}
 		
-		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
+		transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 	}
 	// ==================================================
@@ -202,10 +202,29 @@ public class SCR_Player : MonoBehaviour {
 			SwitchState (PlayerState.CHARGE);
 		}
 	}
+	public void Aim (float px, float py) {
+		if (state == PlayerState.WALK) {
+			target.SetActive (true);
+			target.GetComponent<SCR_Target>().SetPosition (px - SCR_Gameplay.SCREEN_W * 0.5f, py);
+			
+			float x1, x2, y1, y2;
+			x1 = x;
+			y1 = y;
+			if (py > y1 + SCR_Gameplay.SCREEN_H + PLAYER_SIZE) {
+				y1 = py - SCR_Gameplay.SCREEN_H - PLAYER_SIZE;
+			}
+			
+			float aimAngle = SCR_Helper.AngleBetweenTwoPoint (x1, y1, px - SCR_Gameplay.SCREEN_W * 0.5f, py);
+			x2 = x1 + SCR_Gameplay.SCREEN_H * SCR_Helper.Sin (aimAngle) * 2;
+			y2 = y1 + SCR_Gameplay.SCREEN_H * SCR_Helper.Cos (aimAngle) * 2;
+			
+			target.GetComponent<SCR_Target>().SetLine (x1, y1, x2, y2);
+		}
+	}
 	public void PerformPunch (float px, float py) {
 		if (state == PlayerState.WALK) {
 			targetX = px - SCR_Gameplay.SCREEN_W * 0.5f;
-			targetY = py + PLAYER_PUNCH_RANGE;
+			targetY = py;
 			
 			if (py > y + SCR_Gameplay.SCREEN_H + PLAYER_SIZE) {
 				y = py - SCR_Gameplay.SCREEN_H - PLAYER_SIZE;
@@ -219,15 +238,19 @@ public class SCR_Player : MonoBehaviour {
 			speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
 			
 			SwitchState (PlayerState.FLY_UP);
+			
+			target.GetComponent<SCR_Target>().HideLine();
 		}
 	}
 	public void AddDeltaCameraToTarget (float amount) {
 		if (state == PlayerState.FLY_UP) {
 			targetY += amount;
 			
-			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, targetY);
-			speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
-			speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
+			if (y < targetY - PLAYER_PUNCH_RANGE) {
+				flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, targetY);
+				speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
+				speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
+			}
 		}
 	}
 	public void ReAdjustY () {
