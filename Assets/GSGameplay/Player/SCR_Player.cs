@@ -25,11 +25,8 @@ public class SCR_Player : MonoBehaviour {
 	
 	public const float PLAYER_CHARGE_TIME	= 0.2f;
 	public const float PLAYER_THROW_TIME	= 0.3f;
-	public const float PLAYER_UP_SPEED		= 5000.0f;
 	public const float PLAYER_SIZE			= 200;
 	public const float PLAYER_UP_FRICTION	= 5000;
-	public const float PLAYER_PUNCH_SPEED	= 5000.0f;
-	public const float PLAYER_PUNCH_RANGE	= 150.0f;
 	// ==================================================
 	// Stuff
 	public	GameObject	PFB_Target;
@@ -133,7 +130,7 @@ public class SCR_Player : MonoBehaviour {
 		else if (state == PlayerState.FLY_UP || state == PlayerState.FLY_DOWN) {
 			if (state == PlayerState.FLY_UP) {
 				var distance = SCR_Helper.DistanceBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
-				if (distance <= PLAYER_PUNCH_RANGE) {
+				if (distance <= SCR_Profile.GetPunchRange()) {
 					Punch (distance);
 					SwitchState (PlayerState.FLY_DOWN);
 					speedY = 0;
@@ -143,7 +140,7 @@ public class SCR_Player : MonoBehaviour {
 					SwitchState (PlayerState.FLY_DOWN);
 				}
 				target.SetActive (true);
-				target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - PLAYER_PUNCH_RANGE);
+				target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - SCR_Profile.GetPunchRange());
 			}
 			else  if (state == PlayerState.FLY_DOWN) {
 				speedY -= SCR_Gameplay.GRAVITY * dt;
@@ -176,8 +173,8 @@ public class SCR_Player : MonoBehaviour {
 	// ==================================================
 	private void Punch (float distance) {
 		float punchAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
-		float punchX = PLAYER_PUNCH_SPEED * SCR_Helper.Sin (punchAngle);
-		float punchY = PLAYER_PUNCH_SPEED * SCR_Helper.Cos (punchAngle);
+		float punchX = SCR_Profile.GetPunchForce() * SCR_Helper.Sin (punchAngle);
+		float punchY = SCR_Profile.GetPunchForce() * SCR_Helper.Cos (punchAngle);
 		
 		bossScript.Punch (punchX, Mathf.Abs(punchY));
 	}
@@ -234,8 +231,8 @@ public class SCR_Player : MonoBehaviour {
 			else			direction = -1;
 			
 			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, py);
-			speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
-			speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
+			speedX = SCR_Profile.GetPunchSpeed() * SCR_Helper.Sin (flyAngle);
+			speedY = SCR_Profile.GetPunchSpeed() * SCR_Helper.Cos (flyAngle);
 			
 			SwitchState (PlayerState.FLY_UP);
 			
@@ -246,10 +243,10 @@ public class SCR_Player : MonoBehaviour {
 		if (state == PlayerState.FLY_UP) {
 			targetY += amount;
 			
-			if (y < targetY - PLAYER_PUNCH_RANGE) {
+			if (y < targetY - SCR_Profile.GetPunchRange()) {
 				flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, targetY);
-				speedX = PLAYER_UP_SPEED * SCR_Helper.Sin (flyAngle);
-				speedY = PLAYER_UP_SPEED * SCR_Helper.Cos (flyAngle);
+				speedX = SCR_Profile.GetPunchSpeed() * SCR_Helper.Sin (flyAngle);
+				speedY = SCR_Profile.GetPunchSpeed() * SCR_Helper.Cos (flyAngle);
 			}
 		}
 	}

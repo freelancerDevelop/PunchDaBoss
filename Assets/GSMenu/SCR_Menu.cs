@@ -14,6 +14,7 @@ public class SCR_Menu : MonoBehaviour {
 		Screen.SetResolution(540, 960, false);
 	
 		// Load profile
+		SCR_Profile.Init ();
 		SCR_Profile.LoadProfile ();
 		
 		// OK, confirm that menu is now the first state
@@ -23,5 +24,10 @@ public class SCR_Menu : MonoBehaviour {
 	public void OnPlay () {
 		// Load latest level
 		SceneManager.LoadScene("GSGameplay/SCN_Gameplay");
+	}
+	
+	public void OnShop () {
+		// Load latest level
+		SceneManager.LoadScene("GSShop/SCN_Shop");
 	}
 }

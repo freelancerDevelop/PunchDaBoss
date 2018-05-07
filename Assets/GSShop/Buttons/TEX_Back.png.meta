@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: c9ca28ac5ef455d4086bdde26baf166c
+guid: 8ed83d96d963b024b87eba268cfbc5b6
 TextureImporter:
   fileIDToRecycleName:
-    21300000: TEX_Play_0
-    21300002: TEX_Play_1
+    21300000: TEX_Back_0
+    21300002: TEX_Back_1
   externalObjects: {}
   serializedVersion: 5
   mipmaps:
@@ -106,7 +106,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TEX_Play_0
+      name: TEX_Back_0
       rect:
         serializedVersion: 2
         x: 0
@@ -120,13 +120,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e2ceda13ed26cae4da408a2c2f5bbf1e
+      spriteID: c1da265b3318bc54a9b20ed97001a4e5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_Play_1
+      name: TEX_Back_1
       rect:
         serializedVersion: 2
         x: 0
@@ -140,7 +140,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 42dbd378e406e574da6494e89ab62804
+      spriteID: 4b25ec9ba4c1d1445992c6d80102bd95
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 871591cc7bfcfb747809e3a5c2dfe57b
+    spriteID: 517786802678a8c4ca2ee52e341055c1
     vertices: []
     indices: 
     edges: []
