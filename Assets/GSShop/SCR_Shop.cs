@@ -34,6 +34,7 @@ public class SCR_Shop : MonoBehaviour {
 			GameObject entry = Instantiate(PFB_PunchEntry);
 			entry.transform.GetChild(4).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].name;
 			entry.transform.GetChild(5).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].cost.ToString();
+			entry.transform.GetChild(6).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].desc;
 			
 			if (SCR_Profile.martialMoves[i].unlocked == 1) {
 				entry.transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.4f, 0.8f, 0.4f, 0.4f);

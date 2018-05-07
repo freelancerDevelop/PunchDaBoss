@@ -45,6 +45,7 @@ public class SCR_Player : MonoBehaviour {
 	public 	float	speedY		= 0;
 	public 	float	targetX		= 0;
 	public 	float	targetY		= 0;
+	public	float	cooldown	= 0;
 	
 	private	GameObject	target	= null;
 	// ==================================================
@@ -167,8 +168,13 @@ public class SCR_Player : MonoBehaviour {
 			}
 		}
 		
-		transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
+		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
+	
+		if (cooldown > 0) {
+			cooldown -= dt;
+			if (cooldown < 0) cooldown = 0;
+		}
 	}
 	// ==================================================
 	private void Punch (float distance) {
@@ -219,7 +225,7 @@ public class SCR_Player : MonoBehaviour {
 		}
 	}
 	public void PerformPunch (float px, float py) {
-		if (state == PlayerState.WALK) {
+		if (cooldown <= 0) {
 			targetX = px - SCR_Gameplay.SCREEN_W * 0.5f;
 			targetY = py;
 			
@@ -236,8 +242,10 @@ public class SCR_Player : MonoBehaviour {
 			
 			SwitchState (PlayerState.FLY_UP);
 			
-			target.GetComponent<SCR_Target>().HideLine();
+			cooldown = SCR_Profile.GetPunchCooldown();
 		}
+		
+		target.GetComponent<SCR_Target>().HideLine();
 	}
 	public void AddDeltaCameraToTarget (float amount) {
 		if (state == PlayerState.FLY_UP) {

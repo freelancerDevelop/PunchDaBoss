@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
@@ -35,6 +36,10 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	// Instance
 	public static SCR_Gameplay instance 		= null;
+	
+	// On-screen object
+	public GameObject	pnlCooldown;
+	public GameObject	txtPunchName;
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
@@ -78,6 +83,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		player		= Instantiate (PFB_Player);
 		boss 		= Instantiate (PFB_Boss);
+		
+		txtPunchName.GetComponent<Text>().text = SCR_Profile.GetPunchName();
 	}
 	
 	// Update
@@ -141,6 +148,9 @@ public class SCR_Gameplay : MonoBehaviour {
 			cameraHeight += deltaCamera;
 			if (cameraHeight < 0) cameraHeight = 0;
 		}
+		
+		float cooldown = player.GetComponent<SCR_Player>().cooldown;
+		pnlCooldown.GetComponent<RectTransform>().sizeDelta = new Vector2(512, 512 * cooldown / SCR_Profile.GetPunchCooldown());
 	}
 	
 	
