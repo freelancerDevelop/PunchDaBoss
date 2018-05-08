@@ -198,7 +198,12 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		if (SCR_Profile.showTutorial == 1) {
 			if (tutorialStep != TutorialStep.AIM && tutorialStep != TutorialStep.PUNCH && Time.timeScale < 1) {
-				Time.timeScale += dt;
+				if (tutorialStep == TutorialStep.MISS) {
+					Time.timeScale += dt * 3.0f;
+				}
+				else {
+					Time.timeScale += dt * 0.5f;
+				}
 				if (Time.timeScale > 1) Time.timeScale = 1;
 			}
 		}
