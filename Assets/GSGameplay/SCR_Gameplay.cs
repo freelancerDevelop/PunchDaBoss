@@ -6,7 +6,17 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
-
+public enum TutorialStep {
+	NONE = 0,
+	GRAB,
+	THROW,
+	AIM,
+	PUNCH,
+	CONTINUE,
+	HIT,
+	MISS,
+	FINISH
+}
 
 public enum GameState {
 	TALKING = 0,
@@ -45,6 +55,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject	txtHeightNumber;
 	public GameObject	txtMoneyNumber;
 	public GameObject	txtCurrentHeight;
+	public GameObject	pnlTutorial;
+	public GameObject	txtTutorial;
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
@@ -54,10 +66,10 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public GameState 	gameState		= GameState.TALKING;
 	[System.NonSerialized] public float 		cameraHeight	= 0.0f;
 	[System.NonSerialized] public float 		cameraTarget	= 0.0f;
-	[System.NonSerialized] public int			maxBossY	= 0;
+	[System.NonSerialized] public int			maxBossY		= 0;
 	[System.NonSerialized] public int			punchNumber		= 0;
 	
-	
+	[System.NonSerialized] public TutorialStep	tutorialStep	= TutorialStep.NONE;
 	
 	
 	// Init
@@ -93,7 +105,10 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		
 		pnlResult.SetActive (false);
+		pnlTutorial.SetActive (false);
 		txtPunchName.GetComponent<Text>().text = SCR_Profile.GetPunchName();
+	
+		TriggerTutorial (TutorialStep.GRAB);
 	}
 	
 	// Update
@@ -110,7 +125,11 @@ public class SCR_Gameplay : MonoBehaviour {
 			if (gameState == GameState.PUNCHING) {
 				float touchX = Input.mousePosition.x * TOUCH_SCALE;
 				float touchY = Input.mousePosition.y * TOUCH_SCALE;
-				player.GetComponent<SCR_Player>().Aim (touchX, touchY + cameraHeight);
+				
+				if (SCR_Profile.showTutorial == 0 || tutorialStep == TutorialStep.AIM || tutorialStep == TutorialStep.PUNCH) {
+					player.GetComponent<SCR_Player>().Aim (touchX, touchY + cameraHeight);
+					TriggerTutorial (TutorialStep.PUNCH);
+				}
 			}
 			else if (gameState == GameState.BOSS_RUNNING) {
 				if (boss.GetComponent<SCR_Boss>().IsRunning()) {
@@ -133,6 +152,8 @@ public class SCR_Gameplay : MonoBehaviour {
 				float touchX = Input.mousePosition.x * TOUCH_SCALE;
 				float touchY = Input.mousePosition.y * TOUCH_SCALE;
 				player.GetComponent<SCR_Player>().PerformPunch (touchX, touchY + cameraHeight);
+				
+				TriggerTutorial (TutorialStep.CONTINUE);
 			}
 		}
 		
@@ -172,6 +193,13 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		float cooldown = player.GetComponent<SCR_Player>().cooldown;
 		pnlCooldown.GetComponent<RectTransform>().sizeDelta = new Vector2(512, 512 * cooldown / SCR_Profile.GetPunchCooldown());
+		
+		if (SCR_Profile.showTutorial == 1) {
+			if (tutorialStep != TutorialStep.AIM && tutorialStep != TutorialStep.PUNCH && Time.timeScale < 1) {
+				Time.timeScale += dt;
+				if (Time.timeScale > 1) Time.timeScale = 1;
+			}
+		}
 	}
 	
 	
@@ -183,5 +211,44 @@ public class SCR_Gameplay : MonoBehaviour {
 		int money = (int)(0.1f * maxBossY);
 		txtMoneyNumber.GetComponent<Text>().text = money.ToString();
 		SCR_Profile.AddMoney (money);
+	}
+	
+	
+	public void TriggerTutorial (TutorialStep step, bool force = false) {
+		if (SCR_Profile.showTutorial == 1) {
+			if (step == tutorialStep + 1 || force == true) {
+				tutorialStep = step;
+				pnlTutorial.SetActive (true);
+					
+				if (step == TutorialStep.GRAB) {
+					txtTutorial.GetComponent<Text>().text = "Tap anywhere to grab your boss!";
+				}
+				else if (step == TutorialStep.THROW) {
+					txtTutorial.GetComponent<Text>().text = "Now, tap anywhere to throw him upward.";
+				}
+				else if (step == TutorialStep.AIM) {
+					Time.timeScale = 0.05f;
+					txtTutorial.GetComponent<Text>().text = "Tap and hold your finger to aim your punch. Aim slightly ahead of his trajectory.";
+				}
+				else if (step == TutorialStep.PUNCH) {
+					Time.timeScale = 0.05f;
+					txtTutorial.GetComponent<Text>().text = "Remember, always aim slightly ahead of his trajectory. Release your finger to rush up and punch him.";
+				}
+				else if (step == TutorialStep.CONTINUE) {
+					txtTutorial.GetComponent<Text>().text = "The cooldown is on the top left corner of the screen.";
+				}
+				else if (step == TutorialStep.HIT) {
+					txtTutorial.GetComponent<Text>().text = "Nice hit! Now, keep punching your boss as high as possible.";
+				}
+				else if (step == TutorialStep.MISS) {
+					txtTutorial.GetComponent<Text>().text = "I can't believe you miss that. Let's try again.";
+				}
+				else if (step == TutorialStep.FINISH) {
+					pnlTutorial.SetActive (false);
+					SCR_Profile.showTutorial = 0;
+					SCR_Profile.SaveProfile();
+				}
+			}
+		}
 	}
 }

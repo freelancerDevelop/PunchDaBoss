@@ -104,6 +104,7 @@ public class SCR_Player : MonoBehaviour {
 					if (Mathf.Abs(x - bossScript.x) < PLAYER_GRAB_RANGE) {
 						bossScript.Grabbed();
 						SwitchState (PlayerState.GRAB);
+						SCR_Gameplay.instance.TriggerTutorial (TutorialStep.THROW);
 					}
 				}
 			}
@@ -188,7 +189,9 @@ public class SCR_Player : MonoBehaviour {
 	
 		if (cooldown > 0) {
 			cooldown -= dt;
-			if (cooldown < 0) cooldown = 0;
+			if (cooldown < 0) {
+				cooldown = 0;
+			}
 		}
 	}
 	// ==================================================

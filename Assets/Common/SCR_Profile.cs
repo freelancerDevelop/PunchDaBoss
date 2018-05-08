@@ -38,7 +38,7 @@ public class SCR_Profile {
 	public static int 				money = 0;
 	public static int				martialEquip = 0;
 	public static MartialMove[] 	martialMoves;
-	
+	public static int				showTutorial = 1;
 	
 	
 	public static void Init() {
@@ -107,6 +107,7 @@ public class SCR_Profile {
 	
 	public static void SaveProfile () {
 		PlayerPrefs.SetInt("money", money);
+		PlayerPrefs.SetInt("showTutorial", showTutorial);
 		PlayerPrefs.SetInt("martialEquip", martialEquip);
 		
 		for (int i=0; i<martialMoves.Length; i++) {
@@ -116,6 +117,7 @@ public class SCR_Profile {
 	
 	public static void LoadProfile () {
 		money = PlayerPrefs.GetInt("money", 0);
+		showTutorial = PlayerPrefs.GetInt("showTutorial", 1);
 		martialEquip = PlayerPrefs.GetInt("martialEquip", 0);
 		
 		for (int i=0; i<martialMoves.Length; i++) {
@@ -126,6 +128,7 @@ public class SCR_Profile {
 	}
 	
 	public static void ResetProfile () {
+		showTutorial = 1;
 		money = 10000;
 		martialEquip = 0;
 		for (int i=1; i<martialMoves.Length; i++) {

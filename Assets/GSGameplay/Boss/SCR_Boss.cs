@@ -38,6 +38,7 @@ public class SCR_Boss : MonoBehaviour {
 	public float	speedY		= 0;
 	public float	rotation	= 0;
 	public float	rotateSpeed	= 0;
+	public bool		getHit		= false;
 	// ==================================================
 	
 	
@@ -79,7 +80,17 @@ public class SCR_Boss : MonoBehaviour {
 		}
 		
 		if (state == BossState.FLY) {
+			float oldSpeedY = speedY;
 			speedY -= SCR_Gameplay.GRAVITY * dt;
+			
+			if (speedY < 0 && oldSpeedY >= 0) {
+				if (!getHit) {
+					SCR_Gameplay.instance.TriggerTutorial (TutorialStep.AIM);
+				}
+				else {
+					SCR_Gameplay.instance.TriggerTutorial (TutorialStep.FINISH, true);
+				}
+			}
 			
 			x += speedX * dt;
 			y += speedY * dt;
@@ -100,6 +111,10 @@ public class SCR_Boss : MonoBehaviour {
 			if (y <= SCR_Gameplay.instance.cameraHeight - BOSS_SIZE) {
 				SCR_Gameplay.instance.gameState = GameState.BOSS_FALLING;
 				SCR_Gameplay.instance.Lose();
+				
+				if (!getHit) {
+					SCR_Gameplay.instance.TriggerTutorial (TutorialStep.MISS, true);
+				}
 			}
 			else if (y <= BOSS_START_Y) {
 				y = BOSS_START_Y;
@@ -190,6 +205,8 @@ public class SCR_Boss : MonoBehaviour {
 			}
 			speedY += py;
 			RandomRotate ();
+			getHit = true;
+			SCR_Gameplay.instance.TriggerTutorial (TutorialStep.HIT);
 		}
 	}
 	public void ReAdjustY () {
