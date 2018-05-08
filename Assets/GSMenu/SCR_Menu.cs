@@ -30,4 +30,8 @@ public class SCR_Menu : MonoBehaviour {
 		// Load latest level
 		SceneManager.LoadScene("GSShop/SCN_Shop");
 	}
+	
+	public void OnReset () {
+		SCR_Profile.ResetProfile();
+	}
 }

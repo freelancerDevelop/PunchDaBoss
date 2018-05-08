@@ -99,6 +99,7 @@ public class SCR_Boss : MonoBehaviour {
 			
 			if (y <= SCR_Gameplay.instance.cameraHeight - BOSS_SIZE) {
 				SCR_Gameplay.instance.gameState = GameState.BOSS_FALLING;
+				SCR_Gameplay.instance.Lose();
 			}
 			else if (y <= BOSS_START_Y) {
 				y = BOSS_START_Y;
@@ -140,14 +141,6 @@ public class SCR_Boss : MonoBehaviour {
 		}
 		else if (state == BossState.RUN) {
 			x += direction * BOSS_RUN_SPEED * dt;
-			
-			if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X) - BOSS_SIZE) {
-				SCR_Gameplay.instance.Lose();
-			}
-			else if (x >= (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X) + BOSS_SIZE) {
-				SCR_Gameplay.instance.Lose();
-			}
-			
 			rotation = 0;
 		}
 		
@@ -182,6 +175,9 @@ public class SCR_Boss : MonoBehaviour {
 	}
 	public bool IsFlying () {
 		return state == BossState.FLY;
+	}
+	public bool IsRunning () {
+		return state == BossState.RUN;
 	}
 	public void Punch (float px, float py) {
 		if (state == BossState.FLY) {

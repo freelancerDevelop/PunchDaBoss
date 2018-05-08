@@ -11,6 +11,7 @@ public class SCR_Shop : MonoBehaviour {
 	
 	// Object
 	public Transform shopContent;
+	public GameObject txtMoney;
 	private GameObject[] entries;
 
 	// Instance
@@ -29,11 +30,13 @@ public class SCR_Shop : MonoBehaviour {
 		instance = this;
 		
 		// Create the shop
+		txtMoney.GetComponent<Text>().text = SCR_Profile.money.ToString() + "$";
+		
 		entries = new GameObject[SCR_Profile.martialMoves.Length];
 		for (int i=0; i<SCR_Profile.martialMoves.Length; i++) {
 			GameObject entry = Instantiate(PFB_PunchEntry);
 			entry.transform.GetChild(4).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].name;
-			entry.transform.GetChild(5).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].cost.ToString();
+			entry.transform.GetChild(5).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].cost.ToString() + "$";
 			entry.transform.GetChild(6).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].desc;
 			
 			if (SCR_Profile.martialMoves[i].unlocked == 1) {
@@ -88,6 +91,8 @@ public class SCR_Shop : MonoBehaviour {
 		}
 	}
 	public void RefreshShop () {
+		txtMoney.GetComponent<Text>().text = SCR_Profile.money.ToString() + "$";
+		
 		for (int i=0; i<entries.Length; i++) {
 			if (SCR_Profile.martialMoves[i].unlocked == 1) {
 				entries[i].transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.4f, 0.8f, 0.4f, 0.4f);

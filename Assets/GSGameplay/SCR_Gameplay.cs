@@ -40,15 +40,22 @@ public class SCR_Gameplay : MonoBehaviour {
 	// On-screen object
 	public GameObject	pnlCooldown;
 	public GameObject	txtPunchName;
+	public GameObject	pnlResult;
+	public GameObject	txtPunchNumber;
+	public GameObject	txtHeightNumber;
+	public GameObject	txtMoneyNumber;
+	public GameObject	txtCurrentHeight;
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
 	[System.NonSerialized] public GameObject 	boss			= null;
-	[System.NonSerialized] public float 		cameraHeight	= 0.0f;
-	[System.NonSerialized] public float 		cameraTarget	= 0.0f;
 	
 	// Game
 	[System.NonSerialized] public GameState 	gameState		= GameState.TALKING;
+	[System.NonSerialized] public float 		cameraHeight	= 0.0f;
+	[System.NonSerialized] public float 		cameraTarget	= 0.0f;
+	[System.NonSerialized] public int			maxBossY	= 0;
+	[System.NonSerialized] public int			punchNumber		= 0;
 	
 	
 	
@@ -84,6 +91,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		player		= Instantiate (PFB_Player);
 		boss 		= Instantiate (PFB_Boss);
 		
+		
+		pnlResult.SetActive (false);
 		txtPunchName.GetComponent<Text>().text = SCR_Profile.GetPunchName();
 	}
 	
@@ -102,6 +111,11 @@ public class SCR_Gameplay : MonoBehaviour {
 				float touchX = Input.mousePosition.x * TOUCH_SCALE;
 				float touchY = Input.mousePosition.y * TOUCH_SCALE;
 				player.GetComponent<SCR_Player>().Aim (touchX, touchY + cameraHeight);
+			}
+			else if (gameState == GameState.BOSS_RUNNING) {
+				if (boss.GetComponent<SCR_Boss>().IsRunning()) {
+					SceneManager.LoadScene("GSMenu/SCN_Menu");
+				}
 			}
 		}
 		else if (Input.GetMouseButtonUp(0)) {
@@ -136,6 +150,8 @@ public class SCR_Gameplay : MonoBehaviour {
 			if (deltaCamera > -1) deltaCamera = -1;
 			cameraHeight += deltaCamera;
 			
+			player.GetComponent<SCR_Player>().TurnOffCrossHair();
+			
 			if (cameraHeight < CAMERA_ENDING_Y) {
 				gameState = GameState.BOSS_RUNNING;
 				player.GetComponent<SCR_Player>().ReAdjustY();
@@ -149,12 +165,23 @@ public class SCR_Gameplay : MonoBehaviour {
 			if (cameraHeight < 0) cameraHeight = 0;
 		}
 		
+		if (boss.GetComponent<SCR_Boss>().y * 0.01f - 3 > maxBossY) {
+			maxBossY = (int)(boss.GetComponent<SCR_Boss>().y * 0.01f - 3);
+			txtCurrentHeight.GetComponent<Text>().text = maxBossY.ToString();
+		}
+		
 		float cooldown = player.GetComponent<SCR_Player>().cooldown;
 		pnlCooldown.GetComponent<RectTransform>().sizeDelta = new Vector2(512, 512 * cooldown / SCR_Profile.GetPunchCooldown());
 	}
 	
 	
 	public void Lose () {
-		SceneManager.LoadScene("GSMenu/SCN_Menu");
+		pnlResult.SetActive (true);
+		txtPunchNumber.GetComponent<Text>().text = punchNumber.ToString();
+		txtHeightNumber.GetComponent<Text>().text = maxBossY.ToString();
+		
+		int money = (int)(0.1f * maxBossY);
+		txtMoneyNumber.GetComponent<Text>().text = money.ToString();
+		SCR_Profile.AddMoney (money);
 	}
 }

@@ -9,24 +9,26 @@ public enum PlayerState {
 	CHARGE,
 	THROW,
 	FLY_UP,
-	FLY_DOWN
+	FLY_DOWN,
+	WATCH
 }
 
 public class SCR_Player : MonoBehaviour {
 	// ==================================================
 	// Const
-	public const float PLAYER_START_X		= 100;
-	public const float PLAYER_START_Y		= 350;
-	public const float PLAYER_SCALE			= 0.4f;
-	public const float PLAYER_WALK_SPEED	= 400.0f;
-	public const float PLAYER_GRAB_RANGE	= 100.0f;
-	public const float PLAYER_GRAB_HEIGHT	= 100.0f;
-	public const float PLAYER_REVERSE_X		= 140.0f;
+	public const float PLAYER_START_X			= 100;
+	public const float PLAYER_START_Y			= 350;
+	public const float PLAYER_SCALE				= 0.4f;
+	public const float PLAYER_WALK_SPEED		= 400.0f;
+	public const float PLAYER_GRAB_RANGE		= 100.0f;
+	public const float PLAYER_GRAB_HEIGHT		= 100.0f;
+	public const float PLAYER_REVERSE_X			= 140.0f;
 	
-	public const float PLAYER_CHARGE_TIME	= 0.2f;
-	public const float PLAYER_THROW_TIME	= 0.3f;
-	public const float PLAYER_SIZE			= 200;
-	public const float PLAYER_UP_FRICTION	= 5000;
+	public const float PLAYER_CHARGE_TIME		= 0.2f;
+	public const float PLAYER_THROW_TIME		= 0.3f;
+	public const float PLAYER_START_COOLDOWN	= 1.0f;
+	public const float PLAYER_SIZE				= 200;
+	public const float PLAYER_UP_FRICTION		= 5000;
 	// ==================================================
 	// Stuff
 	public	GameObject	PFB_Target;
@@ -109,6 +111,10 @@ public class SCR_Player : MonoBehaviour {
 				bossScript.y = y + PLAYER_GRAB_HEIGHT;
 				bossScript.direction = -direction;
 			}
+			
+			if (SCR_Gameplay.instance.gameState == GameState.BOSS_FALLING || SCR_Gameplay.instance.gameState == GameState.BOSS_RUNNING) {
+				SwitchState (PlayerState.WATCH);
+			}
 		}
 		else if (state == PlayerState.CHARGE) {
 			chargeCount += dt;
@@ -167,6 +173,14 @@ public class SCR_Player : MonoBehaviour {
 				}
 			}
 		}
+		else if (state == PlayerState.WATCH) {
+			if (bossScript.x < x) {
+				direction = -1;
+			}
+			else {
+				direction = 1;
+			}
+		}
 		
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
@@ -180,8 +194,9 @@ public class SCR_Player : MonoBehaviour {
 	private void Punch (float distance) {
 		float punchAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
 		float punchX = SCR_Profile.GetPunchForce() * SCR_Helper.Sin (punchAngle);
-		float punchY = SCR_Profile.GetPunchForce() * SCR_Helper.Cos (punchAngle);
+		float punchY = SCR_Profile.GetPunchForce() * (1 + SCR_Helper.Cos (punchAngle) * 0.33f);
 		
+		SCR_Gameplay.instance.punchNumber ++;
 		bossScript.Punch (punchX, Mathf.Abs(punchY));
 	}
 	// ==================================================
@@ -203,10 +218,14 @@ public class SCR_Player : MonoBehaviour {
 	public void ThrowTheBoss () {
 		if (state == PlayerState.GRAB) {
 			SwitchState (PlayerState.CHARGE);
+			cooldown = PLAYER_START_COOLDOWN;
 		}
 	}
+	public void TurnOffCrossHair () {
+		target.SetActive (false);
+	}
 	public void Aim (float px, float py) {
-		if (state == PlayerState.WALK) {
+		if (cooldown <= 0) {
 			target.SetActive (true);
 			target.GetComponent<SCR_Target>().SetPosition (px - SCR_Gameplay.SCREEN_W * 0.5f, py);
 			
@@ -225,7 +244,7 @@ public class SCR_Player : MonoBehaviour {
 		}
 	}
 	public void PerformPunch (float px, float py) {
-		if (cooldown <= 0) {
+		if (cooldown <= 0 && target.activeSelf) {
 			targetX = px - SCR_Gameplay.SCREEN_W * 0.5f;
 			targetY = py;
 			
@@ -240,12 +259,12 @@ public class SCR_Player : MonoBehaviour {
 			speedX = SCR_Profile.GetPunchSpeed() * SCR_Helper.Sin (flyAngle);
 			speedY = SCR_Profile.GetPunchSpeed() * SCR_Helper.Cos (flyAngle);
 			
+			target.GetComponent<SCR_Target>().HideLine();
+			
 			SwitchState (PlayerState.FLY_UP);
 			
 			cooldown = SCR_Profile.GetPunchCooldown();
 		}
-		
-		target.GetComponent<SCR_Target>().HideLine();
 	}
 	public void AddDeltaCameraToTarget (float amount) {
 		if (state == PlayerState.FLY_UP) {
