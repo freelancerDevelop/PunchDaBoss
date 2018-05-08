@@ -64,7 +64,7 @@ public class SCR_Player : MonoBehaviour {
 		
 		x = PLAYER_START_X;
 		y = PLAYER_START_Y;
-		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
+		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 		
 		bossScript = SCR_Gameplay.instance.boss.GetComponent<SCR_Boss>();
@@ -184,7 +184,7 @@ public class SCR_Player : MonoBehaviour {
 			}
 		}
 		
-		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
+		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 	
 		if (cooldown > 0) {

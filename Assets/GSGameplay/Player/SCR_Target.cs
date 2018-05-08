@@ -13,15 +13,15 @@ public class SCR_Target : MonoBehaviour {
 	}
 	
 	public void SetPosition (float x, float y) {
-		transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
+		transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 	}
 	
 	public void SetLine (float x1, float y1, float x2, float y2) {
 		gameObject.GetComponent<LineRenderer>().enabled = true;
 		
 		var points = new Vector3[2];
-		points[0] = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x1, y1 - SCR_Gameplay.instance.cameraHeight, -20);
-		points[1] = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x2, y2 - SCR_Gameplay.instance.cameraHeight, -20);
+		points[0] = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x1, y1, -20);
+		points[1] = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x2, y2, -20);
 		
         gameObject.GetComponent<LineRenderer>().SetPositions(points);
 	}

@@ -81,8 +81,8 @@ public class SCR_Background : MonoBehaviour {
 					instance.background[i+1].SetActive (true);
 					
 					backgroundY = backgroundY % BACKGROUND_HEIGHT;
-					instance.background[i].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY, instance.background[i].transform.position.z);
-					instance.background[i+1].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + BACKGROUND_HEIGHT, instance.background[i+1].transform.position.z);
+					instance.background[i].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + cameraY, instance.background[i].transform.position.z);
+					instance.background[i+1].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + cameraY + BACKGROUND_HEIGHT, instance.background[i+1].transform.position.z);
 				}
 			}
 		}
@@ -90,18 +90,18 @@ public class SCR_Background : MonoBehaviour {
 			backgroundY = backgroundY % BACKGROUND_HEIGHT;
 			instance.background[BACKGROUND_PART-2].SetActive (true);
 			instance.background[BACKGROUND_PART-1].SetActive (true);
-			instance.background[BACKGROUND_PART-2].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY, instance.background[BACKGROUND_PART-2].transform.position.z);
-			instance.background[BACKGROUND_PART-1].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + BACKGROUND_HEIGHT, instance.background[BACKGROUND_PART-1].transform.position.z);
+			instance.background[BACKGROUND_PART-2].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + cameraY, instance.background[BACKGROUND_PART-2].transform.position.z);
+			instance.background[BACKGROUND_PART-1].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + cameraY + BACKGROUND_HEIGHT, instance.background[BACKGROUND_PART-1].transform.position.z);
 		}
 		
-		float middlegroundY = cameraY * MIDDLEGROUND_SCROLL_RATIO;
+		float middlegroundY = cameraY * (1 + MIDDLEGROUND_SCROLL_RATIO);
 		instance.middleground.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -middlegroundY + MIDDLEGROUND_OFFSET, instance.middleground.transform.position.z);
 		
-		float foregroundY = cameraY * FOREGROUND_SCROLL_RATIO;
+		float foregroundY = cameraY * (1 + FOREGROUND_SCROLL_RATIO);
 		instance.foreground.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -foregroundY, instance.foreground.transform.position.z);
 		
 		for (int i=0; i<instance.cloudY.Length; i++) {
-			instance.cloud[i].transform.position = new Vector3 (instance.cloud[i].transform.position.x, instance.cloudY[i] - SCR_Gameplay.instance.cameraHeight, instance.cloud[i].transform.position.z);
+			instance.cloud[i].transform.position = new Vector3 (instance.cloud[i].transform.position.x, instance.cloudY[i], instance.cloud[i].transform.position.z);
 		}
 	}
 	
@@ -109,19 +109,17 @@ public class SCR_Background : MonoBehaviour {
 		for (int i=0; i<cloudY.Length; i++) {
 			float cloudX = Random.Range (0, SCR_Gameplay.SCREEN_W);
 			cloudY[i] = SCR_Gameplay.SCREEN_H + CLOUD_SIZE + CLOUD_SIZE_SPACING * i;
-			cloud[i].transform.position = new Vector3 (cloudX, cloudY[i] - SCR_Gameplay.instance.cameraHeight, cloud[i].transform.position.z);
+			cloud[i].transform.position = new Vector3 (cloudX, cloudY[i], cloud[i].transform.position.z);
 		}
 	}
 	
 	private void Update () {
-		SetCameraY (SCR_Gameplay.instance.cameraHeight);
-		
 		for (int i=0; i<cloudY.Length; i++) {
 			if (cloudY[i] < SCR_Gameplay.instance.cameraHeight - CLOUD_SIZE) {
 				cloudY[i] = SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H + CLOUD_SIZE;
 				
 				float cloudX = Random.Range (0, SCR_Gameplay.SCREEN_W);
-				cloud[i].transform.position = new Vector3 (cloudX, cloudY[i] - SCR_Gameplay.instance.cameraHeight, cloud[i].transform.position.z);
+				cloud[i].transform.position = new Vector3 (cloudX, cloudY[i], cloud[i].transform.position.z);
 			}
 		}
 	}

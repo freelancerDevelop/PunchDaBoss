@@ -52,7 +52,7 @@ public class SCR_Boss : MonoBehaviour {
 		
 		x = BOSS_START_X;
 		y = BOSS_START_Y;
-		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
+		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
 		
 		rotation = 0;
@@ -159,7 +159,7 @@ public class SCR_Boss : MonoBehaviour {
 			rotation = 0;
 		}
 		
-		transform.position 			= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y - SCR_Gameplay.instance.cameraHeight, transform.position.z);
+		transform.position 			= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		transform.localScale 		= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
 		transform.localEulerAngles 	= new Vector3 (0, 0, rotation);
 	}

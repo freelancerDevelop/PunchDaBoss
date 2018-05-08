@@ -119,7 +119,6 @@ public class SCR_Gameplay : MonoBehaviour {
 		}
 		
 		float dt = Time.deltaTime;
-		//cameraHeight += dt * 1000;
 		
 		if (Input.GetMouseButton(0)) {
 			if (gameState == GameState.PUNCHING) {
@@ -185,6 +184,9 @@ public class SCR_Gameplay : MonoBehaviour {
 			cameraHeight += deltaCamera;
 			if (cameraHeight < 0) cameraHeight = 0;
 		}
+		
+		SCR_Background.SetCameraY (cameraHeight);
+		Camera.main.transform.position = new Vector3 (SCREEN_W * 0.5f, SCREEN_H * 0.5f + cameraHeight, Camera.main.transform.position.z);
 		
 		if (boss.GetComponent<SCR_Boss>().y * 0.01f - 3 > maxBossY) {
 			maxBossY = (int)(boss.GetComponent<SCR_Boss>().y * 0.01f - 3);
