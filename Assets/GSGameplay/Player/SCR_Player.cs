@@ -29,6 +29,7 @@ public class SCR_Player : MonoBehaviour {
 	public const float PLAYER_START_COOLDOWN	= 1.0f;
 	public const float PLAYER_SIZE				= 200;
 	public const float PLAYER_UP_FRICTION		= 5000;
+	public const float PLAYER_SLAV_RANDOM		= 200;
 	// ==================================================
 	// Stuff
 	public	GameObject	PFB_Target;
@@ -246,6 +247,12 @@ public class SCR_Player : MonoBehaviour {
 	public void PerformPunch (float px, float py) {
 		if (cooldown <= 0 && target.activeSelf) {
 			targetX = px - SCR_Gameplay.SCREEN_W * 0.5f;
+			if (SCR_Profile.martialEquip == (int)PunchType.SLAV) {
+				float random = PLAYER_SLAV_RANDOM;
+				random *= (py - SCR_Gameplay.instance.cameraHeight) / SCR_Gameplay.SCREEN_H;
+				Debug.Log(random);
+				targetX += Random.Range(-random, random);
+			}
 			targetY = py;
 			
 			if (py > y + SCR_Gameplay.SCREEN_H + PLAYER_SIZE) {
