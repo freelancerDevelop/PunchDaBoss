@@ -253,7 +253,6 @@ public class SCR_Player : MonoBehaviour {
 			if (SCR_Profile.martialEquip == (int)PunchType.SLAV) {
 				float random = PLAYER_SLAV_RANDOM;
 				random *= (py - SCR_Gameplay.instance.cameraHeight) / SCR_Gameplay.SCREEN_H;
-				Debug.Log(random);
 				targetX += Random.Range(-random, random);
 			}
 			targetY = py;
@@ -262,8 +261,8 @@ public class SCR_Player : MonoBehaviour {
 				y = py - SCR_Gameplay.SCREEN_H - PLAYER_SIZE;
 			}
 			
-			if (px >= x) 	direction = 1;
-			else			direction = -1;
+			if (targetX >= x) 	direction = 1;
+			else				direction = -1;
 			
 			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, py);
 			speedX = SCR_Profile.GetPunchSpeed() * SCR_Helper.Sin (flyAngle);
