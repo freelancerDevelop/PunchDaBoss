@@ -72,14 +72,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PFB_Target: {fileID: 1825876431103544, guid: cec1c81da5834bb41892ffbf9ac10bad, type: 2}
-  x: 0
-  y: 0
-  direction: -1
-  speedX: 0
-  speedY: 0
-  targetX: 0
-  targetY: 0
-  cooldown: 0
+  PFB_BasicParticle: {fileID: 1863523605684764, guid: 922be8d6a2c15b84587851758d8e12dc,
+    type: 2}
 --- !u!212 &212578281504200068
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -120,7 +114,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5, y: 7}
+  m_Size: {x: 4, y: 4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

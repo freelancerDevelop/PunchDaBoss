@@ -9,6 +9,7 @@ public enum PlayerState {
 	CHARGE,
 	THROW,
 	FLY_UP,
+	PUNCH,
 	FLY_DOWN,
 	WATCH
 }
@@ -18,39 +19,46 @@ public class SCR_Player : MonoBehaviour {
 	// Const
 	public const float PLAYER_START_X			= 100;
 	public const float PLAYER_START_Y			= 350;
-	public const float PLAYER_SCALE				= 0.4f;
+	public const float PLAYER_SCALE				= 0.8f;
 	public const float PLAYER_WALK_SPEED		= 400.0f;
 	public const float PLAYER_GRAB_RANGE		= 100.0f;
 	public const float PLAYER_GRAB_HEIGHT		= 100.0f;
 	public const float PLAYER_REVERSE_X			= 140.0f;
 	
-	public const float PLAYER_CHARGE_TIME		= 0.2f;
+	public const float PLAYER_CHARGE_TIME		= 0.5f;
+	public const float PLAYER_PUNCH_TIME		= 0.5f;
 	public const float PLAYER_THROW_TIME		= 0.3f;
 	public const float PLAYER_START_COOLDOWN	= 1.0f;
 	public const float PLAYER_SIZE				= 200;
 	public const float PLAYER_UP_FRICTION		= 5000;
 	public const float PLAYER_SLAV_RANDOM		= 200;
 	// ==================================================
-	// Stuff
+	// Prefab
 	public	GameObject	PFB_Target;
+	public	GameObject	PFB_BasicParticle;
 	
+	
+	// ==================================================
+	// Stuff
 	private Animator 	animator	= null;
 	private PlayerState state		= PlayerState.TALK;
 	private SCR_Boss	bossScript	= null;
 	// ==================================================
 	// More stuff
-	public 	float	x			= 0;
-	public 	float	y			= 0;
-	public 	int		direction	= -1;
-	private	float	chargeCount	= 0;
-	private float	flyAngle	= 0;
-	public 	float	speedX		= 0;
-	public 	float	speedY		= 0;
-	public 	float	targetX		= 0;
-	public 	float	targetY		= 0;
-	public	float	cooldown	= 0;
+	[System.NonSerialized] public 	float	x			= 0;
+	[System.NonSerialized] public 	float	y			= 0;
+	[System.NonSerialized] public 	int		direction	= -1;
+	[System.NonSerialized] public	float	chargeCount	= 0;
+	[System.NonSerialized] public	float	punchCount	= 0;
+	[System.NonSerialized] public	float	flyAngle	= 0;
+	[System.NonSerialized] public 	float	speedX		= 0;
+	[System.NonSerialized] public 	float	speedY		= 0;
+	[System.NonSerialized] public 	float	targetX		= 0;
+	[System.NonSerialized] public 	float	targetY		= 0;
+	[System.NonSerialized] public	float	cooldown	= 0;
 	
-	private	GameObject	target	= null;
+	private	GameObject	target			= null;
+	private	GameObject	punchParticle	= null;
 	// ==================================================
 	
 	
@@ -65,13 +73,21 @@ public class SCR_Player : MonoBehaviour {
 		x = PLAYER_START_X;
 		y = PLAYER_START_Y;
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
+		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 		
 		bossScript = SCR_Gameplay.instance.boss.GetComponent<SCR_Boss>();
 		target = Instantiate (PFB_Target);
 		target.SetActive (false);
 		
 		chargeCount = 0;
+		
+		if (SCR_Profile.martialEquip == (int)PunchType.BASIC) {
+			punchParticle = Instantiate (PFB_BasicParticle);
+			punchParticle.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE);
+			foreach(Transform child in punchParticle.transform) {
+				child.gameObject.SetActive (false);
+			}
+		}
 		
 		SwitchState (PlayerState.TALK);
 	}
@@ -120,9 +136,9 @@ public class SCR_Player : MonoBehaviour {
 		}
 		else if (state == PlayerState.CHARGE) {
 			chargeCount += dt;
-			bossScript.x = x - direction * PLAYER_GRAB_RANGE;
-			bossScript.y = y - PLAYER_GRAB_HEIGHT;
-			bossScript.direction = -direction;
+			//bossScript.x = x - direction * PLAYER_GRAB_RANGE;
+			//bossScript.y = y - PLAYER_GRAB_HEIGHT;
+			//bossScript.direction = -direction;
 			if (chargeCount >= PLAYER_CHARGE_TIME) {
 				chargeCount = 0;
 				SwitchState (PlayerState.THROW);
@@ -136,12 +152,12 @@ public class SCR_Player : MonoBehaviour {
 				SwitchState (PlayerState.WALK);
 			}
 		}
-		else if (state == PlayerState.FLY_UP || state == PlayerState.FLY_DOWN) {
+		else if (state == PlayerState.FLY_UP || state == PlayerState.PUNCH || state == PlayerState.FLY_DOWN) {
 			if (state == PlayerState.FLY_UP) {
 				var distance = SCR_Helper.DistanceBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
 				if (distance <= SCR_Profile.GetPunchRange()) {
 					Punch (distance);
-					SwitchState (PlayerState.FLY_DOWN);
+					SwitchState (PlayerState.PUNCH);
 					speedY = 0;
 				}
 				else if (y > SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H) {
@@ -151,7 +167,16 @@ public class SCR_Player : MonoBehaviour {
 				target.SetActive (true);
 				target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - SCR_Profile.GetPunchRange());
 			}
-			else  if (state == PlayerState.FLY_DOWN) {
+			else if (state == PlayerState.PUNCH) {
+				speedY -= SCR_Gameplay.GRAVITY * dt;
+				target.SetActive (false);
+				punchCount -= dt;
+				if (punchCount < 0) {
+					punchCount = 0;
+					SwitchState (PlayerState.FLY_DOWN);
+				}
+			}
+			else if (state == PlayerState.FLY_DOWN) {
 				speedY -= SCR_Gameplay.GRAVITY * dt;
 				target.SetActive (false);
 			}
@@ -185,7 +210,7 @@ public class SCR_Player : MonoBehaviour {
 		}
 		
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
+		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 	
 		if (cooldown > 0) {
 			cooldown -= dt;
@@ -200,8 +225,18 @@ public class SCR_Player : MonoBehaviour {
 		float punchX = SCR_Profile.GetPunchForce() * SCR_Helper.Sin (punchAngle);
 		float punchY = SCR_Profile.GetPunchForce() * (1 + SCR_Helper.Cos (punchAngle) * 0.33f);
 		
+		float particleX = (x + bossScript.x) * 0.5f;
+		float particleY = (y + bossScript.y) * 0.5f;
+		punchParticle.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + particleX, particleY, punchParticle.transform.position.z);
+		foreach(Transform child in punchParticle.transform) {
+			child.gameObject.SetActive (true);
+		}
+		
 		SCR_Gameplay.instance.punchNumber ++;
 		bossScript.Punch (punchX, Mathf.Abs(punchY));
+		
+		Time.timeScale = 0.2f;
+		punchCount = PLAYER_PUNCH_TIME;
 	}
 	// ==================================================
 	

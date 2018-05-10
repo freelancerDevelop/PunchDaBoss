@@ -207,6 +207,12 @@ public class SCR_Gameplay : MonoBehaviour {
 				if (Time.timeScale > 1) Time.timeScale = 1;
 			}
 		}
+		else {
+			if (Time.timeScale < 1) {
+				Time.timeScale += dt * 3.0f;
+				if (Time.timeScale > 1) Time.timeScale = 1;
+			}
+		}
 	}
 	
 	
