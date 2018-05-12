@@ -143,6 +143,13 @@ public class SCR_Player : MonoBehaviour {
 				chargeCount = 0;
 				SwitchState (PlayerState.THROW);
 				bossScript.Thrown();
+				
+				float particleX = (x + bossScript.x) * 0.5f;
+				float particleY = (y + bossScript.y) * 0.5f;
+				punchParticle.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + particleX, particleY, punchParticle.transform.position.z);
+				foreach(Transform child in punchParticle.transform) {
+					child.gameObject.SetActive (true);
+				}
 			}
 		}
 		else if (state == PlayerState.THROW) {
@@ -235,7 +242,7 @@ public class SCR_Player : MonoBehaviour {
 		SCR_Gameplay.instance.punchNumber ++;
 		bossScript.Punch (punchX, Mathf.Abs(punchY));
 		
-		Time.timeScale = 0.2f;
+		//Time.timeScale = 0.05f;
 		punchCount = PLAYER_PUNCH_TIME;
 	}
 	// ==================================================
