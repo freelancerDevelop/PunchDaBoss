@@ -59,6 +59,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114099341274546070
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -70,6 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26a90ec040fd244bb268552270c7bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PFB_Shadow: {fileID: 1379963925943356, guid: 88dc65e96e722174aa5f1c125dbe1396, type: 2}
   direction: 1
   x: 0
   y: 0
@@ -77,6 +79,7 @@ MonoBehaviour:
   speedY: 0
   rotation: 0
   rotateSpeed: 0
+  getHit: 0
 --- !u!212 &212684035878523678
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -90,6 +93,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:

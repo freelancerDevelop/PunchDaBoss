@@ -32,12 +32,14 @@ public class SCR_Player : MonoBehaviour {
 	public const float PLAYER_SIZE				= 200;
 	public const float PLAYER_UP_FRICTION		= 5000;
 	public const float PLAYER_SLAV_RANDOM		= 200;
+	
+	public const float PLAYER_SHADOW_OFFSET		= -120;
+	public const float PLAYER_SHADOW_DISTANCE	= 1500;
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Target;
+	public	GameObject	PFB_Shadow;
 	public	GameObject	PFB_BasicParticle;
-	
-	
 	// ==================================================
 	// Stuff
 	private Animator 	animator	= null;
@@ -57,6 +59,7 @@ public class SCR_Player : MonoBehaviour {
 	[System.NonSerialized] public 	float	targetY		= 0;
 	[System.NonSerialized] public	float	cooldown	= 0;
 	
+	private	GameObject	shadow			= null;
 	private	GameObject	target			= null;
 	private	GameObject	punchParticle	= null;
 	// ==================================================
@@ -78,6 +81,10 @@ public class SCR_Player : MonoBehaviour {
 		bossScript = SCR_Gameplay.instance.boss.GetComponent<SCR_Boss>();
 		target = Instantiate (PFB_Target);
 		target.SetActive (false);
+		
+		shadow = Instantiate (PFB_Shadow);
+		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + PLAYER_SHADOW_OFFSET, shadow.transform.position.z);
+		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 		
 		chargeCount = 0;
 		
@@ -218,6 +225,11 @@ public class SCR_Player : MonoBehaviour {
 		
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
+		
+		float shadowScale = 1 - (y - PLAYER_START_Y) / PLAYER_SHADOW_DISTANCE;
+		if (shadowScale < 0) shadowScale = 0;
+		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, shadow.transform.position.y, shadow.transform.position.z);
+		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * shadowScale, 1);
 	
 		if (cooldown > 0) {
 			cooldown -= dt;

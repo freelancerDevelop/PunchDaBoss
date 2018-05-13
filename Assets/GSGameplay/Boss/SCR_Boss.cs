@@ -25,6 +25,12 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_RUN_SPEED		= 600.0f;
 	public const float BOSS_MAX_SPEED_X		= 1000.0f;
 	public const float BOSS_SIZE			= 200;
+	
+	public const float BOSS_SHADOW_OFFSET	= -120;
+	public const float BOSS_SHADOW_DISTANCE	= 1500;
+	// ==================================================
+	// Prefab
+	public	GameObject	PFB_Shadow;
 	// ==================================================
 	// Stuff
 	private Animator 	animator	= null;
@@ -39,6 +45,8 @@ public class SCR_Boss : MonoBehaviour {
 	public float	rotation	= 0;
 	public float	rotateSpeed	= 0;
 	public bool		getHit		= false;
+	
+	private	GameObject	shadow	= null;
 	// ==================================================
 	
 	
@@ -54,6 +62,10 @@ public class SCR_Boss : MonoBehaviour {
 		y = BOSS_START_Y;
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
+		
+		shadow = Instantiate (PFB_Shadow);
+		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + BOSS_SHADOW_OFFSET, shadow.transform.position.z);
+		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
 		
 		rotation = 0;
 		
@@ -162,6 +174,11 @@ public class SCR_Boss : MonoBehaviour {
 		transform.position 			= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		transform.localScale 		= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
 		transform.localEulerAngles 	= new Vector3 (0, 0, rotation);
+		
+		float shadowScale = 1 - (y - BOSS_START_Y) / BOSS_SHADOW_DISTANCE;
+		if (shadowScale < 0) shadowScale = 0;
+		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, shadow.transform.position.y, shadow.transform.position.z);
+		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, 1);
 	}
 	// ==================================================
 	

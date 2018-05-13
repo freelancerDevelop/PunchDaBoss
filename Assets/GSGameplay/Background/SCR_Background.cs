@@ -11,7 +11,7 @@ public class SCR_Background : MonoBehaviour {
 	private const int 	BACKGROUND_PART 			= 5;
 	
 	private const float BACKGROUND_SCROLL_RATIO		= 0.02f;
-	private const float MIDDLEGROUND_SCROLL_RATIO	= 0.4f;
+	private const float MIDDLEGROUND_SCROLL_RATIO	= 0.2f;
 	private const float FOREGROUND_SCROLL_RATIO		= 1.0f;
 	
 	private const float MIDDLEGROUND_OFFSET			= 100;
@@ -94,10 +94,10 @@ public class SCR_Background : MonoBehaviour {
 			instance.background[BACKGROUND_PART-1].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -backgroundY + cameraY + BACKGROUND_HEIGHT, instance.background[BACKGROUND_PART-1].transform.position.z);
 		}
 		
-		float middlegroundY = cameraY * (1 + MIDDLEGROUND_SCROLL_RATIO);
+		float middlegroundY = cameraY * (-1 + MIDDLEGROUND_SCROLL_RATIO);
 		instance.middleground.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -middlegroundY + MIDDLEGROUND_OFFSET, instance.middleground.transform.position.z);
 		
-		float foregroundY = cameraY * (1 + FOREGROUND_SCROLL_RATIO);
+		float foregroundY = cameraY * (-1 + FOREGROUND_SCROLL_RATIO);
 		instance.foreground.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f, -foregroundY, instance.foreground.transform.position.z);
 		
 		for (int i=0; i<instance.cloudY.Length; i++) {
