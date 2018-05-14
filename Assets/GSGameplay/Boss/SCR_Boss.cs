@@ -13,14 +13,14 @@ public enum BossState {
 public class SCR_Boss : MonoBehaviour {
 	// ==================================================
 	// Const
-	public const float BOSS_START_X			= -100;
+	public const float BOSS_START_X			= -200;
 	public const float BOSS_START_Y			= 350;
-	public const float BOSS_SCALE			= 0.4f;
+	public const float BOSS_SCALE			= 0.8f;
 	public const float BOSS_REVERSE_X		= 50.0f;
 	public const float BOSS_THROWN_SPEED_X	= 1000.0f;
 	public const float BOSS_THROWN_SPEED_Y	= 2500.0f;
-	public const float BOSS_ROTATE_MIN		= 150.0f;
-	public const float BOSS_ROTATE_MAX		= 800.0f;
+	public const float BOSS_ROTATE_MIN		= 50.0f;
+	public const float BOSS_ROTATE_MAX		= 300.0f;
 	public const float BOSS_SLIDE_FRICTION	= 700.0f;
 	public const float BOSS_RUN_SPEED		= 600.0f;
 	public const float BOSS_MAX_SPEED_X		= 1000.0f;
@@ -28,9 +28,13 @@ public class SCR_Boss : MonoBehaviour {
 	
 	public const float BOSS_SHADOW_OFFSET	= -120;
 	public const float BOSS_SHADOW_DISTANCE	= 1500;
+	public const float BOSS_SMOKE_RATE		= 0.05f;
+	public const float BOSS_SMOKE_OFFSET_X	= 100;
+	public const float BOSS_SMOKE_OFFSET_Y	= -100;
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Shadow;
+	public	GameObject	PFB_Smoke;
 	// ==================================================
 	// Stuff
 	private Animator 	animator	= null;
@@ -47,6 +51,7 @@ public class SCR_Boss : MonoBehaviour {
 	public bool		getHit		= false;
 	
 	private	GameObject	shadow	= null;
+	private	GameObject	smoke	= null;
 	// ==================================================
 	
 	
@@ -61,11 +66,16 @@ public class SCR_Boss : MonoBehaviour {
 		x = BOSS_START_X;
 		y = BOSS_START_Y;
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
+		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 		
 		shadow = Instantiate (PFB_Shadow);
 		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + BOSS_SHADOW_OFFSET, shadow.transform.position.z);
-		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
+		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
+		
+		smoke = Instantiate (PFB_Smoke);
+		smoke.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
+		ParticleSystem.EmissionModule emission = smoke.GetComponent<ParticleSystem>().emission;
+		emission.rateOverTime = 0;
 		
 		rotation = 0;
 		
@@ -110,13 +120,13 @@ public class SCR_Boss : MonoBehaviour {
 			if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
 				x = -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X);
 				speedX = -speedX;
-				direction = 1;
+				//direction = 1;
 				RandomRotate ();
 			}
 			else if (x >= (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
 				x = (SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X);
 				speedX = -speedX;
-				direction = -1;
+				//direction = -1;
 				RandomRotate ();
 			}
 			
@@ -131,6 +141,8 @@ public class SCR_Boss : MonoBehaviour {
 			else if (y <= BOSS_START_Y) {
 				y = BOSS_START_Y;
 				SwitchState (BossState.SLIDE);
+				
+				smoke.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x + BOSS_SMOKE_OFFSET_X * direction, y + BOSS_SMOKE_OFFSET_Y, smoke.transform.position.z);
 			}
 			
 			rotation += rotateSpeed * dt;
@@ -138,6 +150,7 @@ public class SCR_Boss : MonoBehaviour {
 		else if (state == BossState.SLIDE) {
 			if (speedX > 0) {
 				speedX -= BOSS_SLIDE_FRICTION * dt;
+				direction = 1;
 				if (speedX < 0) {
 					speedX = 0;
 					SwitchState (BossState.RUN);
@@ -145,11 +158,16 @@ public class SCR_Boss : MonoBehaviour {
 			}
 			else {
 				speedX += BOSS_SLIDE_FRICTION * dt;
+				direction = -1;
 				if (speedX > 0) {
 					speedX = 0;
 					SwitchState (BossState.RUN);
 				}
 			}
+			
+			smoke.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x + BOSS_SMOKE_OFFSET_X * direction, y + BOSS_SMOKE_OFFSET_Y, smoke.transform.position.z);
+			ParticleSystem.EmissionModule emission = smoke.GetComponent<ParticleSystem>().emission;
+			emission.rateOverTime = Mathf.Abs(speedX) * BOSS_SMOKE_RATE;
 			
 			x += speedX * dt;
 			
@@ -172,7 +190,7 @@ public class SCR_Boss : MonoBehaviour {
 		}
 		
 		transform.position 			= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 		= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
+		transform.localScale 		= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
 		transform.localEulerAngles 	= new Vector3 (0, 0, rotation);
 		
 		float shadowScale = 1 - (y - BOSS_START_Y) / BOSS_SHADOW_DISTANCE;

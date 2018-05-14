@@ -264,4 +264,9 @@ public class SCR_Gameplay : MonoBehaviour {
 			}
 		}
 	}
+	
+	
+	public void ShakeCamera (float magnitude, float duration) {
+		
+	}
 }

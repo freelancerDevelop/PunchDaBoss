@@ -17,12 +17,12 @@ public enum PlayerState {
 public class SCR_Player : MonoBehaviour {
 	// ==================================================
 	// Const
-	public const float PLAYER_START_X			= 100;
+	public const float PLAYER_START_X			= 200;
 	public const float PLAYER_START_Y			= 350;
 	public const float PLAYER_SCALE				= 0.8f;
-	public const float PLAYER_WALK_SPEED		= 400.0f;
+	public const float PLAYER_WALK_SPEED		= 600.0f;
 	public const float PLAYER_GRAB_RANGE		= 100.0f;
-	public const float PLAYER_GRAB_HEIGHT		= 100.0f;
+	public const float PLAYER_GRAB_HEIGHT		= 50.0f;
 	public const float PLAYER_REVERSE_X			= 140.0f;
 	
 	public const float PLAYER_CHARGE_TIME		= 0.5f;
@@ -39,6 +39,7 @@ public class SCR_Player : MonoBehaviour {
 	// Prefab
 	public	GameObject	PFB_Target;
 	public	GameObject	PFB_Shadow;
+	public	GameObject	PFB_Trail;
 	public	GameObject	PFB_BasicParticle;
 	// ==================================================
 	// Stuff
@@ -59,8 +60,9 @@ public class SCR_Player : MonoBehaviour {
 	[System.NonSerialized] public 	float	targetY		= 0;
 	[System.NonSerialized] public	float	cooldown	= 0;
 	
-	private	GameObject	shadow			= null;
 	private	GameObject	target			= null;
+	private	GameObject	shadow			= null;
+	private	GameObject	trail			= null;
 	private	GameObject	punchParticle	= null;
 	// ==================================================
 	
@@ -87,6 +89,9 @@ public class SCR_Player : MonoBehaviour {
 		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
 		
 		chargeCount = 0;
+		
+		trail = Instantiate (PFB_Trail);
+		trail.GetComponent<SCR_Trail>().TurnParticleOff();
 		
 		if (SCR_Profile.martialEquip == (int)PunchType.BASIC) {
 			punchParticle = Instantiate (PFB_BasicParticle);
@@ -173,13 +178,17 @@ public class SCR_Player : MonoBehaviour {
 					Punch (distance);
 					SwitchState (PlayerState.PUNCH);
 					speedY = 0;
+					trail.GetComponent<SCR_Trail>().TurnParticleOff();
 				}
 				else if (y > SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H) {
-					speedY = 0;
 					SwitchState (PlayerState.FLY_DOWN);
+					speedY = 0;
+					trail.GetComponent<SCR_Trail>().TurnParticleOff();
 				}
 				target.SetActive (true);
 				target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - SCR_Profile.GetPunchRange());
+				
+				trail.GetComponent<SCR_Trail>().MoveTo (x, y);
 			}
 			else if (state == PlayerState.PUNCH) {
 				speedY -= SCR_Gameplay.GRAVITY * dt;
@@ -321,6 +330,9 @@ public class SCR_Player : MonoBehaviour {
 			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, py);
 			speedX = SCR_Profile.GetPunchSpeed() * SCR_Helper.Sin (flyAngle);
 			speedY = SCR_Profile.GetPunchSpeed() * SCR_Helper.Cos (flyAngle);
+			
+			trail.GetComponent<SCR_Trail>().JumpTo (x, y);
+			trail.GetComponent<SCR_Trail>().TurnParticleOn();
 			
 			target.GetComponent<SCR_Target>().HideLine();
 			

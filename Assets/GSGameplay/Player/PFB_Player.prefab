@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1379963925943356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -12}
+  m_LocalPosition: {x: 0, y: 0, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -73,6 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PFB_Target: {fileID: 1825876431103544, guid: cec1c81da5834bb41892ffbf9ac10bad, type: 2}
   PFB_Shadow: {fileID: 1379963925943356, guid: 88dc65e96e722174aa5f1c125dbe1396, type: 2}
+  PFB_Trail: {fileID: 1793611705320234, guid: ba59d7232f87dcf499e791f7f11ef0f5, type: 2}
   PFB_BasicParticle: {fileID: 1863523605684764, guid: 922be8d6a2c15b84587851758d8e12dc,
     type: 2}
 --- !u!212 &212578281504200068
