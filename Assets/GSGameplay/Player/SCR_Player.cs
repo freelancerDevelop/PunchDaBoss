@@ -17,12 +17,12 @@ public enum PlayerState {
 public class SCR_Player : MonoBehaviour {
 	// ==================================================
 	// Const
-	public const float PLAYER_START_X			= 200;
+	public const float PLAYER_START_X			= 150;
 	public const float PLAYER_START_Y			= 350;
 	public const float PLAYER_SCALE				= 0.8f;
-	public const float PLAYER_WALK_SPEED		= 600.0f;
-	public const float PLAYER_GRAB_RANGE		= 100.0f;
-	public const float PLAYER_GRAB_HEIGHT		= 50.0f;
+	public const float PLAYER_WALK_SPEED		= 400.0f;
+	public const float PLAYER_GRAB_RANGE		= 120.0f;
+	public const float PLAYER_GRAB_HEIGHT		= 70.0f;
 	public const float PLAYER_REVERSE_X			= 140.0f;
 	
 	public const float PLAYER_CHARGE_TIME		= 0.5f;

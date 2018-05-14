@@ -13,7 +13,7 @@ public enum BossState {
 public class SCR_Boss : MonoBehaviour {
 	// ==================================================
 	// Const
-	public const float BOSS_START_X			= -200;
+	public const float BOSS_START_X			= -150;
 	public const float BOSS_START_Y			= 350;
 	public const float BOSS_SCALE			= 0.8f;
 	public const float BOSS_REVERSE_X		= 50.0f;
@@ -34,6 +34,7 @@ public class SCR_Boss : MonoBehaviour {
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Shadow;
+	public	GameObject	PFB_Blood;
 	public	GameObject	PFB_Smoke;
 	// ==================================================
 	// Stuff
@@ -51,6 +52,7 @@ public class SCR_Boss : MonoBehaviour {
 	public bool		getHit		= false;
 	
 	private	GameObject	shadow	= null;
+	private	GameObject	blood	= null;
 	private	GameObject	smoke	= null;
 	// ==================================================
 	
@@ -72,8 +74,12 @@ public class SCR_Boss : MonoBehaviour {
 		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + BOSS_SHADOW_OFFSET, shadow.transform.position.z);
 		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 		
+		blood = Instantiate (PFB_Blood);
+		blood.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
+		blood.SetActive (false);
+		
 		smoke = Instantiate (PFB_Smoke);
-		smoke.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
+		smoke.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 		ParticleSystem.EmissionModule emission = smoke.GetComponent<ParticleSystem>().emission;
 		emission.rateOverTime = 0;
 		
@@ -197,6 +203,8 @@ public class SCR_Boss : MonoBehaviour {
 		if (shadowScale < 0) shadowScale = 0;
 		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, shadow.transform.position.y, shadow.transform.position.z);
 		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, 1);
+	
+		blood.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, blood.transform.position.z);
 	}
 	// ==================================================
 	
@@ -221,6 +229,8 @@ public class SCR_Boss : MonoBehaviour {
 			speedY = BOSS_THROWN_SPEED_Y;
 			RandomRotate ();
 			SwitchState (BossState.FLY);
+			
+			blood.SetActive(true);
 		}
 	}
 	public bool IsFlying () {
@@ -242,6 +252,8 @@ public class SCR_Boss : MonoBehaviour {
 			RandomRotate ();
 			getHit = true;
 			SCR_Gameplay.instance.TriggerTutorial (TutorialStep.HIT);
+			
+			blood.SetActive(true);
 		}
 	}
 	public void ReAdjustY () {
