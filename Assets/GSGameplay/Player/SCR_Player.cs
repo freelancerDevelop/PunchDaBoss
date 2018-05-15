@@ -69,6 +69,8 @@ public class SCR_Player : MonoBehaviour {
 	private	GameObject	trail			= null;
 	private	GameObject	punchParticle	= null;
 	private	GameObject	landParticle	= null;
+	
+	
 	// ==================================================
 	
 	

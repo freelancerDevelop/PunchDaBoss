@@ -75,6 +75,8 @@ MonoBehaviour:
   PFB_Shadow: {fileID: 1379963925943356, guid: 88dc65e96e722174aa5f1c125dbe1396, type: 2}
   PFB_Trail: {fileID: 1793611705320234, guid: ba59d7232f87dcf499e791f7f11ef0f5, type: 2}
   PFB_Land: {fileID: 1873950423989702, guid: ebd2a562cfaaeb64898eb46b5c43bc3c, type: 2}
+  PFB_CooldownParticle: {fileID: 1125368906207304, guid: 068c92395d998534fabbabb705489ad1,
+    type: 2}
   PFB_BasicParticle: {fileID: 1863523605684764, guid: 922be8d6a2c15b84587851758d8e12dc,
     type: 2}
   PFB_SuckerParticle: {fileID: 1863523605684764, guid: e8702250411ffb34caf0e8ff100e9f02,
