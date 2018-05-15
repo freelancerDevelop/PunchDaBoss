@@ -35,12 +35,16 @@ public class SCR_Player : MonoBehaviour {
 	
 	public const float PLAYER_SHADOW_OFFSET		= -120;
 	public const float PLAYER_SHADOW_DISTANCE	= 1500;
+	public const float PLAYER_SMOKE_OFFSET_Y	= -130;
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Target;
 	public	GameObject	PFB_Shadow;
 	public	GameObject	PFB_Trail;
+	public	GameObject	PFB_Land;
+	
 	public	GameObject	PFB_BasicParticle;
+	public	GameObject	PFB_SuckerParticle;
 	// ==================================================
 	// Stuff
 	private Animator 	animator	= null;
@@ -64,6 +68,7 @@ public class SCR_Player : MonoBehaviour {
 	private	GameObject	shadow			= null;
 	private	GameObject	trail			= null;
 	private	GameObject	punchParticle	= null;
+	private	GameObject	landParticle	= null;
 	// ==================================================
 	
 	
@@ -78,7 +83,7 @@ public class SCR_Player : MonoBehaviour {
 		x = PLAYER_START_X;
 		y = PLAYER_START_Y;
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
+		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE);
 		
 		bossScript = SCR_Gameplay.instance.boss.GetComponent<SCR_Boss>();
 		target = Instantiate (PFB_Target);
@@ -86,7 +91,11 @@ public class SCR_Player : MonoBehaviour {
 		
 		shadow = Instantiate (PFB_Shadow);
 		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + PLAYER_SHADOW_OFFSET, shadow.transform.position.z);
-		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, 1);
+		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE);
+		
+		landParticle = Instantiate (PFB_Land);
+		landParticle.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE, SCR_Gameplay.SCREEN_SCALE * PLAYER_SCALE);
+		landParticle.SetActive (false);
 		
 		chargeCount = 0;
 		
@@ -95,10 +104,17 @@ public class SCR_Player : MonoBehaviour {
 		
 		if (SCR_Profile.martialEquip == (int)PunchType.BASIC) {
 			punchParticle = Instantiate (PFB_BasicParticle);
-			punchParticle.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE);
-			foreach(Transform child in punchParticle.transform) {
-				child.gameObject.SetActive (false);
-			}
+		}
+		else if (SCR_Profile.martialEquip == (int)PunchType.SUCKER) {
+			punchParticle = Instantiate (PFB_SuckerParticle);
+		}
+		else {
+			punchParticle = Instantiate (PFB_BasicParticle);
+		}
+		
+		punchParticle.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE);
+		foreach(Transform child in punchParticle.transform) {
+			child.gameObject.SetActive (false);
 		}
 		
 		SwitchState (PlayerState.TALK);
@@ -220,6 +236,9 @@ public class SCR_Player : MonoBehaviour {
 				if (y <= SCR_Gameplay.instance.cameraHeight - PLAYER_SIZE || y <= PLAYER_START_Y) {
 					y = PLAYER_START_Y;
 					SwitchState (PlayerState.WALK);
+					
+					landParticle.SetActive (true);
+					landParticle.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + PLAYER_SMOKE_OFFSET_Y, landParticle.transform.position.z);
 				}
 			}
 		}
