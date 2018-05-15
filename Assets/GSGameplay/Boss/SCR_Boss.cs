@@ -54,6 +54,7 @@ public class SCR_Boss : MonoBehaviour {
 	private	GameObject	shadow	= null;
 	private	GameObject	blood	= null;
 	private	GameObject	smoke	= null;
+	private	GameObject	tears	= null;
 	// ==================================================
 	
 	
@@ -82,6 +83,9 @@ public class SCR_Boss : MonoBehaviour {
 		smoke.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 		ParticleSystem.EmissionModule emission = smoke.GetComponent<ParticleSystem>().emission;
 		emission.rateOverTime = 0;
+		
+		tears = transform.GetChild(0).gameObject;
+		tears.SetActive (false);
 		
 		rotation = 0;
 		
@@ -196,13 +200,13 @@ public class SCR_Boss : MonoBehaviour {
 		}
 		
 		transform.position 			= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 		= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, 1);
+		transform.localScale 		= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 		transform.localEulerAngles 	= new Vector3 (0, 0, rotation);
 		
 		float shadowScale = 1 - (y - BOSS_START_Y) / BOSS_SHADOW_DISTANCE;
 		if (shadowScale < 0) shadowScale = 0;
 		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, shadow.transform.position.y, shadow.transform.position.z);
-		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, 1);
+		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 	
 		blood.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, blood.transform.position.z);
 	}
@@ -231,6 +235,7 @@ public class SCR_Boss : MonoBehaviour {
 			SwitchState (BossState.FLY);
 			
 			blood.SetActive(true);
+			tears.SetActive (true);
 		}
 	}
 	public bool IsFlying () {
