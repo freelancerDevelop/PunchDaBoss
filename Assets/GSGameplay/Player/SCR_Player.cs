@@ -18,7 +18,7 @@ public class SCR_Player : MonoBehaviour {
 	// ==================================================
 	// Const
 	public const float PLAYER_START_X			= 150;
-	public const float PLAYER_START_Y			= 350;
+	public const float PLAYER_START_Y			= 250;
 	public const float PLAYER_SCALE				= 0.8f;
 	public const float PLAYER_WALK_SPEED		= 400.0f;
 	public const float PLAYER_GRAB_RANGE		= 120.0f;
@@ -203,8 +203,8 @@ public class SCR_Player : MonoBehaviour {
 					speedY = 0;
 					trail.GetComponent<SCR_Trail>().TurnParticleOff();
 				}
-				target.SetActive (true);
-				target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - SCR_Profile.GetPunchRange());
+				//target.SetActive (true);
+				//target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - SCR_Profile.GetPunchRange());
 				
 				trail.GetComponent<SCR_Trail>().MoveTo (x, y);
 			}
@@ -355,7 +355,7 @@ public class SCR_Player : MonoBehaviour {
 			trail.GetComponent<SCR_Trail>().JumpTo (x, y);
 			trail.GetComponent<SCR_Trail>().TurnParticleOn();
 			
-			target.GetComponent<SCR_Target>().HideLine();
+			target.SetActive (false);
 			
 			SwitchState (PlayerState.FLY_UP);
 			
@@ -377,6 +377,10 @@ public class SCR_Player : MonoBehaviour {
 		if (y > PLAYER_SIZE + SCR_Gameplay.SCREEN_H) {
 			y = PLAYER_SIZE + SCR_Gameplay.SCREEN_H;
 		}
+	}
+	
+	public float GetCoolDown () {
+		return 1.0f - (cooldown / SCR_Profile.GetPunchCooldown());
 	}
 	// ==================================================
 }

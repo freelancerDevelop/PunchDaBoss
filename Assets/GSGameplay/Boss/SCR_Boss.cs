@@ -14,7 +14,7 @@ public class SCR_Boss : MonoBehaviour {
 	// ==================================================
 	// Const
 	public const float BOSS_START_X			= -150;
-	public const float BOSS_START_Y			= 350;
+	public const float BOSS_START_Y			= 250;
 	public const float BOSS_SCALE			= 0.8f;
 	public const float BOSS_REVERSE_X		= 50.0f;
 	public const float BOSS_THROWN_SPEED_X	= 500.0f;

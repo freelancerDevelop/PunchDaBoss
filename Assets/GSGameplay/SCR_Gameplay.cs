@@ -57,6 +57,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject	txtCurrentHeight;
 	public GameObject	pnlTutorial;
 	public GameObject	txtTutorial;
+	public GameObject	imgCooldown;
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
@@ -106,6 +107,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		pnlResult.SetActive (false);
 		pnlTutorial.SetActive (false);
+		imgCooldown.SetActive (false);
 		txtPunchName.GetComponent<Text>().text = SCR_Profile.GetPunchName();
 	
 		TriggerTutorial (TutorialStep.GRAB);
@@ -121,13 +123,22 @@ public class SCR_Gameplay : MonoBehaviour {
 		float dt = Time.deltaTime;
 		
 		if (Input.GetMouseButton(0)) {
+			float touchX = Input.mousePosition.x * TOUCH_SCALE;
+			float touchY = Input.mousePosition.y * TOUCH_SCALE;
+			
 			if (gameState == GameState.PUNCHING) {
-				float touchX = Input.mousePosition.x * TOUCH_SCALE;
-				float touchY = Input.mousePosition.y * TOUCH_SCALE;
-				
 				if (SCR_Profile.showTutorial == 0 || tutorialStep == TutorialStep.AIM || tutorialStep == TutorialStep.PUNCH) {
 					player.GetComponent<SCR_Player>().Aim (touchX, touchY + cameraHeight);
 					TriggerTutorial (TutorialStep.PUNCH);
+				}
+					
+				if (player.GetComponent<SCR_Player>().GetCoolDown() >= 0.99f) {
+					imgCooldown.SetActive (false);
+				}
+				else {
+					imgCooldown.SetActive (true);
+					imgCooldown.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = player.GetComponent<SCR_Player>().GetCoolDown();
+					imgCooldown.GetComponent<RectTransform>().anchoredPosition = new Vector2(touchX, touchY);
 				}
 			}
 			else if (gameState == GameState.BOSS_RUNNING) {
@@ -154,6 +165,8 @@ public class SCR_Gameplay : MonoBehaviour {
 				
 				TriggerTutorial (TutorialStep.CONTINUE);
 			}
+			
+			imgCooldown.SetActive (false);
 		}
 		
 		if (gameState == GameState.PUNCHING) {
