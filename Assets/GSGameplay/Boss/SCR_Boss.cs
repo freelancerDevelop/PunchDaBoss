@@ -17,7 +17,7 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_START_Y			= 250;
 	public const float BOSS_SCALE			= 0.8f;
 	public const float BOSS_REVERSE_X		= 50.0f;
-	public const float BOSS_THROWN_SPEED_X	= 500.0f;
+	public const float BOSS_THROWN_SPEED_X	= 1000.0f;
 	public const float BOSS_THROWN_SPEED_Y	= 2500.0f;
 	public const float BOSS_ROTATE_MIN		= 50.0f;
 	public const float BOSS_ROTATE_MAX		= 300.0f;
@@ -248,7 +248,13 @@ public class SCR_Boss : MonoBehaviour {
 	public void Thrown () {
 		if (state == BossState.GRAB) {
 			y = BOSS_START_Y;
-			speedX = BOSS_THROWN_SPEED_X * -direction;
+			if (SCR_Profile.showTutorial == 1) {
+				speedX = BOSS_THROWN_SPEED_X * 0.2f * -direction;
+			}
+			else {
+				speedX = Random.Range (0, BOSS_THROWN_SPEED_X) * -direction;
+			}
+			
 			speedY = BOSS_THROWN_SPEED_Y;
 			RandomRotate ();
 			SwitchState (BossState.FLY);

@@ -154,7 +154,7 @@ public class SCR_Player : MonoBehaviour {
 					}
 				}
 			}
-			else if (state == PlayerState.GRAB) {
+			if (state == PlayerState.GRAB) {
 				bossScript.x = x + direction * PLAYER_GRAB_RANGE;
 				bossScript.y = y + PLAYER_GRAB_HEIGHT;
 				bossScript.direction = -direction;
@@ -313,16 +313,13 @@ public class SCR_Player : MonoBehaviour {
 		target.SetActive (false);
 	}
 	public void Aim (float px, float py) {
-		if (cooldown <= 0) {
+		if (state == PlayerState.WALK) {
 			target.SetActive (true);
 			target.GetComponent<SCR_Target>().SetPosition (px - SCR_Gameplay.SCREEN_W * 0.5f, py);
 			
 			float x1, x2, y1, y2;
 			x1 = x;
-			y1 = y;
-			if (py > y1 + SCR_Gameplay.SCREEN_H + PLAYER_SIZE) {
-				y1 = py - SCR_Gameplay.SCREEN_H - PLAYER_SIZE;
-			}
+			y1 = SCR_Gameplay.instance.cameraHeight;
 			
 			float aimAngle = SCR_Helper.AngleBetweenTwoPoint (x1, y1, px - SCR_Gameplay.SCREEN_W * 0.5f, py);
 			x2 = x1 + SCR_Gameplay.SCREEN_H * SCR_Helper.Sin (aimAngle) * 2;

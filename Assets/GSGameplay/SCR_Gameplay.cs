@@ -48,8 +48,6 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static SCR_Gameplay instance 		= null;
 	
 	// On-screen object
-	public GameObject	pnlCooldown;
-	public GameObject	txtPunchName;
 	public GameObject	pnlResult;
 	public GameObject	txtPunchNumber;
 	public GameObject	txtHeightNumber;
@@ -108,7 +106,6 @@ public class SCR_Gameplay : MonoBehaviour {
 		pnlResult.SetActive (false);
 		pnlTutorial.SetActive (false);
 		imgCooldown.SetActive (false);
-		txtPunchName.GetComponent<Text>().text = SCR_Profile.GetPunchName();
 	
 		TriggerTutorial (TutorialStep.GRAB);
 	}
@@ -122,23 +119,26 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		float dt = Time.deltaTime;
 		
+		if (gameState == GameState.PUNCHING && player.GetComponent<SCR_Player>().GetCoolDown() < 1.0f) {
+			imgCooldown.SetActive (true);
+			imgCooldown.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = player.GetComponent<SCR_Player>().GetCoolDown();
+		}
+		else {
+			imgCooldown.SetActive (false);
+		}
+		
 		if (Input.GetMouseButton(0)) {
 			float touchX = Input.mousePosition.x * TOUCH_SCALE;
 			float touchY = Input.mousePosition.y * TOUCH_SCALE;
 			
-			if (gameState == GameState.PUNCHING) {
+			if (gameState == GameState.TALKING) {
+				gameState = GameState.GRABBING;
+				player.GetComponent<SCR_Player>().GoGrabTheBoss();
+			}
+			else if (gameState == GameState.PUNCHING) {
 				if (SCR_Profile.showTutorial == 0 || tutorialStep == TutorialStep.AIM || tutorialStep == TutorialStep.PUNCH) {
 					player.GetComponent<SCR_Player>().Aim (touchX, touchY + cameraHeight);
 					TriggerTutorial (TutorialStep.PUNCH);
-				}
-					
-				if (player.GetComponent<SCR_Player>().GetCoolDown() >= 0.99f) {
-					imgCooldown.SetActive (false);
-				}
-				else {
-					imgCooldown.SetActive (true);
-					imgCooldown.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = player.GetComponent<SCR_Player>().GetCoolDown();
-					imgCooldown.GetComponent<RectTransform>().anchoredPosition = new Vector2(touchX, touchY);
 				}
 			}
 			else if (gameState == GameState.BOSS_RUNNING) {
@@ -147,12 +147,8 @@ public class SCR_Gameplay : MonoBehaviour {
 				}
 			}
 		}
-		else if (Input.GetMouseButtonUp(0)) {
-			if (gameState == GameState.TALKING) {
-				gameState = GameState.GRABBING;
-				player.GetComponent<SCR_Player>().GoGrabTheBoss();
-			}
-			else if (gameState == GameState.GRABBING) {
+		else {
+			if (gameState == GameState.GRABBING) {
 				if (player.GetComponent<SCR_Player>().IsGrabbingTheBoss()) {
 					gameState = GameState.PUNCHING;
 					player.GetComponent<SCR_Player>().ThrowTheBoss();
@@ -165,8 +161,6 @@ public class SCR_Gameplay : MonoBehaviour {
 				
 				TriggerTutorial (TutorialStep.CONTINUE);
 			}
-			
-			imgCooldown.SetActive (false);
 		}
 		
 		if (gameState == GameState.PUNCHING) {
@@ -206,16 +200,13 @@ public class SCR_Gameplay : MonoBehaviour {
 			txtCurrentHeight.GetComponent<Text>().text = maxBossY.ToString();
 		}
 		
-		float cooldown = player.GetComponent<SCR_Player>().cooldown;
-		pnlCooldown.GetComponent<RectTransform>().sizeDelta = new Vector2(512, 512 * cooldown / SCR_Profile.GetPunchCooldown());
-		
 		if (SCR_Profile.showTutorial == 1) {
 			if (tutorialStep != TutorialStep.AIM && tutorialStep != TutorialStep.PUNCH && Time.timeScale < 1) {
 				if (tutorialStep == TutorialStep.MISS) {
-					Time.timeScale += dt * 3.0f;
+					Time.timeScale += dt * 5.0f;
 				}
 				else {
-					Time.timeScale += dt * 0.5f;
+					Time.timeScale += dt * 2.0f;
 				}
 				if (Time.timeScale > 1) Time.timeScale = 1;
 			}
@@ -247,21 +238,22 @@ public class SCR_Gameplay : MonoBehaviour {
 				pnlTutorial.SetActive (true);
 					
 				if (step == TutorialStep.GRAB) {
-					txtTutorial.GetComponent<Text>().text = "Tap anywhere to grab your boss!";
+					txtTutorial.GetComponent<Text>().text = "Tap anywhere and hold to grab your boss!";
 				}
 				else if (step == TutorialStep.THROW) {
-					txtTutorial.GetComponent<Text>().text = "Now, tap anywhere to throw him upward.";
+					txtTutorial.GetComponent<Text>().text = "Release your finger to throw him upward.";
 				}
 				else if (step == TutorialStep.AIM) {
 					Time.timeScale = 0.05f;
-					txtTutorial.GetComponent<Text>().text = "Tap and hold your finger to aim your punch. Aim slightly ahead of his trajectory.";
+					txtTutorial.GetComponent<Text>().text = "Tap and hold your finger to aim your punch.";
 				}
 				else if (step == TutorialStep.PUNCH) {
 					Time.timeScale = 0.05f;
-					txtTutorial.GetComponent<Text>().text = "Remember, always aim slightly ahead of his trajectory. Release your finger to rush up and punch him.";
+					txtTutorial.GetComponent<Text>().text = "Release your finger to rush up and punch him.";
 				}
 				else if (step == TutorialStep.CONTINUE) {
-					txtTutorial.GetComponent<Text>().text = "The cooldown is on the top left corner of the screen.";
+					txtTutorial.GetComponent<Text>().text = "";
+					pnlTutorial.SetActive (false);
 				}
 				else if (step == TutorialStep.HIT) {
 					txtTutorial.GetComponent<Text>().text = "Nice hit! Now, keep punching your boss as high as possible.";

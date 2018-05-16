@@ -44,9 +44,9 @@ public class SCR_Profile {
 	public static void Init() {
 		if (martialMoves == null) {
 			martialMoves = new MartialMove[6];
-			martialMoves[(int)PunchType.BASIC] 		= new MartialMove ("Basic punch", 	0, 		200.0f, 	3200.0f, 	4000.0f,	2.0f,	"Your basic punch. Not too special, but did its job every time.");
-			martialMoves[(int)PunchType.SUCKER] 	= new MartialMove ("Sucker punch", 	100, 	180.0f, 	3800.0f, 	4500.0f, 	2.4f,	"Exclusively for your boss! Better than basic punch, but with higher cooldown.");
-			martialMoves[(int)PunchType.SLAV] 		= new MartialMove ("Slav punch", 	200, 	200.0f, 	4500.0f, 	5000.0f, 	1.2f,	"Just drink enough Vodka and you can execute this. Very powerful but wildly inaccurate. (Vodka, you know...)");
+			martialMoves[(int)PunchType.BASIC] 		= new MartialMove ("Basic punch", 	0, 		200.0f, 	2900.0f, 	4000.0f,	1.0f,	"Your basic punch. Not too special, but did its job every time.");
+			martialMoves[(int)PunchType.SUCKER] 	= new MartialMove ("Sucker punch", 	100, 	180.0f, 	3800.0f, 	4500.0f, 	1.5f,	"Exclusively for your boss! Better than basic punch, but with higher cooldown.");
+			martialMoves[(int)PunchType.SLAV] 		= new MartialMove ("Slav punch", 	200, 	200.0f, 	4500.0f, 	5000.0f, 	1.0f,	"Just drink enough Vodka and you can execute this. Very powerful but wildly inaccurate. (Vodka, you know...)");
 			martialMoves[(int)PunchType.TAICHI] 	= new MartialMove ("Tai-chi punch", 600, 	220.0f, 	6000.0f, 	2000.0f, 	3.6f,	"When your boss said 'You are a slow worker!', show him this. Extremely powerful punch, but with a pathetic speed.");
 			martialMoves[(int)PunchType.KUNGFU] 	= new MartialMove ("Kung F-U", 		1000, 	130.0f, 	4600.0f, 	6000.0f, 	2.6f,	"There is no better way to say 'F-U' to someone than this. A fast punch, but require high preccision.");
 			martialMoves[(int)PunchType.NINJUTSU] 	= new MartialMove ("Ninjutsu", 		2000, 	250.0f, 	4200.0f, 	5500.0f, 	2.9f,	"The time that you're supposed to work, you spent on learning something else. An ez to hit punch with a long cooldown.");

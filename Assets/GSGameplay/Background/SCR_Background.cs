@@ -15,8 +15,8 @@ public class SCR_Background : MonoBehaviour {
 	private const float MIDDLEGROUND_2_SCROLL_RATIO	= 0.15f;
 	private const float FOREGROUND_SCROLL_RATIO		= 1.0f;
 	
-	private const float MIDDLEGROUND_1_OFFSET		= 400;
-	private const float MIDDLEGROUND_2_OFFSET		= 200;
+	private const float MIDDLEGROUND_1_OFFSET		= 200;
+	private const float MIDDLEGROUND_2_OFFSET		= 80;
 	
 	private const float	CLOUD_SIZE		 			= 200;
 	private const float	CLOUD_SIZE_SPACING 			= 1000;
