@@ -1191,6 +1191,7 @@ MonoBehaviour:
   - {fileID: 1010359996667340, guid: 9fecfa4a45730ce4d8dc9577b8ecdb1e, type: 2}
   - {fileID: 1878808560174890, guid: f636be95ea9a6eb489567e232da27c16, type: 2}
   - {fileID: 1878808560174890, guid: d4b4001b10f42f947b4fec8cdf3010eb, type: 2}
+  - {fileID: 1878808560174890, guid: 6183df9831c5a7342b6c19ad71aa9f94, type: 2}
   PFB_Middleground_1: {fileID: 1128205936271108, guid: 64c1080f4580d744bbe206ecd219f12a,
     type: 2}
   PFB_Middleground_2: {fileID: 1128205936271108, guid: 0c81ffce11d2b6a41b020dafd2c26cf1,
@@ -1309,6 +1310,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PFB_Player: {fileID: 1379963925943356, guid: 67eab74d95932b54199dd5f1ec141fd9, type: 2}
   PFB_Boss: {fileID: 1221462245988634, guid: d4b0af8ce9b0fdd4f966072ce8f75f82, type: 2}
+  PFB_ComboText: {fileID: 1966006480992714, guid: 8db0710544ce1424c8e69c58d010a633,
+    type: 2}
+  cvsMain: {fileID: 309050413}
   pnlResult: {fileID: 1505503516}
   txtPunchNumber: {fileID: 909636046}
   txtHeightNumber: {fileID: 1393854296}

@@ -60,8 +60,6 @@ public class SCR_Player : MonoBehaviour {
 	[System.NonSerialized] public	float	flyAngle	= 0;
 	[System.NonSerialized] public 	float	speedX		= 0;
 	[System.NonSerialized] public 	float	speedY		= 0;
-	[System.NonSerialized] public 	float	targetX		= 0;
-	[System.NonSerialized] public 	float	targetY		= 0;
 	[System.NonSerialized] public	float	cooldown	= 0;
 	
 	private	GameObject	target			= null;
@@ -69,6 +67,11 @@ public class SCR_Player : MonoBehaviour {
 	private	GameObject	trail			= null;
 	private	GameObject	punchParticle	= null;
 	private	GameObject	landParticle	= null;
+	private	bool		ricocheted		= false;
+	private	float		currentAimX		= 0;
+	private	float		currentAimY		= 0;
+	private	float		targetX			= 0;
+	private	float		targetY			= 0;
 	
 	
 	// ==================================================
@@ -166,9 +169,6 @@ public class SCR_Player : MonoBehaviour {
 		}
 		else if (state == PlayerState.CHARGE) {
 			chargeCount += dt;
-			//bossScript.x = x - direction * PLAYER_GRAB_RANGE;
-			//bossScript.y = y - PLAYER_GRAB_HEIGHT;
-			//bossScript.direction = -direction;
 			if (chargeCount >= PLAYER_CHARGE_TIME) {
 				chargeCount = 0;
 				SwitchState (PlayerState.THROW);
@@ -203,8 +203,6 @@ public class SCR_Player : MonoBehaviour {
 					speedY = 0;
 					trail.GetComponent<SCR_Trail>().TurnParticleOff();
 				}
-				//target.SetActive (true);
-				//target.GetComponent<SCR_Target>().SetPosition (targetX, targetY - SCR_Profile.GetPunchRange());
 				
 				trail.GetComponent<SCR_Trail>().MoveTo (x, y);
 			}
@@ -225,13 +223,15 @@ public class SCR_Player : MonoBehaviour {
 			x += speedX * dt;
 			y += speedY * dt;
 			
-			if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - PLAYER_REVERSE_X)) {
+			if (speedX < 0 && x <= -(SCR_Gameplay.SCREEN_W * 0.5f - PLAYER_REVERSE_X)) {
 				speedX = -speedX;
 				direction = 1;
+				Ricochet();
 			}
-			else if (x >= (SCR_Gameplay.SCREEN_W * 0.5f - PLAYER_REVERSE_X)) {
+			else if (speedX > 0 && x >= (SCR_Gameplay.SCREEN_W * 0.5f - PLAYER_REVERSE_X)) {
 				speedX = -speedX;
 				direction = -1;
+				Ricochet();
 			}
 			
 			if (state == PlayerState.FLY_DOWN) {
@@ -269,6 +269,21 @@ public class SCR_Player : MonoBehaviour {
 		}
 	}
 	// ==================================================
+	private void Ricochet () {
+		if (state == PlayerState.FLY_UP) {
+			if (ricocheted == false) {
+				ricocheted = true;
+			}
+			else {
+				speedY *= 0.8f;
+				speedX *= 0.8f;
+			}
+		}
+		else if (state == PlayerState.FLY_DOWN) {
+			speedX *= 0.1f;
+		}
+	}
+	// ==================================================
 	private void Punch (float distance) {
 		float punchAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
 		float punchX = SCR_Profile.GetPunchForce() * SCR_Helper.Sin (punchAngle);
@@ -284,7 +299,10 @@ public class SCR_Player : MonoBehaviour {
 		SCR_Gameplay.instance.punchNumber ++;
 		bossScript.Punch (punchX, Mathf.Abs(punchY));
 		
-		//Time.timeScale = 0.05f;
+		if (ricocheted == true) {
+			SCR_Gameplay.instance.ShowComboText ("Ricochet!", bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
+			Time.timeScale = 0.05f;
+		}
 		punchCount = PLAYER_PUNCH_TIME;
 	}
 	// ==================================================
@@ -319,33 +337,40 @@ public class SCR_Player : MonoBehaviour {
 			
 			float x1, x2, y1, y2;
 			x1 = x;
-			y1 = SCR_Gameplay.instance.cameraHeight;
+			y1 = SCR_Gameplay.instance.cameraHeight - PLAYER_SIZE;
+			if (y1 < PLAYER_START_Y) {
+				y1 = PLAYER_START_Y;
+			}
 			
 			float aimAngle = SCR_Helper.AngleBetweenTwoPoint (x1, y1, px - SCR_Gameplay.SCREEN_W * 0.5f, py);
 			x2 = x1 + SCR_Gameplay.SCREEN_H * SCR_Helper.Sin (aimAngle) * 2;
 			y2 = y1 + SCR_Gameplay.SCREEN_H * SCR_Helper.Cos (aimAngle) * 2;
 			
 			target.GetComponent<SCR_Target>().SetLine (x1, y1, x2, y2);
+			
+			currentAimX = px;
+			currentAimY = py;
 		}
 	}
-	public void PerformPunch (float px, float py) {
+	public void PerformPunch () {
 		if (cooldown <= 0 && target.activeSelf) {
-			targetX = px - SCR_Gameplay.SCREEN_W * 0.5f;
+			targetX = currentAimX - SCR_Gameplay.SCREEN_W * 0.5f;
 			if (SCR_Profile.martialEquip == (int)PunchType.SLAV) {
 				float random = PLAYER_SLAV_RANDOM;
-				random *= (py - SCR_Gameplay.instance.cameraHeight) / SCR_Gameplay.SCREEN_H;
+				random *= (currentAimY - SCR_Gameplay.instance.cameraHeight) / SCR_Gameplay.SCREEN_H;
 				targetX += Random.Range(-random, random);
 			}
-			targetY = py;
+			targetY = currentAimY;
 			
-			if (py > y + SCR_Gameplay.SCREEN_H + PLAYER_SIZE) {
-				y = py - SCR_Gameplay.SCREEN_H - PLAYER_SIZE;
+			y = SCR_Gameplay.instance.cameraHeight - PLAYER_SIZE;
+			if (y < PLAYER_START_Y) {
+				y = PLAYER_START_Y;
 			}
 			
 			if (targetX >= x) 	direction = 1;
 			else				direction = -1;
 			
-			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, py);
+			flyAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, targetX, currentAimY);
 			speedX = SCR_Profile.GetPunchSpeed() * SCR_Helper.Sin (flyAngle);
 			speedY = SCR_Profile.GetPunchSpeed() * SCR_Helper.Cos (flyAngle);
 			
@@ -357,10 +382,16 @@ public class SCR_Player : MonoBehaviour {
 			SwitchState (PlayerState.FLY_UP);
 			
 			cooldown = SCR_Profile.GetPunchCooldown();
+			ricocheted = false;
+		}
+		else {
+			target.SetActive (false);
 		}
 	}
-	public void AddDeltaCameraToTarget (float amount) {
+	public void AddDeltaCameraToPlayer (float amount) {
 		if (state == PlayerState.FLY_UP) {
+			y += amount * 0.5f;
+			
 			targetY += amount;
 			
 			if (y < targetY - SCR_Profile.GetPunchRange()) {

@@ -6,6 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class SCR_Menu : MonoBehaviour {
 	public static bool menuLoaded = false;
+	public GameObject imgBackground2 = null;
+	public GameObject imgPlayer = null;
+	
+	private float timeCounter = 0;
+	private float sequence1 = 0;
+	private float sequence2 = 0;
+	private float lightCounter = 0;
+	
+	private float playerDir = -1;
+	private float playerX = 0;
+	private float playerY = 150;
 	
 	private void Start () {
 		// Set up game's stuff
@@ -19,6 +30,10 @@ public class SCR_Menu : MonoBehaviour {
 		
 		// OK, confirm that menu is now the first state
 		menuLoaded = true;
+		
+		// Animation
+		sequence1 = Random.Range (4, 6);
+		sequence2 = Random.Range (0.3f, 0.7f);
 	}
 	
 	public void OnPlay () {
@@ -33,5 +48,36 @@ public class SCR_Menu : MonoBehaviour {
 	
 	public void OnReset () {
 		SCR_Profile.ResetProfile();
+	}
+	
+	private void Update () {
+		float dt = Time.deltaTime;
+		timeCounter += dt;
+		
+		if (timeCounter < sequence1) {
+			imgBackground2.SetActive (true);
+		}
+		else if (timeCounter > sequence1 && timeCounter < sequence1 + sequence2) {
+			lightCounter += dt;
+			if (lightCounter > 0.07f) {
+				lightCounter = 0;
+				imgBackground2.SetActive (!imgBackground2.activeSelf);
+			}
+		}
+		else if (timeCounter > sequence1 + sequence2 && timeCounter < 10) {
+			imgBackground2.SetActive (false);
+		}
+		else if (timeCounter > 10) {
+			timeCounter = 0;
+			sequence1 = Random.Range (4, 6);
+			sequence2 = Random.Range (0.5f, 0.7f);
+		}
+		
+		
+		playerX += playerDir * dt * 200;
+		if (playerX < -750) playerDir = 1;
+		if (playerX >  900) playerDir = -1;
+		imgPlayer.transform.localScale = new Vector3 (-playerDir * 0.8f, 0.8f, 1);
+		imgPlayer.GetComponent<RectTransform>().anchoredPosition = new Vector3 (playerX, playerY);
 	}
 }

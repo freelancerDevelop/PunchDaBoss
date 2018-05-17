@@ -119,9 +119,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 1
-      minScalar: 0.5
+      minMaxState: 3
+      scalar: 0.8
+      minScalar: 0.7
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -173,8 +173,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 20
-      minScalar: 10
+      scalar: 100
+      minScalar: 50
       maxCurve:
         serializedVersion: 2
         m_Curve:

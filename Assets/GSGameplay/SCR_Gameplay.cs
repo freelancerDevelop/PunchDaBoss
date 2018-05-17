@@ -31,6 +31,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject PFB_Player				= null;
 	public GameObject PFB_Boss					= null;
 	
+	public GameObject PFB_ComboText				= null;
+	
 	// Screen
 	public static float SCREEN_RATIO 			= 0;
 	public static float SCREEN_W 				= 0;
@@ -39,8 +41,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float TOUCH_SCALE				= 0;
 	
 	public static float GRAVITY					= 1500.0f;
-	public static float CAMERA_OFFSET_Y			= 400.0f; // Distance from top of the screen to the boss
-	public static float CAMERA_SPEED_MULTIPLIER = 10.0f;
+	public static float CAMERA_OFFSET_Y			= 600.0f; // Distance from top of the screen to the boss
+	public static float CAMERA_SPEED_MULTIPLIER = 15.0f;
 	
 	public static float CAMERA_ENDING_Y			= 100.0f;
 	
@@ -48,6 +50,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static SCR_Gameplay instance 		= null;
 	
 	// On-screen object
+	public GameObject	cvsMain;
 	public GameObject	pnlResult;
 	public GameObject	txtPunchNumber;
 	public GameObject	txtHeightNumber;
@@ -93,7 +96,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		// Set camera
 		Camera.main.orthographicSize = SCREEN_H * 0.5f;
 		Camera.main.transform.position = new Vector3 (SCREEN_W * 0.5f, SCREEN_H * 0.5f, Camera.main.transform.position.z);
-	}
+}
 	
 	// Start game
 	private void Start () {
@@ -102,11 +105,11 @@ public class SCR_Gameplay : MonoBehaviour {
 		player		= Instantiate (PFB_Player);
 		boss 		= Instantiate (PFB_Boss);
 		
-		
 		pnlResult.SetActive (false);
 		pnlTutorial.SetActive (false);
 		imgCooldown.SetActive (false);
-	
+
+		SCR_Pool.Flush ();		
 		TriggerTutorial (TutorialStep.GRAB);
 	}
 	
@@ -126,6 +129,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		else {
 			imgCooldown.SetActive (false);
 		}
+		
 		
 		if (Input.GetMouseButton(0)) {
 			float touchX = Input.mousePosition.x * TOUCH_SCALE;
@@ -155,9 +159,7 @@ public class SCR_Gameplay : MonoBehaviour {
 				}
 			}
 			else if (gameState == GameState.PUNCHING) {
-				float touchX = Input.mousePosition.x * TOUCH_SCALE;
-				float touchY = Input.mousePosition.y * TOUCH_SCALE;
-				player.GetComponent<SCR_Player>().PerformPunch (touchX, touchY + cameraHeight);
+				player.GetComponent<SCR_Player>().PerformPunch ();
 				
 				TriggerTutorial (TutorialStep.CONTINUE);
 			}
@@ -169,7 +171,7 @@ public class SCR_Gameplay : MonoBehaviour {
 				float deltaCamera = (cameraTarget - cameraHeight) * dt * CAMERA_SPEED_MULTIPLIER;
 				cameraHeight += deltaCamera;
 				
-				player.GetComponent<SCR_Player>().AddDeltaCameraToTarget (deltaCamera);
+				player.GetComponent<SCR_Player>().AddDeltaCameraToPlayer (deltaCamera);
 			}
 		}
 		else if (gameState == GameState.BOSS_FALLING) {
@@ -213,7 +215,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		}
 		else {
 			if (Time.timeScale < 1) {
-				Time.timeScale += dt * 10.0f;
+				Time.timeScale += dt * 5.0f;
 				if (Time.timeScale > 1) Time.timeScale = 1;
 			}
 		}
@@ -270,6 +272,12 @@ public class SCR_Gameplay : MonoBehaviour {
 		}
 	}
 	
+	
+	public void ShowComboText (string caption, float x, float y) {
+		GameObject text = SCR_Pool.GetFreeObject (PFB_ComboText);
+		text.transform.SetParent (cvsMain.transform);
+		text.GetComponent<SCR_ComboText>().Spawn (caption, x, y);
+	}
 	
 	public void ShakeCamera (float magnitude, float duration) {
 		

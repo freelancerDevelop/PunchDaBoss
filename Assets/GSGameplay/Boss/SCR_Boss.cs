@@ -28,12 +28,13 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_MAX_SPEED_X		= 1300.0f;
 	public const float BOSS_SIZE			= 200;
 	
-	
 	public const float BOSS_SHADOW_OFFSET	= -120;
 	public const float BOSS_SHADOW_DISTANCE	= 1500;
 	public const float BOSS_SMOKE_RATE		= 0.05f;
 	public const float BOSS_SMOKE_OFFSET_X	= 100;
 	public const float BOSS_SMOKE_OFFSET_Y	= -130;
+	
+	public const float SPEED_CAP_MULTIPLIER = 1.5f;
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Shadow;
@@ -282,6 +283,9 @@ public class SCR_Boss : MonoBehaviour {
 				speedX = -handicap * BOSS_MAX_SPEED_X;
 			}
 			speedY += py;
+			if (speedY > SCR_Profile.GetPunchSpeed() * SPEED_CAP_MULTIPLIER) {
+				speedY = SCR_Profile.GetPunchSpeed() * SPEED_CAP_MULTIPLIER;
+			}
 			RandomRotate ();
 			getHit = true;
 			SCR_Gameplay.instance.TriggerTutorial (TutorialStep.HIT);

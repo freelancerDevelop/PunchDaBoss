@@ -8,7 +8,7 @@ using UnityEngine;
 public class SCR_Background : MonoBehaviour {
 	// Const
 	private const int 	BACKGROUND_HEIGHT 			= 1920;
-	private const int 	BACKGROUND_PART 			= 5;
+	private const int 	BACKGROUND_PART 			= 6;
 	
 	private const float BACKGROUND_SCROLL_RATIO		= 0.01f;
 	private const float MIDDLEGROUND_1_SCROLL_RATIO	= 0.05f;
@@ -19,6 +19,7 @@ public class SCR_Background : MonoBehaviour {
 	private const float MIDDLEGROUND_2_OFFSET		= 80;
 	
 	private const float	CLOUD_SIZE		 			= 200;
+	private const float	CLOUD_SCALE		 			= 2.0f;
 	private const float	CLOUD_SIZE_SPACING 			= 1000;
 
 	// Prefab
@@ -65,7 +66,7 @@ public class SCR_Background : MonoBehaviour {
 		cloudY = new float[3];
 		for (var i=0; i<3; i++) {
 			cloud[i] = Instantiate (PFB_Cloud);
-			cloud[i].transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE, 1);
+			cloud[i].transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * CLOUD_SCALE, SCR_Gameplay.SCREEN_SCALE * CLOUD_SCALE, 1);
 			cloudY[i] = 0;
 		}
 		
