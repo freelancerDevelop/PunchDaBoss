@@ -40,11 +40,13 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float SCREEN_SCALE			= 0;
 	public static float TOUCH_SCALE				= 0;
 	
-	public static float GRAVITY					= 1500.0f;
+	public static float GRAVITY					= 1800.0f;
 	public static float CAMERA_OFFSET_Y			= 600.0f; // Distance from top of the screen to the boss
 	public static float CAMERA_SPEED_MULTIPLIER = 15.0f;
 	
 	public static float CAMERA_ENDING_Y			= 100.0f;
+	
+	public static int	MONEY_FOR_HIGHLIGHT		= 5;
 	
 	// Instance
 	public static SCR_Gameplay instance 		= null;
@@ -54,6 +56,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject	pnlResult;
 	public GameObject	txtPunchNumber;
 	public GameObject	txtHeightNumber;
+	public GameObject	txtBestNumber;
 	public GameObject	txtMoneyNumber;
 	public GameObject	txtCurrentHeight;
 	public GameObject	pnlTutorial;
@@ -70,6 +73,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public float 		cameraTarget	= 0.0f;
 	[System.NonSerialized] public int			maxBossY		= 0;
 	[System.NonSerialized] public int			punchNumber		= 0;
+	[System.NonSerialized] public int			highlightNumber	= 0;
 	
 	[System.NonSerialized] public TutorialStep	tutorialStep	= TutorialStep.NONE;
 	
@@ -224,10 +228,13 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public void Lose () {
 		pnlResult.SetActive (true);
+		SCR_Profile.ReportScore (maxBossY);
 		txtPunchNumber.GetComponent<Text>().text = punchNumber.ToString();
 		txtHeightNumber.GetComponent<Text>().text = maxBossY.ToString();
+		txtBestNumber.GetComponent<Text>().text = SCR_Profile.highScore.ToString();
 		
 		int money = (int)(0.1f * maxBossY);
+		money += highlightNumber * MONEY_FOR_HIGHLIGHT;
 		txtMoneyNumber.GetComponent<Text>().text = money.ToString();
 		SCR_Profile.AddMoney (money);
 	}

@@ -5,6 +5,9 @@ using UnityEngine;
 public class SCR_Target : MonoBehaviour {
 	public const float TARGET_SCALE		= 0.7f;
 	public const float LINE_SCALE		= 0.8f;
+	public const float ROTATE_SPEED		= 720.0f;
+	
+	private float angle = 0.0f;
 	
 	private void Start () {
 		transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * TARGET_SCALE, SCR_Gameplay.SCREEN_SCALE * TARGET_SCALE, 1);
@@ -31,6 +34,11 @@ public class SCR_Target : MonoBehaviour {
 	}
 
 	private void Update () {
+		float dt = Time.deltaTime;
 		
+		angle += dt * ROTATE_SPEED;
+		if (angle > 360) angle -= 360;
+		
+		gameObject.transform.localEulerAngles = new Vector3(0, 0 ,angle);
 	}
 }

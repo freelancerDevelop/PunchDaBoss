@@ -19,8 +19,8 @@ public class SCR_Background : MonoBehaviour {
 	private const float MIDDLEGROUND_2_OFFSET		= 80;
 	
 	private const float	CLOUD_SIZE		 			= 200;
-	private const float	CLOUD_SCALE		 			= 2.0f;
-	private const float	CLOUD_SIZE_SPACING 			= 1000;
+	private const float	CLOUD_SCALE		 			= 1.4f;
+	private const float	CLOUD_SIZE_SPACING 			= 900;
 
 	// Prefab
 	public GameObject[] 	PFB_Background			= null;

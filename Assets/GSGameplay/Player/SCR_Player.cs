@@ -32,6 +32,8 @@ public class SCR_Player : MonoBehaviour {
 	public const float PLAYER_SIZE				= 200;
 	public const float PLAYER_UP_FRICTION		= 5000;
 	public const float PLAYER_SLAV_RANDOM		= 200;
+	public const float PLAYER_DIRECT_HIT_ANGLE	= 10;
+	public const float PLAYER_MAX_SPEED_BONUS	= 1.45f;
 	
 	public const float PLAYER_SHADOW_OFFSET		= -120;
 	public const float PLAYER_SHADOW_DISTANCE	= 1500;
@@ -296,13 +298,26 @@ public class SCR_Player : MonoBehaviour {
 			child.gameObject.SetActive (true);
 		}
 		
-		SCR_Gameplay.instance.punchNumber ++;
 		bossScript.Punch (punchX, Mathf.Abs(punchY));
-		
 		if (ricocheted == true) {
 			SCR_Gameplay.instance.ShowComboText ("Ricochet!", bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
-			Time.timeScale = 0.05f;
+			SCR_Gameplay.instance.highlightNumber ++;
+			Time.timeScale = 0.1f;
 		}
+		else if (punchAngle > 360-PLAYER_DIRECT_HIT_ANGLE || punchAngle < PLAYER_DIRECT_HIT_ANGLE) {
+			SCR_Gameplay.instance.ShowComboText ("Direct hit!", bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
+			SCR_Gameplay.instance.highlightNumber ++;
+			Time.timeScale = 0.1f;
+		}
+		else if (bossScript.speedY > SCR_Profile.GetPunchSpeed() * PLAYER_MAX_SPEED_BONUS) {
+			SCR_Gameplay.instance.ShowComboText ("Max speed!", bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
+			SCR_Gameplay.instance.highlightNumber ++;
+			Time.timeScale = 0.1f;
+		}
+		
+		SCR_Gameplay.instance.punchNumber ++;
+		
+		
 		punchCount = PLAYER_PUNCH_TIME;
 	}
 	// ==================================================

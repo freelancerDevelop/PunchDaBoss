@@ -36,6 +36,7 @@ public class MartialMove {
 
 public class SCR_Profile {
 	public static int 				money = 0;
+	public static int 				highScore = 0;
 	public static int				martialEquip = 0;
 	public static MartialMove[] 	martialMoves;
 	public static int				showTutorial = 1;
@@ -103,10 +104,18 @@ public class SCR_Profile {
 		PlayerPrefs.SetInt("money", money);
 	}
 	
+	public static void ReportScore (int score) {
+		if (score > highScore) {
+			highScore = score;
+			PlayerPrefs.SetInt("highScore", highScore);
+		}
+	}
+	
 	
 	
 	public static void SaveProfile () {
 		PlayerPrefs.SetInt("money", money);
+		PlayerPrefs.SetInt("highScore", highScore);
 		PlayerPrefs.SetInt("showTutorial", showTutorial);
 		PlayerPrefs.SetInt("martialEquip", martialEquip);
 		
@@ -117,6 +126,7 @@ public class SCR_Profile {
 	
 	public static void LoadProfile () {
 		money = PlayerPrefs.GetInt("money", 0);
+		highScore = PlayerPrefs.GetInt("highScore", 0);
 		showTutorial = PlayerPrefs.GetInt("showTutorial", 1);
 		martialEquip = PlayerPrefs.GetInt("martialEquip", 0);
 		
@@ -129,7 +139,8 @@ public class SCR_Profile {
 	
 	public static void ResetProfile () {
 		showTutorial = 1;
-		money = 10000;
+		money = 0;
+		highScore = 0;
 		martialEquip = 0;
 		for (int i=1; i<martialMoves.Length; i++) {
 			martialMoves[i].unlocked = 0;
