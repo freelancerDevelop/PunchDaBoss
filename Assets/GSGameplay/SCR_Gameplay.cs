@@ -116,9 +116,6 @@ public class SCR_Gameplay : MonoBehaviour {
 
 		SCR_Pool.Flush ();		
 		TriggerTutorial (TutorialStep.GRAB);
-		
-		SCR_WaitMusic.FadeOut();
-		SCR_PunchMusic.FadeIn();
 	}
 	
 	// Update
@@ -164,6 +161,8 @@ public class SCR_Gameplay : MonoBehaviour {
 				if (player.GetComponent<SCR_Player>().IsGrabbingTheBoss()) {
 					gameState = GameState.PUNCHING;
 					player.GetComponent<SCR_Player>().ThrowTheBoss();
+					SCR_WaitMusic.FadeOut();
+					SCR_PunchMusic.FadeIn();
 				}
 			}
 			else if (gameState == GameState.PUNCHING) {

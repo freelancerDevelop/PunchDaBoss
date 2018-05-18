@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum PunchType {
 	BASIC = 0,
-	SUCKER,
 	SLAV,
+	SUCKER,
 	TAICHI,
 	KUNGFU,
 	NINJUTSU
@@ -46,11 +46,11 @@ public class SCR_Profile {
 		if (martialMoves == null) {
 			martialMoves = new MartialMove[6];
 			martialMoves[(int)PunchType.BASIC] 		= new MartialMove ("Basic punch", 	0, 		200.0f, 	2600.0f, 	3700.0f,	1.2f,	"Your basic punch. Not too special, but did its job every time.");
-			martialMoves[(int)PunchType.SUCKER] 	= new MartialMove ("Sucker punch", 	100, 	160.0f, 	3000.0f, 	4200.0f, 	1.7f,	"Exclusively for your boss! Better than basic punch, but with higher cooldown.");
-			martialMoves[(int)PunchType.SLAV] 		= new MartialMove ("Slav punch", 	200, 	200.0f, 	4500.0f, 	5000.0f, 	1.0f,	"Just drink enough Vodka and you can execute this. Very powerful but wildly inaccurate. (Vodka, you know...)");
-			martialMoves[(int)PunchType.TAICHI] 	= new MartialMove ("Tai-chi punch", 600, 	220.0f, 	6000.0f, 	2000.0f, 	3.6f,	"When your boss said 'You are a slow worker!', show him this. Extremely powerful punch, but with a pathetic speed.");
-			martialMoves[(int)PunchType.KUNGFU] 	= new MartialMove ("Kung F-U", 		1000, 	130.0f, 	4600.0f, 	6000.0f, 	2.6f,	"There is no better way to say 'F-U' to someone than this. A fast punch, but require high preccision.");
-			martialMoves[(int)PunchType.NINJUTSU] 	= new MartialMove ("Ninjutsu", 		2000, 	250.0f, 	4200.0f, 	5500.0f, 	2.9f,	"The time that you're supposed to work, you spent on learning something else. An ez to hit punch with a long cooldown.");
+			martialMoves[(int)PunchType.SLAV] 		= new MartialMove ("Slav punch", 	500, 	200.0f, 	4500.0f, 	5000.0f, 	1.0f,	"Just drink enough Vodka and you can execute this. Very powerful but wildly inaccurate. (Vodka, you know...)");
+			martialMoves[(int)PunchType.SUCKER] 	= new MartialMove ("Sucker punch", 	750, 	160.0f, 	3000.0f, 	4200.0f, 	1.7f,	"Exclusively for your boss! Better than basic punch, but with higher cooldown.");
+			martialMoves[(int)PunchType.TAICHI] 	= new MartialMove ("Tai-chi punch", 750, 	220.0f, 	6000.0f, 	2000.0f, 	3.6f,	"When your boss said 'You are a slow worker!', show him this. Extremely powerful punch, but with a pathetic speed.");
+			martialMoves[(int)PunchType.KUNGFU] 	= new MartialMove ("Kung F-U", 		2000, 	130.0f, 	4600.0f, 	6000.0f, 	2.6f,	"There is no better way to say 'F-U' to someone than this. A fast punch, but require high preccision.");
+			martialMoves[(int)PunchType.NINJUTSU] 	= new MartialMove ("Ninjutsu", 		2500, 	250.0f, 	4200.0f, 	5500.0f, 	2.9f,	"The time that you're supposed to work, you spent on learning something else. An ez to hit punch with a long cooldown.");
 		}
 	}
 	

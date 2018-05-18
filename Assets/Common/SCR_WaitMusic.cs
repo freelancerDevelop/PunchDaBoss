@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SCR_WaitMusic : MonoBehaviour {
-	public static float	MUSIC_FADE_OUT_SPEED	= 0.5f;
-	public static float	MUSIC_FADE_IN_SPEED		= 0.75f;
+	public static float	MUSIC_FADE_OUT_SPEED	= 1.5f;
+	public static float	MUSIC_FADE_IN_SPEED		= 1.75f;
 	
 	private static SCR_WaitMusic 	instance 	= null;
 	private static AudioSource 		source		= null;

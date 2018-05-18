@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class SCR_Shop : MonoBehaviour {
 	// Prefab
-	public GameObject PFB_PunchEntry;
+	public GameObject 	PFB_PunchEntry;
+	public Sprite[] 	SPR_PunchIcon;
 	
 	// Object
 	public Transform shopContent;
@@ -35,37 +36,19 @@ public class SCR_Shop : MonoBehaviour {
 		entries = new GameObject[SCR_Profile.martialMoves.Length];
 		for (int i=0; i<SCR_Profile.martialMoves.Length; i++) {
 			GameObject entry = Instantiate(PFB_PunchEntry);
-			entry.transform.GetChild(4).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].name;
-			entry.transform.GetChild(5).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].cost.ToString() + "$";
-			entry.transform.GetChild(6).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].desc;
+			entry.transform.GetChild(0).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].name;
+			entry.transform.GetChild(1).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].cost.ToString() + "$";
+			entry.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = SPR_PunchIcon[i];
 			
-			if (SCR_Profile.martialMoves[i].unlocked == 1) {
-				entry.transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.4f, 0.8f, 0.4f, 0.4f);
-				entry.transform.GetChild(2).gameObject.SetActive (false);
-				entry.transform.GetChild(3).gameObject.SetActive (true);
-				if (SCR_Profile.martialEquip == i) {
-					entry.transform.GetChild(3).gameObject.GetComponent<Button>().interactable = false;
-				}
-				else {
-					entry.transform.GetChild(3).gameObject.GetComponent<Button>().interactable = true;
-				}
-			}
-			else if (SCR_Profile.money < SCR_Profile.martialMoves[i].cost) {
-				entry.transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.8f, 0.4f, 0.4f, 0.4f);
-				entry.transform.GetChild(3).gameObject.SetActive (false);
-				entry.transform.GetChild(2).gameObject.SetActive (true);
-				entry.transform.GetChild(2).gameObject.GetComponent<Button>().interactable = false;
+			if (SCR_Profile.money < SCR_Profile.martialMoves[i].cost) {
+				entry.GetComponent<Button>().interactable = false;
 			}
 			else {
-				entry.transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.8f, 0.8f, 0.8f, 0.4f);
-				entry.transform.GetChild(3).gameObject.SetActive (false);
-				entry.transform.GetChild(2).gameObject.SetActive (true);
-				entry.transform.GetChild(2).gameObject.GetComponent<Button>().interactable = true;
+				entry.GetComponent<Button>().interactable = true;
 			}
 			
 			int param = i;
-			entry.transform.GetChild(2).gameObject.GetComponent<Button>().onClick.AddListener(delegate{BuyPunch(param);});
-			entry.transform.GetChild(3).gameObject.GetComponent<Button>().onClick.AddListener(delegate{EquipPunch(param);});
+			entry.GetComponent<Button>().onClick.AddListener(delegate{BuyPunch(param);});
 			
 			entry.transform.SetParent (shopContent);
 			entry.transform.localScale = new Vector3(1, 1, 1);
@@ -81,41 +64,25 @@ public class SCR_Shop : MonoBehaviour {
 	
 	
 	public void BuyPunch (int index) {
+		/*
 		if (SCR_Profile.BuyPunch (index)) {
 			RefreshShop();
 		}
-	}
-	public void EquipPunch (int index) {
-		if (SCR_Profile.EquipPunch (index)) {
+		else if (SCR_Profile.EquipPunch (index)) {
 			RefreshShop();
 		}
+		*/
 	}
+	
 	public void RefreshShop () {
 		txtMoney.GetComponent<Text>().text = SCR_Profile.money.ToString() + "$";
 		
 		for (int i=0; i<entries.Length; i++) {
-			if (SCR_Profile.martialMoves[i].unlocked == 1) {
-				entries[i].transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.4f, 0.8f, 0.4f, 0.4f);
-				entries[i].transform.GetChild(2).gameObject.SetActive (false);
-				entries[i].transform.GetChild(3).gameObject.SetActive (true);
-				if (SCR_Profile.martialEquip == i) {
-					entries[i].transform.GetChild(3).gameObject.GetComponent<Button>().interactable = false;
-				}
-				else {
-					entries[i].transform.GetChild(3).gameObject.GetComponent<Button>().interactable = true;
-				}
-			}
-			else if (SCR_Profile.money < SCR_Profile.martialMoves[i].cost) {
-				entries[i].transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.8f, 0.4f, 0.4f, 0.4f);
-				entries[i].transform.GetChild(3).gameObject.SetActive (false);
-				entries[i].transform.GetChild(2).gameObject.SetActive (true);
-				entries[i].transform.GetChild(2).gameObject.GetComponent<Button>().interactable = false;
+			if (SCR_Profile.money < SCR_Profile.martialMoves[i].cost) {
+				entries[i].GetComponent<Button>().interactable = false;
 			}
 			else {
-				entries[i].transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color (0.8f, 0.8f, 0.8f, 0.4f);
-				entries[i].transform.GetChild(3).gameObject.SetActive (false);
-				entries[i].transform.GetChild(2).gameObject.SetActive (true);
-				entries[i].transform.GetChild(2).gameObject.GetComponent<Button>().interactable = true;
+				entries[i].GetComponent<Button>().interactable = true;
 			}
 		}
 	}
