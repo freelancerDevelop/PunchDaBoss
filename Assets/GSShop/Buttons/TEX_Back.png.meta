@@ -110,9 +110,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 150
-        width: 400
-        height: 150
+        y: 180
+        width: 200
+        height: 180
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -120,7 +120,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c1da265b3318bc54a9b20ed97001a4e5
+      spriteID: 7c6ddc068e85fad4d938808c832c9036
       vertices: []
       indices: 
       edges: []
@@ -131,8 +131,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 400
-        height: 150
+        width: 200
+        height: 180
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,7 +140,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4b25ec9ba4c1d1445992c6d80102bd95
+      spriteID: f907679e4c8e7af4da112777c68f1d87
       vertices: []
       indices: 
       edges: []

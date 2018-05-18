@@ -18,6 +18,8 @@ public class SCR_Menu : MonoBehaviour {
 	private float playerX = 0;
 	private float playerY = 150;
 	
+	private static bool musicPlayed = false;
+	
 	private void Start () {
 		// Set up game's stuff
 		Application.targetFrameRate = 60;
@@ -34,6 +36,10 @@ public class SCR_Menu : MonoBehaviour {
 		// Animation
 		sequence1 = Random.Range (4, 6);
 		sequence2 = Random.Range (0.3f, 0.7f);
+		
+		// Music
+		SCR_WaitMusic.FadeIn();
+		SCR_PunchMusic.FadeOut();
 	}
 	
 	public void OnPlay () {
@@ -53,6 +59,12 @@ public class SCR_Menu : MonoBehaviour {
 	private void Update () {
 		float dt = Time.deltaTime;
 		timeCounter += dt;
+		
+		if (!musicPlayed) {
+			musicPlayed = true;
+			SCR_WaitMusic.Play();
+			SCR_PunchMusic.Play();
+		}
 		
 		if (timeCounter < sequence1) {
 			imgBackground2.SetActive (true);

@@ -188,7 +188,7 @@ public class SCR_Player : MonoBehaviour {
 			chargeCount += dt;
 			if (chargeCount >= PLAYER_THROW_TIME) {
 				chargeCount = 0;
-				SwitchState (PlayerState.WALK);
+				SwitchState (PlayerState.TALK);
 			}
 		}
 		else if (state == PlayerState.FLY_UP || state == PlayerState.PUNCH || state == PlayerState.FLY_DOWN) {
@@ -239,7 +239,7 @@ public class SCR_Player : MonoBehaviour {
 			if (state == PlayerState.FLY_DOWN) {
 				if (y <= SCR_Gameplay.instance.cameraHeight - PLAYER_SIZE || y <= PLAYER_START_Y) {
 					y = PLAYER_START_Y;
-					SwitchState (PlayerState.WALK);
+					SwitchState (PlayerState.TALK);
 					
 					landParticle.SetActive (true);
 					landParticle.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + PLAYER_SMOKE_OFFSET_Y, landParticle.transform.position.z);
@@ -346,7 +346,7 @@ public class SCR_Player : MonoBehaviour {
 		target.SetActive (false);
 	}
 	public void Aim (float px, float py) {
-		if (state == PlayerState.WALK) {
+		if (state == PlayerState.TALK) {
 			target.SetActive (true);
 			target.GetComponent<SCR_Target>().SetPosition (px - SCR_Gameplay.SCREEN_W * 0.5f, py);
 			

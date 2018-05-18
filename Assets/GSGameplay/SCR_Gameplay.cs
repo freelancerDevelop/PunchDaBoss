@@ -74,6 +74,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public int			maxBossY		= 0;
 	[System.NonSerialized] public int			punchNumber		= 0;
 	[System.NonSerialized] public int			highlightNumber	= 0;
+	[System.NonSerialized] public float			punchVolume		= 0;
 	
 	[System.NonSerialized] public TutorialStep	tutorialStep	= TutorialStep.NONE;
 	
@@ -115,6 +116,9 @@ public class SCR_Gameplay : MonoBehaviour {
 
 		SCR_Pool.Flush ();		
 		TriggerTutorial (TutorialStep.GRAB);
+		
+		SCR_WaitMusic.FadeOut();
+		SCR_PunchMusic.FadeIn();
 	}
 	
 	// Update
