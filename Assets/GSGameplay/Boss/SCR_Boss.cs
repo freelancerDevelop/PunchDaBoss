@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum BossState {
 	TALK = 0,
@@ -34,6 +36,12 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_SMOKE_OFFSET_X	= 100;
 	public const float BOSS_SMOKE_OFFSET_Y	= -130;
 	
+	public const float BOSS_TALK_SCALE		= 1.6f;
+	public const float BOSS_TALK_OFFSET_X	= -200;
+	public const float BOSS_TALK_OFFSET_Y	= 300;
+	public const float BOSS_TALK_START		= 1.5f;
+	public const float BOSS_TALK_END		= 5.0f;
+	
 	public const float SPEED_CAP_MULTIPLIER = 1.5f;
 	// ==================================================
 	// Prefab
@@ -42,6 +50,7 @@ public class SCR_Boss : MonoBehaviour {
 	public	GameObject	PFB_Tears;
 	public	GameObject	PFB_Smoke;
 	public	GameObject	PFB_Land;
+	public	GameObject	PFB_TalkBubble;
 	// ==================================================
 	// Stuff
 	private Animator 	animator	= null;
@@ -62,6 +71,20 @@ public class SCR_Boss : MonoBehaviour {
 	private	GameObject	smokeParticle	= null;
 	private	GameObject	tearsParticle	= null;
 	private	GameObject	landParticle	= null;
+	private	GameObject	talkBubble		= null;
+	
+	private string[] dialogue = new string[] 
+					{"It's the 3rd time you're late!"
+					,"You're such a slow worker!"
+					,"You'll never be promoted!"
+					,"One more mistake and you're fired!"
+					,"Why are you so lazy?"
+					,"You'll OT this weekend, alone!"
+					,"Don't even ask for a raise."
+					,"You working result is pathetic..."
+					,"You should feel ashamed."};
+	private int dialogueID = 0;
+	private float talkCounter = 1.2f;
 	// ==================================================
 	
 	
@@ -95,12 +118,16 @@ public class SCR_Boss : MonoBehaviour {
 		landParticle.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 		landParticle.SetActive (false);
 		
-		tearsParticle  = Instantiate (PFB_Tears);
+		tearsParticle = Instantiate (PFB_Tears);
 		tearsParticle.transform.SetParent (transform);
 		tearsParticle.transform.localScale = new Vector3 (1, 1, 1);
 		tearsParticle.transform.localPosition = new Vector3 (-0.25f, 0.75f, -1);
 		tearsParticle.SetActive (false);
 		
+		talkBubble = Instantiate (PFB_TalkBubble);
+		talkBubble.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_TALK_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_TALK_SCALE, 1);
+		talkBubble.transform.localPosition = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x + BOSS_TALK_OFFSET_X, y + BOSS_TALK_OFFSET_Y, talkBubble.transform.localPosition.z);
+		talkBubble.SetActive (false);
 		
 		rotation = 0;
 		
@@ -159,6 +186,8 @@ public class SCR_Boss : MonoBehaviour {
 				SCR_Gameplay.instance.gameState = GameState.BOSS_FALLING;
 				SCR_Gameplay.instance.Lose();
 				
+				SCR_Audio.PlayFallSound();
+				
 				if (!getHit) {
 					SCR_Gameplay.instance.TriggerTutorial (TutorialStep.MISS, true);
 				}
@@ -166,6 +195,7 @@ public class SCR_Boss : MonoBehaviour {
 			else if (y <= BOSS_START_Y) {
 				y = BOSS_START_Y;
 				SwitchState (BossState.SLIDE);
+				SCR_Audio.PlayPunchSound();
 				
 				smokeParticle.transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x + BOSS_SMOKE_OFFSET_X * direction, y + BOSS_SMOKE_OFFSET_Y, smokeParticle.transform.position.z);
 				
@@ -229,6 +259,31 @@ public class SCR_Boss : MonoBehaviour {
 		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * shadowScale, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 	
 		bloodParticle.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, bloodParticle.transform.position.z);
+		
+		
+		
+		if (state == BossState.TALK) {
+			if (talkCounter < BOSS_TALK_START) {
+				talkCounter += dt;
+				if (talkCounter >= BOSS_TALK_START) {
+					
+					SCR_Audio.PlayTalkSound();
+					dialogueID ++;
+					if (dialogueID >= dialogue.Length) {
+						dialogueID = 0;
+					}
+					talkBubble.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = dialogue[dialogueID];
+					talkBubble.SetActive (true);
+				}
+			}
+			else {
+				talkCounter += dt;
+				if (talkCounter >= BOSS_TALK_END) {
+					talkBubble.SetActive (false);
+					talkCounter = 0;
+				}
+			}
+		}
 	}
 	// ==================================================
 	
@@ -244,6 +299,8 @@ public class SCR_Boss : MonoBehaviour {
 	public void Grabbed () {
 		if (state == BossState.TALK) {
 			SwitchState (BossState.GRAB);
+			talkBubble.SetActive (false);
+			SCR_GrabbedSound.Play();
 		}
 	}
 	public void Thrown () {
@@ -262,6 +319,9 @@ public class SCR_Boss : MonoBehaviour {
 			
 			bloodParticle.SetActive(true);
 			tearsParticle.SetActive (true);
+			
+			SCR_GrabbedSound.Stop();
+			SCR_Audio.PlayScreamSound();
 		}
 	}
 	public bool IsFlying () {
@@ -291,6 +351,8 @@ public class SCR_Boss : MonoBehaviour {
 			SCR_Gameplay.instance.TriggerTutorial (TutorialStep.HIT);
 			
 			bloodParticle.SetActive(true);
+			
+			SCR_Audio.PlayScreamSound();
 		}
 	}
 	public void ReAdjustY () {

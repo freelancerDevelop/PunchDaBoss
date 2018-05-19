@@ -45,15 +45,18 @@ public class SCR_Menu : MonoBehaviour {
 	public void OnPlay () {
 		// Load latest level
 		SceneManager.LoadScene("GSGameplay/SCN_Gameplay");
+		SCR_Audio.PlayClickSound();
 	}
 	
 	public void OnShop () {
 		// Load latest level
 		SceneManager.LoadScene("GSShop/SCN_Shop");
+		SCR_Audio.PlayClickSound();
 	}
 	
 	public void OnReset () {
 		SCR_Profile.ResetProfile();
+		SCR_Audio.PlayClickSound();
 	}
 	
 	private void Update () {

@@ -76,6 +76,8 @@ MonoBehaviour:
   PFB_Tears: {fileID: 1480715170899834, guid: 891069c43923a884db367ad05d144231, type: 2}
   PFB_Smoke: {fileID: 1873950423989702, guid: 33791ba17efbccf4c9ab73e6d539b925, type: 2}
   PFB_Land: {fileID: 1873950423989702, guid: ebd2a562cfaaeb64898eb46b5c43bc3c, type: 2}
+  PFB_TalkBubble: {fileID: 1890845560413550, guid: e66ea7299c5766446bfbe24df5eac2b0,
+    type: 2}
   direction: 1
   x: 0
   y: 0

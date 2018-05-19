@@ -72,6 +72,7 @@ public class SCR_Shop : MonoBehaviour {
 			RefreshShop();
 		}
 		*/
+		SCR_Audio.PlayClickSound();
 	}
 	
 	public void RefreshShop () {
@@ -90,5 +91,6 @@ public class SCR_Shop : MonoBehaviour {
 	public void OnBack () {
 		// Load latest level
 		SceneManager.LoadScene("GSMenu/SCN_Menu");
+		SCR_Audio.PlayClickSound();
 	}
 }

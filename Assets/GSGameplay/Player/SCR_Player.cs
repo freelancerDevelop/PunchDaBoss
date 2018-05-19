@@ -174,6 +174,7 @@ public class SCR_Player : MonoBehaviour {
 			if (chargeCount >= PLAYER_CHARGE_TIME) {
 				chargeCount = 0;
 				SwitchState (PlayerState.THROW);
+				SCR_Audio.PlayPunchSound();
 				bossScript.Thrown();
 				
 				float particleX = (x + bossScript.x) * 0.5f;
@@ -189,6 +190,8 @@ public class SCR_Player : MonoBehaviour {
 			if (chargeCount >= PLAYER_THROW_TIME) {
 				chargeCount = 0;
 				SwitchState (PlayerState.TALK);
+				SCR_WaitMusic.FadeOut();
+				SCR_PunchMusic.FadeIn();
 			}
 		}
 		else if (state == PlayerState.FLY_UP || state == PlayerState.PUNCH || state == PlayerState.FLY_DOWN) {
@@ -287,6 +290,8 @@ public class SCR_Player : MonoBehaviour {
 	}
 	// ==================================================
 	private void Punch (float distance) {
+		SCR_Audio.PlayPunchSound();
+		
 		float punchAngle = SCR_Helper.AngleBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
 		float punchX = SCR_Profile.GetPunchForce() * SCR_Helper.Sin (punchAngle);
 		float punchY = SCR_Profile.GetPunchForce() * (1 + SCR_Helper.Cos (punchAngle) * 0.33f);
@@ -316,7 +321,6 @@ public class SCR_Player : MonoBehaviour {
 		}
 		
 		SCR_Gameplay.instance.punchNumber ++;
-		
 		
 		punchCount = PLAYER_PUNCH_TIME;
 	}
@@ -395,6 +399,7 @@ public class SCR_Player : MonoBehaviour {
 			target.SetActive (false);
 			
 			SwitchState (PlayerState.FLY_UP);
+			SCR_Audio.PlayFlyUpSound();
 			
 			cooldown = SCR_Profile.GetPunchCooldown();
 			ricocheted = false;

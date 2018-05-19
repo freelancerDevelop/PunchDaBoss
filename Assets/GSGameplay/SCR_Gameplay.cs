@@ -153,6 +153,7 @@ public class SCR_Gameplay : MonoBehaviour {
 			else if (gameState == GameState.BOSS_RUNNING) {
 				if (boss.GetComponent<SCR_Boss>().IsRunning()) {
 					SceneManager.LoadScene("GSMenu/SCN_Menu");
+					SCR_Audio.PlayClickSound();
 				}
 			}
 		}
@@ -161,8 +162,6 @@ public class SCR_Gameplay : MonoBehaviour {
 				if (player.GetComponent<SCR_Player>().IsGrabbingTheBoss()) {
 					gameState = GameState.PUNCHING;
 					player.GetComponent<SCR_Player>().ThrowTheBoss();
-					SCR_WaitMusic.FadeOut();
-					SCR_PunchMusic.FadeIn();
 				}
 			}
 			else if (gameState == GameState.PUNCHING) {

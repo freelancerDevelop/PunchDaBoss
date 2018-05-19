@@ -22,7 +22,7 @@ public class SCR_PunchMusic : MonoBehaviour {
 	}
 		
 	private void Start() {
-		source = GetComponent<AudioSource>();
+		source 	= GetComponent<AudioSource>();
 	}
 	
 	public static void Play () {
@@ -47,5 +47,15 @@ public class SCR_PunchMusic : MonoBehaviour {
 			if (volume < targetVol) volume = targetVol;
 		}
 		source.volume = volume;
+	}
+	
+	public static bool IsAm() {
+		if (source.time > source.clip.length * 0.25f && source.time < source.clip.length * 0.5f) {
+			return true;
+		}
+		else if (source.time > source.clip.length * 0.75f) {
+			return true;
+		}
+		return false;
 	}
 }
