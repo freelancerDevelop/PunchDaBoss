@@ -26,7 +26,12 @@ public class SCR_WaitMusic : MonoBehaviour {
 	}
 	
 	public static void Play () {
-		source.Play();
+		if (SCR_Profile.soundOn == 1) {
+			source.Play();
+		}
+	}
+	public static void Stop () {
+		source.Stop();
 	}
 	
 	public static void FadeIn () {

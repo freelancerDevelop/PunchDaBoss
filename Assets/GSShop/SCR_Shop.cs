@@ -14,6 +14,13 @@ public class SCR_Shop : MonoBehaviour {
 	public Transform shopContent;
 	public GameObject txtMoney;
 	private GameObject[] entries;
+	
+	
+	public GameObject pnlDetail;
+	public GameObject txtDetailName;
+	public GameObject txtDetailPrice;
+	public GameObject txtDetailDesc;
+	public GameObject imgDetailIcon;
 
 	// Instance
 	public static SCR_Shop instance = null;
@@ -31,30 +38,32 @@ public class SCR_Shop : MonoBehaviour {
 		instance = this;
 		
 		// Create the shop
-		txtMoney.GetComponent<Text>().text = SCR_Profile.money.ToString() + "$";
+		txtMoney.GetComponent<Text>().text = "$" + SCR_Profile.money.ToString();
 		
 		entries = new GameObject[SCR_Profile.martialMoves.Length];
 		for (int i=0; i<SCR_Profile.martialMoves.Length; i++) {
 			GameObject entry = Instantiate(PFB_PunchEntry);
 			entry.transform.GetChild(0).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].name;
-			entry.transform.GetChild(1).gameObject.GetComponent<Text>().text = SCR_Profile.martialMoves[i].cost.ToString() + "$";
+			entry.transform.GetChild(1).gameObject.GetComponent<Text>().text = "$" + SCR_Profile.martialMoves[i].cost.ToString();
 			entry.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = SPR_PunchIcon[i];
 			
-			if (SCR_Profile.money < SCR_Profile.martialMoves[i].cost) {
-				entry.GetComponent<Button>().interactable = false;
+			if (i == SCR_Profile.martialEquip) {
+				entry.transform.GetChild(3).gameObject.SetActive (true);
 			}
 			else {
-				entry.GetComponent<Button>().interactable = true;
+				entry.transform.GetChild(3).gameObject.SetActive (false);
 			}
 			
 			int param = i;
-			entry.GetComponent<Button>().onClick.AddListener(delegate{BuyPunch(param);});
+			entry.GetComponent<Button>().onClick.AddListener(delegate{ShowDetail(param);});
 			
 			entry.transform.SetParent (shopContent);
 			entry.transform.localScale = new Vector3(1, 1, 1);
 			
 			entries[i] = entry;
 		}
+		
+		pnlDetail.SetActive (false);
 	}
 	
 	
@@ -63,7 +72,24 @@ public class SCR_Shop : MonoBehaviour {
 	}
 	
 	
-	public void BuyPunch (int index) {
+	public void ShowDetail (int index) {
+		SCR_Audio.PlayClickSound();
+		
+		txtDetailName.GetComponent<Text>().text = SCR_Profile.martialMoves[index].name;
+		txtDetailPrice.GetComponent<Text>().text = "$" + SCR_Profile.martialMoves[index].cost.ToString();
+		txtDetailDesc.GetComponent<Text>().text = SCR_Profile.martialMoves[index].desc;
+		imgDetailIcon.GetComponent<Image>().sprite = SPR_PunchIcon[index];
+		
+		pnlDetail.SetActive (true);
+	}
+	
+	public void HideDetail (int index) {
+		SCR_Audio.PlayClickSound();
+		pnlDetail.SetActive (false);
+	}
+	
+	
+	public void BuyPunch () {
 		/*
 		if (SCR_Profile.BuyPunch (index)) {
 			RefreshShop();
@@ -76,7 +102,7 @@ public class SCR_Shop : MonoBehaviour {
 	}
 	
 	public void RefreshShop () {
-		txtMoney.GetComponent<Text>().text = SCR_Profile.money.ToString() + "$";
+		txtMoney.GetComponent<Text>().text = "$" + SCR_Profile.money.ToString();
 		
 		for (int i=0; i<entries.Length; i++) {
 			if (SCR_Profile.money < SCR_Profile.martialMoves[i].cost) {

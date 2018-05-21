@@ -22,7 +22,9 @@ public class SCR_GrabbedSound : MonoBehaviour {
 	}
 	
 	public static void Play () {
-		source.Play();
+		if (SCR_Profile.soundOn == 1) {
+			source.Play();
+		}
 	}
 	
 	public static void Stop () {

@@ -16,6 +16,10 @@ public class SCR_Audio : MonoBehaviour {
 	public AudioClip   fall;
 	public AudioClip   click;
 	
+	
+	private int lastScreamSound = -1;
+	private int lastTalkSound = -1;
+	
 	private void Awake() {
 		if (instance == null) {
 			instance = this;
@@ -31,36 +35,60 @@ public class SCR_Audio : MonoBehaviour {
 	}
 	
 	public static void PlayScreamSound () {
-		if (SCR_PunchMusic.IsAm()) {
-			int choose = Random.Range(0, instance.screamAm.Length);
-			source.PlayOneShot(instance.screamAm[choose]);
-		}
-		else {
-			int choose = Random.Range(0, instance.screamEm.Length);
-			source.PlayOneShot(instance.screamEm[choose]);
+		if (SCR_Profile.soundOn == 1) {
+			if (SCR_PunchMusic.IsAm()) {
+				int choose = instance.lastScreamSound;
+				while (choose == instance.lastScreamSound) {
+					choose = Random.Range(0, instance.screamAm.Length);
+				}
+				instance.lastScreamSound = choose;
+				source.PlayOneShot(instance.screamAm[choose]);
+			}
+			else {
+				int choose = instance.lastScreamSound;
+				while (choose == instance.lastScreamSound) {
+					choose = Random.Range(0, instance.screamEm.Length);
+				}
+				instance.lastScreamSound = choose;
+				source.PlayOneShot(instance.screamEm[choose]);
+			}
 		}
 	}
 	
 	public static void PlayTalkSound () {
-		int choose = Random.Range(0, instance.talk.Length);
-		source.PlayOneShot(instance.talk[choose]);
+		if (SCR_Profile.soundOn == 1) {
+			int choose = instance.lastTalkSound;
+			while (choose == instance.lastTalkSound) {
+				choose = Random.Range(0, instance.talk.Length);
+			}
+			instance.lastTalkSound = choose;
+			source.PlayOneShot(instance.talk[choose]);
+		}
 	}
 	
 	
 	public static void PlayFlyUpSound () {
-		source.PlayOneShot(instance.flyUp);
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.flyUp);
+		}
 	}
 	
 	public static void PlayPunchSound () {
-		int choose = Random.Range(0, instance.punch.Length);
-		source.PlayOneShot(instance.punch[choose]);
+		if (SCR_Profile.soundOn == 1) {
+			int choose = Random.Range(0, instance.punch.Length);
+			source.PlayOneShot(instance.punch[choose]);
+		}
 	}
 	
 	public static void PlayFallSound () {
-		source.PlayOneShot(instance.fall);
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.fall);
+		}
 	}
 	
 	public static void PlayClickSound () {
-		source.PlayOneShot(instance.click);
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.click);
+		}
 	}
 }

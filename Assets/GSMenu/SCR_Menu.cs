@@ -9,6 +9,9 @@ public class SCR_Menu : MonoBehaviour {
 	public GameObject imgBackground2 = null;
 	public GameObject imgPlayer = null;
 	
+	public GameObject btnSoundOn = null;
+	public GameObject btnSoundOff = null;
+	
 	private float timeCounter = 0;
 	private float sequence1 = 0;
 	private float sequence2 = 0;
@@ -29,6 +32,7 @@ public class SCR_Menu : MonoBehaviour {
 		// Load profile
 		SCR_Profile.Init ();
 		SCR_Profile.LoadProfile ();
+		RefreshSoundButtonStatus();
 		
 		// OK, confirm that menu is now the first state
 		menuLoaded = true;
@@ -52,6 +56,39 @@ public class SCR_Menu : MonoBehaviour {
 		// Load latest level
 		SceneManager.LoadScene("GSShop/SCN_Shop");
 		SCR_Audio.PlayClickSound();
+	}
+	
+	public void OnSound () {
+		SCR_Profile.ToggleSound();
+		RefreshSoundButtonStatus();
+		RefreshSoundStatus();
+		SCR_Audio.PlayClickSound();
+	}
+	
+	public void RefreshSoundButtonStatus () {
+		if (SCR_Profile.soundOn == 1) {
+			btnSoundOn.SetActive (true);
+			btnSoundOff.SetActive (false);
+		}
+		else {
+			btnSoundOn.SetActive (false);
+			btnSoundOff.SetActive (true);
+		}
+	}
+	
+	public void RefreshSoundStatus () {
+		if (SCR_Profile.soundOn == 1) {
+			if (musicPlayed == true) {
+				SCR_WaitMusic.Play();
+				SCR_PunchMusic.Play();
+			}
+		}
+		else {
+			if (musicPlayed == true) {
+				SCR_WaitMusic.Stop();
+				SCR_PunchMusic.Stop();
+			}
+		}
 	}
 	
 	public void OnReset () {
