@@ -10,7 +10,7 @@ TextureImporter:
   serializedVersion: 5
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -112,9 +112,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 160
-        width: 184
-        height: 160
+        y: 150
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -122,7 +122,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 38a2065b8662d7f48908a70ada38ca94
+      spriteID: 4acb95d3f02cb1b4f8645df2b77d33f6
       vertices: []
       indices: 
       edges: []
@@ -131,10 +131,10 @@ TextureImporter:
       name: TEX_Sound_1
       rect:
         serializedVersion: 2
-        x: 184
-        y: 160
-        width: 184
-        height: 160
+        x: 150
+        y: 150
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,7 +142,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d8de795720120c46b1ff9ba67276352
+      spriteID: 6ddb4cd76accf924aa164f2f89f99a43
       vertices: []
       indices: 
       edges: []
@@ -153,8 +153,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 184
-        height: 160
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -162,7 +162,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4eab117bf7380d142871c001fc5c1c8b
+      spriteID: cc5ac19313dd3a64eb93b9ddbc4bbffd
       vertices: []
       indices: 
       edges: []
@@ -171,10 +171,10 @@ TextureImporter:
       name: TEX_Sound_3
       rect:
         serializedVersion: 2
-        x: 184
+        x: 150
         y: 0
-        width: 184
-        height: 160
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -182,7 +182,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 755354fcb07454040b3315ebe9d2d668
+      spriteID: 061cbadd5e4b74842b336b6ed4909325
       vertices: []
       indices: 
       edges: []

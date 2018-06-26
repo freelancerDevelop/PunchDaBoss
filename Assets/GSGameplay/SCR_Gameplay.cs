@@ -12,9 +12,8 @@ public enum TutorialStep {
 	THROW,
 	AIM,
 	PUNCH,
+	FLY_UP,
 	CONTINUE,
-	HIT,
-	MISS,
 	FINISH
 }
 
@@ -27,12 +26,6 @@ public enum GameState {
 }
 
 public class SCR_Gameplay : MonoBehaviour {
-	// Prefab
-	public GameObject PFB_Player				= null;
-	public GameObject PFB_Boss					= null;
-	
-	public GameObject PFB_ComboText				= null;
-	
 	// Screen
 	public static float SCREEN_RATIO 			= 0;
 	public static float SCREEN_W 				= 0;
@@ -40,43 +33,89 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float SCREEN_SCALE			= 0;
 	public static float TOUCH_SCALE				= 0;
 	
-	public static float GRAVITY					= 1800.0f;
-	public static float CAMERA_OFFSET_Y			= 600.0f; // Distance from top of the screen to the boss
+	public static float GRAVITY					= 3500.0f;
+	public static float CAMERA_OFFSET_Y			= 700.0f; // Distance from top of the screen to the boss
 	public static float CAMERA_SPEED_MULTIPLIER = 15.0f;
-	
 	public static float CAMERA_ENDING_Y			= 100.0f;
+	public static float CAMERA_SHAKE_AMOUNT		= 4.0f;
+	
+	public static float COMBO_TIME				= 1.5f;
+	
+	public static float FURNITURE_Y				= 1470.0f;
+	public static float FRAGMENT_Y				= 1308.0f;
+	public static float LAPTOP_Y				= 1570.0f;
+	
+	public static float PUNCH_TEXT_OFFSET_Y		= 200.0f;
+	
+	public static float OBJECT_SPAWN_TIME		= 15.0f;
 	
 	public static int	MONEY_FOR_HIGHLIGHT		= 5;
+	public static float	TUTORIAL_FADE_SPEED		= 0.3f;
+	public static float	TUTORIAL_HOLD_DURATION	= 0.5f;
+	
+	
+	// Prefab
+	public GameObject 	PFB_Player				= null;
+	public GameObject[]	PFB_Boss				= null;
+	public GameObject[]	PFB_Security			= null;
+	public GameObject[]	PFB_FlyingObject		= null;
+	public GameObject[]	PFB_Furniture			= null;
+	
+	public GameObject 	PFB_Destruction			= null;
+	public GameObject 	PFB_Ricochet			= null;
+	public GameObject[]	PFB_Combo				= null;
+	
+	
 	
 	// Instance
 	public static SCR_Gameplay instance 		= null;
 	
+	
 	// On-screen object
 	public GameObject	cvsMain;
 	public GameObject	pnlResult;
+	public GameObject 	txtMoney;
+	public GameObject 	txtMoneyAdd;
 	public GameObject	txtPunchNumber;
 	public GameObject	txtHeightNumber;
 	public GameObject	txtBestNumber;
 	public GameObject	txtMoneyNumber;
 	public GameObject	txtCurrentHeight;
-	public GameObject	pnlTutorial;
+	public GameObject	imgHighScore;
+	public GameObject	imgClockContent;
+	public GameObject[]	imgCombo;
+	public GameObject	txtTapToBack;
 	public GameObject	txtTutorial;
-	public GameObject	imgCooldown;
+	public GameObject	pnlFlashWhite;
+	
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
 	[System.NonSerialized] public GameObject 	boss			= null;
+	[System.NonSerialized] public GameObject 	security		= null;
+	[System.NonSerialized] public GameObject 	flyingObject	= null;
 	
 	// Game
 	[System.NonSerialized] public GameState 	gameState		= GameState.TALKING;
 	[System.NonSerialized] public float 		cameraHeight	= 0.0f;
 	[System.NonSerialized] public float 		cameraTarget	= 0.0f;
+	[System.NonSerialized] public float 		cameraShakeTime	= 0.0f;
 	[System.NonSerialized] public int			maxBossY		= 0;
 	[System.NonSerialized] public int			punchNumber		= 0;
-	[System.NonSerialized] public int			highlightNumber	= 0;
 	[System.NonSerialized] public float			punchVolume		= 0;
+	[System.NonSerialized] public bool			breakFurniture	= false;
+	
+	[System.NonSerialized] public int			comboCount		= 0;
+	[System.NonSerialized] public float			comboTime		= 0;
+	
+	[System.NonSerialized] public float			objectCounter	= 0;
+	[System.NonSerialized] public float			internalMoney	= 0;
+	
+	[System.NonSerialized] public float			flashWhiteAlpha	= 0;
 	
 	[System.NonSerialized] public TutorialStep	tutorialStep	= TutorialStep.NONE;
+	[System.NonSerialized] public float			tutorialAlpha	= 0;
+	[System.NonSerialized] public float			tutorialCounter	= 0;
 	
 	
 	// Init
@@ -101,21 +140,28 @@ public class SCR_Gameplay : MonoBehaviour {
 		// Set camera
 		Camera.main.orthographicSize = SCREEN_H * 0.5f;
 		Camera.main.transform.position = new Vector3 (SCREEN_W * 0.5f, SCREEN_H * 0.5f, Camera.main.transform.position.z);
-}
+	}
 	
 	// Start game
 	private void Start () {
 		gameState	= GameState.TALKING;
 		
 		player		= Instantiate (PFB_Player);
-		boss 		= Instantiate (PFB_Boss);
+		boss 		= Instantiate (PFB_Boss[SCR_Profile.bossSelecting]);
+		security	= Instantiate (PFB_Security[SCR_Profile.bossSelecting]);
 		
 		pnlResult.SetActive (false);
-		pnlTutorial.SetActive (false);
-		imgCooldown.SetActive (false);
+		txtTapToBack.SetActive (false);
+		txtTutorial.SetActive (false);
 
-		SCR_Pool.Flush ();		
+		SCR_Pool.Flush ();
 		TriggerTutorial (TutorialStep.GRAB);
+		SCR_LightBar.deltaCamera = 0;
+		
+		SCR_UnityAnalytics.StartGame();
+		
+		internalMoney = SCR_Profile.money;
+		txtMoney.GetComponent<Text>().text = internalMoney.ToString();
 	}
 	
 	// Update
@@ -127,15 +173,6 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		float dt = Time.deltaTime;
 		
-		if (gameState == GameState.PUNCHING && player.GetComponent<SCR_Player>().GetCoolDown() < 1.0f) {
-			imgCooldown.SetActive (true);
-			imgCooldown.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = player.GetComponent<SCR_Player>().GetCoolDown();
-		}
-		else {
-			imgCooldown.SetActive (false);
-		}
-		
-		
 		if (Input.GetMouseButton(0)) {
 			float touchX = Input.mousePosition.x * TOUCH_SCALE;
 			float touchY = Input.mousePosition.y * TOUCH_SCALE;
@@ -145,15 +182,18 @@ public class SCR_Gameplay : MonoBehaviour {
 				player.GetComponent<SCR_Player>().GoGrabTheBoss();
 			}
 			else if (gameState == GameState.PUNCHING) {
-				if (SCR_Profile.showTutorial == 0 || tutorialStep == TutorialStep.AIM || tutorialStep == TutorialStep.PUNCH) {
+				if (SCR_Profile.showTutorial == 0 
+				|| tutorialStep == TutorialStep.AIM  
+				|| tutorialStep == TutorialStep.PUNCH 
+				|| tutorialStep == TutorialStep.CONTINUE) {
 					player.GetComponent<SCR_Player>().Aim (touchX, touchY + cameraHeight);
-					TriggerTutorial (TutorialStep.PUNCH);
 				}
-			}
-			else if (gameState == GameState.BOSS_RUNNING) {
-				if (boss.GetComponent<SCR_Boss>().IsRunning()) {
-					SceneManager.LoadScene("GSMenu/SCN_Menu");
-					SCR_Audio.PlayClickSound();
+				
+				if (SCR_Profile.showTutorial == 1 && tutorialStep == TutorialStep.AIM) {
+					tutorialCounter += dt;
+					if (tutorialCounter > TUTORIAL_HOLD_DURATION) {
+						TriggerTutorial (TutorialStep.PUNCH);
+					}
 				}
 			}
 		}
@@ -166,8 +206,14 @@ public class SCR_Gameplay : MonoBehaviour {
 			}
 			else if (gameState == GameState.PUNCHING) {
 				player.GetComponent<SCR_Player>().PerformPunch ();
-				
-				TriggerTutorial (TutorialStep.CONTINUE);
+			}
+			tutorialCounter = 0;
+		}
+		
+		if (Input.GetMouseButtonUp(0) && gameState == GameState.BOSS_RUNNING) {
+			if (boss.GetComponent<SCR_Boss>().IsRunning()) {
+				SceneManager.LoadScene("GSMenu/SCN_Menu");
+				SCR_Audio.PlayClickSound();
 			}
 		}
 		
@@ -175,14 +221,69 @@ public class SCR_Gameplay : MonoBehaviour {
 			cameraTarget = boss.GetComponent<SCR_Boss>().y - SCREEN_H + CAMERA_OFFSET_Y;
 			if (cameraTarget > cameraHeight) {
 				float deltaCamera = (cameraTarget - cameraHeight) * dt * CAMERA_SPEED_MULTIPLIER;
+				SCR_LightBar.deltaCamera = deltaCamera;
+				
 				cameraHeight += deltaCamera;
 				
 				player.GetComponent<SCR_Player>().AddDeltaCameraToPlayer (deltaCamera);
+				security.GetComponent<SCR_Security>().AddDeltaCameraToSecurity (deltaCamera);
+				
+				if (flyingObject != null) {
+					flyingObject.GetComponent<SCR_FlyingObject>().AddDeltaCameraToObject (deltaCamera);
+				}
 			}
+			
+			if (!breakFurniture) {
+				if (boss.GetComponent<SCR_Boss>().y > FURNITURE_Y - SCR_Boss.BOSS_SIZE) {
+					SCR_Background.BreakFurniture (boss.GetComponent<SCR_Boss>().x, boss.GetComponent<SCR_Boss>().y, boss.GetComponent<SCR_Boss>().speedY);
+					breakFurniture = true;
+				}
+			}
+			
+			if (flyingObject == null) {
+				objectCounter += dt;
+				if (objectCounter >= OBJECT_SPAWN_TIME) {
+					objectCounter = 0;
+					
+					if (cameraHeight > 300000) {
+						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[2]);	
+					}
+					else if (cameraHeight > 150000) {
+						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[1]);	
+					}
+					else {
+						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[0]);	
+					}
+					
+					//int choose = Random.Range (0, PFB_FlyingObject.Length);
+					//flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[choose]);
+					
+					float x = Random.Range (-(SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f, (SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f);
+					float y = cameraHeight + Random.Range (1.0f, 1.5f) * SCREEN_H;
+					flyingObject.GetComponent<SCR_FlyingObject>().Spawn (x, y);
+				}
+			}
+			else {
+				if (flyingObject.GetComponent<SCR_FlyingObject>().broken == false) {
+					if (SCR_Helper.DistanceBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, boss.GetComponent<SCR_Boss>().x, boss.GetComponent<SCR_Boss>().y) < (SCR_FlyingObject.OBJECT_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f) {
+						float bossAngle = SCR_Helper.AngleBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, boss.GetComponent<SCR_Boss>().x, boss.GetComponent<SCR_Boss>().y);
+						boss.GetComponent<SCR_Boss>().CrashIntoObject (bossAngle);
+						flyingObject.GetComponent<SCR_FlyingObject>().Break();
+					}
+					
+					else if (SCR_Helper.DistanceBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, player.GetComponent<SCR_Player>().x, player.GetComponent<SCR_Player>().y) < (SCR_FlyingObject.OBJECT_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f) {
+						flyingObject.GetComponent<SCR_FlyingObject>().Break();
+					}
+				}
+			}
+			
+			Debug.Log(flyingObject);
 		}
 		else if (gameState == GameState.BOSS_FALLING) {
 			float deltaCamera = -cameraHeight * dt * CAMERA_SPEED_MULTIPLIER;
 			if (deltaCamera > -1) deltaCamera = -1;
+			SCR_LightBar.deltaCamera = deltaCamera;
+			
 			cameraHeight += deltaCamera;
 			
 			player.GetComponent<SCR_Player>().TurnOffCrossHair();
@@ -201,7 +302,27 @@ public class SCR_Gameplay : MonoBehaviour {
 		}
 		
 		SCR_Background.SetCameraY (cameraHeight);
-		Camera.main.transform.position = new Vector3 (SCREEN_W * 0.5f, SCREEN_H * 0.5f + cameraHeight, Camera.main.transform.position.z);
+		
+		if (cameraShakeTime > 0) {
+			cameraShakeTime -= dt;
+			Camera.main.transform.position = new Vector3 (SCREEN_W * 0.5f + Random.Range(-CAMERA_SHAKE_AMOUNT, CAMERA_SHAKE_AMOUNT), SCREEN_H * 0.5f + cameraHeight + Random.Range(-CAMERA_SHAKE_AMOUNT, CAMERA_SHAKE_AMOUNT), Camera.main.transform.position.z);
+		}
+		else {
+			Camera.main.transform.position = new Vector3 (SCREEN_W * 0.5f, SCREEN_H * 0.5f + cameraHeight, Camera.main.transform.position.z);
+		}
+		
+		if (comboTime > 0) {
+			comboTime -= dt;
+			if (comboTime <= 0) {
+				comboTime = 0;
+				comboCount = 0;
+				for (int i=1; i<imgCombo.Length; i++) {
+					imgCombo[i].SetActive (false);
+				}
+				imgCombo[0].SetActive (true);
+			}
+		}
+		imgClockContent.GetComponent<Image>().fillAmount = comboTime / COMBO_TIME;
 		
 		if (boss.GetComponent<SCR_Boss>().y * 0.01f - 3 > maxBossY) {
 			maxBossY = (int)(boss.GetComponent<SCR_Boss>().y * 0.01f - 3);
@@ -209,36 +330,126 @@ public class SCR_Gameplay : MonoBehaviour {
 		}
 		
 		if (SCR_Profile.showTutorial == 1) {
-			if (tutorialStep != TutorialStep.AIM && tutorialStep != TutorialStep.PUNCH && Time.timeScale < 1) {
-				if (tutorialStep == TutorialStep.MISS) {
-					Time.timeScale += dt * 5.0f;
-				}
-				else {
-					Time.timeScale += dt * 2.0f;
-				}
+			if (tutorialStep != TutorialStep.AIM && Time.timeScale < 1) {
+				Time.timeScale += dt * 2.0f;
 				if (Time.timeScale > 1) Time.timeScale = 1;
 			}
 		}
 		else {
 			if (Time.timeScale < 1) {
-				Time.timeScale += dt * 5.0f;
+				Time.timeScale += dt * 3.0f;
 				if (Time.timeScale > 1) Time.timeScale = 1;
 			}
 		}
+		
+		if (flashWhiteAlpha > 0) {
+			flashWhiteAlpha -= dt * 2.0f;
+			if (flashWhiteAlpha < 0) flashWhiteAlpha = 0;
+			
+			Color color = pnlFlashWhite.GetComponent<Image>().color;
+			color.a = flashWhiteAlpha;
+			pnlFlashWhite.GetComponent<Image>().color = color;
+		}
+		
+		if (SCR_Profile.showTutorial == 0) {
+			if (tutorialAlpha > 0) {
+				tutorialAlpha -= TUTORIAL_FADE_SPEED * dt;
+				if (tutorialAlpha < 0) tutorialAlpha = 0;
+				Color color = txtTutorial.GetComponent<Text>().color;
+				color.a = tutorialAlpha;
+				txtTutorial.GetComponent<Text>().color = color;
+			}
+		}
+		
+		
+		if (SCR_Profile.money - internalMoney > 1000) {
+			internalMoney += 57;
+		}
+		else if (SCR_Profile.money - internalMoney > 100) {
+			internalMoney += 13;
+		}
+		else if (SCR_Profile.money - internalMoney > 10) {
+			internalMoney += 7;
+		}
+		else if (SCR_Profile.money - internalMoney > 0) {
+			internalMoney += 1;
+		}
+		
+		if (SCR_Profile.money - internalMoney < -1000) {
+			internalMoney -= 57;
+		}
+		else if (SCR_Profile.money - internalMoney < -100) {
+			internalMoney -= 13;
+		}
+		else if (SCR_Profile.money - internalMoney < -10) {
+			internalMoney -= 7;
+		}
+		else if (SCR_Profile.money - internalMoney < 0) {
+			internalMoney -= 1;
+		}
+		
+		txtMoney.GetComponent<Text>().text = internalMoney.ToString();
+	}
+	
+	
+	
+	
+	public void PunchSuccess (float x, float y) {
+		comboTime = COMBO_TIME;
+		comboCount ++;
+		if (comboCount == 3) {
+			security.GetComponent<SCR_Security>().PerformPunch();
+		}
+		
+		for (int i=0; i<imgCombo.Length; i++) {
+			imgCombo[i].SetActive (false);
+		}
+		imgCombo[comboCount].SetActive (true);
+		
+		punchNumber ++;
+		if (SCR_Profile.showTutorial == 1) {
+			txtTutorial.GetComponent<Text>().text = "Keep on punching (" + punchNumber.ToString() + "/3)";
+			if (punchNumber == 3) {
+				TriggerTutorial (TutorialStep.FINISH);
+			}
+		}
+		
+		if (comboCount >= 1) {
+			GameObject text = SCR_Pool.GetFreeObject (PFB_Combo[comboCount-1]);
+			text.transform.SetParent (cvsMain.transform);
+			text.GetComponent<SCR_ComboText>().Spawn (x, y);
+		}
+	}
+	
+	public void SecurityPunchSuccess () {
+		comboCount = 0;
+		
+		for (int i=1; i<imgCombo.Length; i++) {
+			imgCombo[i].SetActive (false);
+		}
+		imgCombo[0].SetActive (true);
 	}
 	
 	
 	public void Lose () {
 		pnlResult.SetActive (true);
+		txtTapToBack.SetActive (true);
+		
+		if (maxBossY > SCR_Profile.highScore)
+			imgHighScore.SetActive (true);
+		else
+			imgHighScore.SetActive (false);
+		
 		SCR_Profile.ReportScore (maxBossY);
 		txtPunchNumber.GetComponent<Text>().text = punchNumber.ToString();
 		txtHeightNumber.GetComponent<Text>().text = maxBossY.ToString();
 		txtBestNumber.GetComponent<Text>().text = SCR_Profile.highScore.ToString();
 		
-		int money = (int)(0.1f * maxBossY);
-		money += highlightNumber * MONEY_FOR_HIGHLIGHT;
-		txtMoneyNumber.GetComponent<Text>().text = money.ToString();
-		SCR_Profile.AddMoney (money);
+		int money = (int)(maxBossY);
+		txtMoneyNumber.GetComponent<Text>().text = "$" + money.ToString();
+		AddMoney (money);
+		
+		SCR_UnityAnalytics.FinishGame(maxBossY);
 	}
 	
 	
@@ -246,49 +457,65 @@ public class SCR_Gameplay : MonoBehaviour {
 		if (SCR_Profile.showTutorial == 1) {
 			if (step == tutorialStep + 1 || force == true) {
 				tutorialStep = step;
-				pnlTutorial.SetActive (true);
+
 					
 				if (step == TutorialStep.GRAB) {
-					txtTutorial.GetComponent<Text>().text = "Tap anywhere and hold to grab your boss!";
+					tutorialAlpha = 1;
+					txtTutorial.SetActive (true);
+					txtTutorial.GetComponent<Text>().text = "Tap anywhere to start";
+					SCR_UnityAnalytics.StartTutorial();
 				}
 				else if (step == TutorialStep.THROW) {
-					txtTutorial.GetComponent<Text>().text = "Release your finger to throw him upward.";
+					txtTutorial.SetActive (false);
 				}
 				else if (step == TutorialStep.AIM) {
-					Time.timeScale = 0.05f;
-					txtTutorial.GetComponent<Text>().text = "Tap and hold your finger to aim your punch.";
+					txtTutorial.SetActive (true);
+					txtTutorial.GetComponent<Text>().text = "Tap and hold to aim";
 				}
 				else if (step == TutorialStep.PUNCH) {
+					txtTutorial.SetActive (true);
+					txtTutorial.GetComponent<Text>().text = "Release to start punching";
+				}
+				else if (step == TutorialStep.FLY_UP) {
+					txtTutorial.GetComponent<Text>().text = "Keep on punching (0/3)";
 					Time.timeScale = 0.05f;
-					txtTutorial.GetComponent<Text>().text = "Release your finger to rush up and punch him.";
 				}
 				else if (step == TutorialStep.CONTINUE) {
-					txtTutorial.GetComponent<Text>().text = "";
-					pnlTutorial.SetActive (false);
-				}
-				else if (step == TutorialStep.HIT) {
-					txtTutorial.GetComponent<Text>().text = "Nice hit! Now, keep punching your boss as high as possible.";
-				}
-				else if (step == TutorialStep.MISS) {
-					txtTutorial.GetComponent<Text>().text = "I can't believe you miss that. Let's try again.";
+					
 				}
 				else if (step == TutorialStep.FINISH) {
-					pnlTutorial.SetActive (false);
+					txtTutorial.GetComponent<Text>().text = "Well done!";
 					SCR_Profile.showTutorial = 0;
 					SCR_Profile.SaveProfile();
+					
+					SCR_UnityAnalytics.FinishTutorial();
 				}
 			}
 		}
 	}
 	
 	
-	public void ShowComboText (string caption, float x, float y) {
-		GameObject text = SCR_Pool.GetFreeObject (PFB_ComboText);
-		text.transform.SetParent (cvsMain.transform);
-		text.GetComponent<SCR_ComboText>().Spawn (caption, x, y);
+	public void AddMoney (int money) {
+		txtMoneyAdd.GetComponent<SCR_MoneyAdd>().SetText (money.ToString());
+		SCR_Profile.AddMoney (money);
 	}
 	
-	public void ShakeCamera (float magnitude, float duration) {
-		
+	public void ShowDestruction (float x, float y) {
+		GameObject text = SCR_Pool.GetFreeObject (PFB_Destruction);
+		text.transform.SetParent (cvsMain.transform);
+		text.GetComponent<SCR_ComboText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
+	}
+	public void ShowRicochet (float x, float y) {
+		GameObject text = SCR_Pool.GetFreeObject (PFB_Ricochet);
+		text.transform.SetParent (cvsMain.transform);
+		text.GetComponent<SCR_ComboText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
+	}
+	
+	public void ShakeCamera (float duration) {
+		cameraShakeTime = duration;
+	}
+	
+	public void FlashWhite () {
+		flashWhiteAlpha = 0.9f;
 	}
 }

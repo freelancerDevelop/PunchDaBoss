@@ -8,7 +8,7 @@ TextureImporter:
   serializedVersion: 5
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -110,9 +110,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 329
-        width: 569
-        height: 329
+        y: 350
+        width: 700
+        height: 350
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -120,7 +120,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a4ef61cff9b9fab4bbf1231664dec16e
+      spriteID: d4c4c4464b19ecc4db7eb215d4ef8e0f
       vertices: []
       indices: 
       edges: []
@@ -131,8 +131,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 569
-        height: 329
+        width: 700
+        height: 350
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,7 +140,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2316daf6047a85840a5f1f0088998c26
+      spriteID: 25dbb08953fe74740b0a80791ce9426e
       vertices: []
       indices: 
       edges: []

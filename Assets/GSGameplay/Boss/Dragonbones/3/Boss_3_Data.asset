@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073bee4373b27a443b0a44a72181864e, type: 3}
+  m_Name: Boss_3_Data
+  m_EditorClassIdentifier: 
+  dataName: Boss_3
+  dragonBonesJSON: {fileID: 4900000, guid: ef1a2c995710a4149b7c227d72860a7b, type: 3}
+  textureAtlas:
+  - textureAtlasJSON: {fileID: 4900000, guid: 5da11982fd45f04408422a3a0c8e11a1, type: 3}
+    texture: {fileID: 2800000, guid: df0cb8518997e8142bf516eb6547f202, type: 3}
+    material: {fileID: 2100000, guid: 50df5e7eb8f0c8c41a2f9c80c6577a62, type: 2}
+    uiMaterial: {fileID: 0}
