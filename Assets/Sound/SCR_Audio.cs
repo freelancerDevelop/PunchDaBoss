@@ -124,15 +124,15 @@ public class SCR_Audio : MonoBehaviour {
 				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_ui_back.wav", (x) => back = x));
 				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_ui_purchase.wav", (x) => buy = x));
 				
-				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_drone_collision.wav", (x) => droneCollision = x));
-				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_drone_loop.wav", (x) => droneLoop = x));
-				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_drone_xplo.wav", (x) => droneExplosion = x));
+				instance.StartCoroutine(LoadFromFile("Sound/Gameplay/pdb_obj_drone_collision.wav", (x) => droneCollision = x));
+				instance.StartCoroutine(LoadFromFile("Sound/Gameplay/pdb_obj_drone_loop.wav", (x) => droneLoop = x));
+				instance.StartCoroutine(LoadFromFile("Sound/Gameplay/pdb_obj_drone_xplo.wav", (x) => droneExplosion = x));
 				
-				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_balloon_xplo.wav", (x) => balloonExplosion = x));
+				instance.StartCoroutine(LoadFromFile("Sound/Gameplay/pdb_obj_balloon_xplo.wav", (x) => balloonExplosion = x));
 				
-				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_ufo_collision.wav", (x) => ufoCollision = x));
-				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_ufo_loop.wav", (x) => ufoLoop = x));
-				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_ufo_xplo.wav", (x) => ufoExplosion = x));
+				instance.StartCoroutine(LoadFromFile("Sound/Gameplay/pdb_obj_ufo_collision.wav", (x) => ufoCollision = x));
+				instance.StartCoroutine(LoadFromFile("Sound/Gameplay/pdb_obj_ufo_loop.wav", (x) => ufoLoop = x));
+				instance.StartCoroutine(LoadFromFile("Sound/Gameplay/pdb_obj_ufo_xplo.wav", (x) => ufoExplosion = x));
 			}
 		}
 		else {
