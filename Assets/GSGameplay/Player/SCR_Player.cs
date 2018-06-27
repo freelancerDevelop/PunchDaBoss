@@ -50,6 +50,8 @@ public class SCR_Player : MonoBehaviour {
 	public const float PLAYER_SMOKE_SCALE		= 0.72f;
 	public const float PLAYER_SMOKE_OFFSET_Y	= -100;
 	
+	public const float PLAYER_MARKER_SCALE		= 0.5f;
+	
 	public int[] 		PUNCH_MONEY = new int []{10, 15, 20};
 	public const int 	RICOCHET_MONEY = 100;
 	
@@ -122,7 +124,7 @@ public class SCR_Player : MonoBehaviour {
 		shadow.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_SHADOW_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * PLAYER_SHADOW_SCALE, SCR_Gameplay.SCREEN_SCALE * PLAYER_SHADOW_SCALE);
 		
 		marker = Instantiate (PFB_Marker);
-		marker.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE, SCR_Gameplay.SCREEN_SCALE);
+		marker.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * PLAYER_MARKER_SCALE, SCR_Gameplay.SCREEN_SCALE * PLAYER_MARKER_SCALE, SCR_Gameplay.SCREEN_SCALE * PLAYER_MARKER_SCALE);
 		marker.SetActive (false);
 		
 		landParticle = Instantiate (PFB_Land);

@@ -276,8 +276,6 @@ public class SCR_Gameplay : MonoBehaviour {
 					}
 				}
 			}
-			
-			Debug.Log(flyingObject);
 		}
 		else if (gameState == GameState.BOSS_FALLING) {
 			float deltaCamera = -cameraHeight * dt * CAMERA_SPEED_MULTIPLIER;
