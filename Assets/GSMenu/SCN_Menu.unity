@@ -5025,8 +5025,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 808411150}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.013}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7267067, w: -0.6869479}
+  m_LocalPosition: {x: -0.003787261, y: 2.471388, z: -0.013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1624954463}
@@ -9245,6 +9245,17 @@ MonoBehaviour:
   click: {fileID: 8300000, guid: 5d1c1c529362cc94a90657c254de8acf, type: 3}
   back: {fileID: 8300000, guid: f9458ee137c0f6f4bafc57dddffd8590, type: 3}
   buy: {fileID: 8300000, guid: 45547d261a9bbeb4d94065f41c4b70e3, type: 3}
+  objectHit:
+  - {fileID: 8300000, guid: c956d0f3628e60941b1a1f5554355ce3, type: 3}
+  - {fileID: 8300000, guid: d8be10f82ed90e04098b716f469f1836, type: 3}
+  - {fileID: 8300000, guid: 145e17169c172de4092d9debb7ce58cb, type: 3}
+  droneLoop: {fileID: 8300000, guid: a2973931bdb0c2c43a1c1eeeba768d27, type: 3}
+  droneCollision: {fileID: 8300000, guid: 4b3359064e8e3ca489376513516c84e8, type: 3}
+  droneExplosion: {fileID: 8300000, guid: 1c6201f0dbc05e5408c0eee0dada4ebb, type: 3}
+  balloonExplosion: {fileID: 8300000, guid: 5cb39afb0feeb4c4ca3a5f91b2b53749, type: 3}
+  ufoLoop: {fileID: 8300000, guid: 78710701e02c1e344ac5c180393c9f5f, type: 3}
+  ufoCollision: {fileID: 8300000, guid: 2627cb25d5a6a0a44af79d2d3ebab86e, type: 3}
+  ufoExplosion: {fileID: 8300000, guid: 5abe9a7d5505ab6429a41b762f312058, type: 3}
 --- !u!82 &1366286750
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13665,9 +13676,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1881803176}
-  m_LocalRotation: {x: 0, y: 0, z: -0.38103035, w: 0.9245625}
-  m_LocalPosition: {x: 0.58905506, y: 0.9199417, z: -0.002}
-  m_LocalScale: {x: 1.0000002, y: 0.9999998, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.38195765, w: 0.92417985}
+  m_LocalPosition: {x: 0.6611768, y: 0.898264, z: -0.002}
+  m_LocalScale: {x: 1.0000002, y: 0.99999994, z: 1}
   m_Children: []
   m_Father: {fileID: 1624954463}
   m_RootOrder: 2

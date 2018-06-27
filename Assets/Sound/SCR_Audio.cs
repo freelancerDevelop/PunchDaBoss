@@ -32,6 +32,18 @@ public class SCR_Audio : MonoBehaviour {
 	public AudioClip   back;
 	public AudioClip   buy;
 	
+	public AudioClip[] objectHit;
+	
+	public AudioClip   droneLoop;
+	public AudioClip   droneCollision;
+	public AudioClip   droneExplosion;
+	
+	public AudioClip   balloonExplosion;
+	
+	public AudioClip   ufoLoop;
+	public AudioClip   ufoCollision;
+	public AudioClip   ufoExplosion;
+	
 	private float 	screamCooldown = 0;
 	private int 	lastScreamSound = -1;
 	private int 	lastTalkSound = -1;
@@ -95,6 +107,10 @@ public class SCR_Audio : MonoBehaviour {
 					instance.StartCoroutine(LoadFromFileAndPutToArray("Sound/Gameplay/pdb_security_flyup_0" + (i+1).ToString() + ".wav", securityFlyUp, i));
 				}
 				
+				objectHit = new AudioClip[3];
+				for (int i=0; i<3; i++) {
+					instance.StartCoroutine(LoadFromFileAndPutToArray("Sound/Gameplay/pdb_obj_hit_0" + (i+1).ToString() + ".wav", objectHit, i));
+				}
 				
 				breakSound = new AudioClip[2];
 				instance.StartCoroutine(LoadFromFileAndPutToArray("Sound/Gameplay/pdb_start_break.wav", breakSound, 0));
@@ -107,6 +123,16 @@ public class SCR_Audio : MonoBehaviour {
 				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_ui_select.wav", (x) => click = x));
 				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_ui_back.wav", (x) => back = x));
 				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_ui_purchase.wav", (x) => buy = x));
+				
+				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_drone_collision.wav", (x) => droneCollision = x));
+				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_drone_loop.wav", (x) => droneLoop = x));
+				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_drone_xplo.wav", (x) => droneExplosion = x));
+				
+				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_balloon_xplo.wav", (x) => balloonExplosion = x));
+				
+				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_ufo_collision.wav", (x) => ufoCollision = x));
+				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_ufo_loop.wav", (x) => ufoLoop = x));
+				instance.StartCoroutine(LoadFromFile("Sound/UI/pdb_obj_ufo_xplo.wav", (x) => ufoExplosion = x));
 			}
 		}
 		else {
@@ -258,6 +284,53 @@ public class SCR_Audio : MonoBehaviour {
 	public static void PlayBuySound () {
 		if (SCR_Profile.soundOn == 1) {
 			source.PlayOneShot(instance.buy);
+		}
+	}
+	
+	public static void PlayObjectHitSound () {
+		if (SCR_Profile.soundOn == 1) {
+			int choose = Random.Range(0, instance.objectHit.Length);
+			source.PlayOneShot(instance.objectHit[choose]);
+		}
+	}
+	
+	public static void PlayDroneLoopSound (AudioSource s) {
+		if (SCR_Profile.soundOn == 1) {
+			s.clip = instance.droneLoop;
+			s.Play();
+		}
+	}
+	public static void PlayDroneCollisionSound () {
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.droneCollision);
+		}
+	}
+	public static void PlayDroneExplosionSound () {
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.droneExplosion);
+		}
+	}
+	
+	public static void PlayBalloonExplosionSound () {
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.balloonExplosion);
+		}
+	}
+	
+	public static void PlayUFOLoopSound (AudioSource s) {
+		if (SCR_Profile.soundOn == 1) {
+			s.clip = instance.ufoLoop;
+			s.Play();
+		}
+	}
+	public static void PlayUFOCollisionSound () {
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.ufoCollision);
+		}
+	}
+	public static void PlayUFOExplosionSound () {
+		if (SCR_Profile.soundOn == 1) {
+			source.PlayOneShot(instance.ufoExplosion);
 		}
 	}
 }

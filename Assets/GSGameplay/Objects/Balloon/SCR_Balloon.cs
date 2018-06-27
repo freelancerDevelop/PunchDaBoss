@@ -45,6 +45,8 @@ public class SCR_Balloon : SCR_FlyingObject {
 		
 		SCR_Gameplay.instance.ShakeCamera (0.3f);
 		SCR_Gameplay.instance.FlashWhite();
+		
+		SCR_Audio.PlayBalloonExplosionSound();
 	}
 	
 	public override void AddDeltaCameraToObject (float deltaCamera) {

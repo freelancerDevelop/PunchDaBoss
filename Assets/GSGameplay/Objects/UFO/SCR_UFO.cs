@@ -42,6 +42,8 @@ public class SCR_UFO : SCR_FlyingObject {
 		foreach(Transform child in crashParticle.transform) {
 			child.gameObject.SetActive (false);
 		}
+		
+		SCR_Audio.PlayUFOLoopSound(GetComponent<AudioSource>());
 	}
 	
 	public override void Break () {
@@ -60,6 +62,9 @@ public class SCR_UFO : SCR_FlyingObject {
 			child.gameObject.SetActive (true);
 		}
 		
+		GetComponent<AudioSource>().Stop();
+		SCR_Audio.PlayObjectHitSound();
+		SCR_Audio.PlayUFOCollisionSound();
 	}
 	
 	private void Crash() {
@@ -84,6 +89,8 @@ public class SCR_UFO : SCR_FlyingObject {
 		
 		SCR_Gameplay.instance.ShakeCamera (0.3f);
 		SCR_Gameplay.instance.FlashWhite();
+		
+		SCR_Audio.PlayUFOExplosionSound();
 	}
 	
 	public override void AddDeltaCameraToObject (float deltaCamera) {
