@@ -118,6 +118,12 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public float			tutorialCounter	= 0;
 	
 	
+	private Vector2		txtMoneyAddOriginalPosition;
+	private Vector2		txtMoneyAddOriginalAnchorMin;
+	private Vector2		txtMoneyAddOriginalAnchorMax;
+	private TextAnchor	txtMoneyAddOriginalAlignment;
+	private int			txtMoneyAddOriginalFontSize;
+	
 	// Init
 	private void Awake () {
 		// Don't do anything if menu state is not the first state
@@ -162,6 +168,12 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		internalMoney = SCR_Profile.money;
 		txtMoney.GetComponent<Text>().text = internalMoney.ToString();
+		
+		txtMoneyAddOriginalPosition = txtMoneyAdd.GetComponent<RectTransform>().anchoredPosition;
+		txtMoneyAddOriginalAnchorMin = txtMoneyAdd.GetComponent<RectTransform>().anchorMin;
+		txtMoneyAddOriginalAnchorMax = txtMoneyAdd.GetComponent<RectTransform>().anchorMax;
+		txtMoneyAddOriginalAlignment = txtMoneyAdd.GetComponent<Text>().alignment;
+		txtMoneyAddOriginalFontSize = txtMoneyAdd.GetComponent<Text>().fontSize;
 	}
 	
 	// Update
@@ -495,6 +507,20 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public void AddMoney (int money) {
 		txtMoneyAdd.GetComponent<SCR_MoneyAdd>().SetText (money.ToString());
+		txtMoneyAdd.GetComponent<RectTransform>().anchorMin = txtMoneyAddOriginalAnchorMin;
+		txtMoneyAdd.GetComponent<RectTransform>().anchorMax = txtMoneyAddOriginalAnchorMax;
+		txtMoneyAdd.GetComponent<RectTransform>().anchoredPosition = txtMoneyAddOriginalPosition;
+		txtMoneyAdd.GetComponent<Text>().alignment = txtMoneyAddOriginalAlignment;
+		txtMoneyAdd.GetComponent<Text>().fontSize = txtMoneyAddOriginalFontSize;
+		SCR_Profile.AddMoney (money);
+	}
+	
+	public void AddMoneyAtPosition (int money, float x, float y) {
+		txtMoneyAdd.GetComponent<SCR_MoneyAdd>().Spawn (money.ToString(), x, y + PUNCH_TEXT_OFFSET_Y);
+		txtMoneyAdd.GetComponent<RectTransform>().anchorMin = Vector2.zero;
+		txtMoneyAdd.GetComponent<RectTransform>().anchorMax = Vector2.zero;
+		txtMoneyAdd.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
+		txtMoneyAdd.GetComponent<Text>().fontSize = 80;
 		SCR_Profile.AddMoney (money);
 	}
 	

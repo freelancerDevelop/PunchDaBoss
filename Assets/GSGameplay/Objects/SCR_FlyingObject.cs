@@ -37,7 +37,7 @@ public class SCR_FlyingObject : MonoBehaviour {
 	public virtual void Break() {
 		broken = true;
 		SCR_Gameplay.instance.ShowDestruction (x + SCR_Gameplay.SCREEN_W * 0.5f, y - SCR_Gameplay.instance.cameraHeight);
-		SCR_Gameplay.instance.AddMoney (DESTRUCTION_MONEY);
+		SCR_Gameplay.instance.AddMoneyAtPosition (DESTRUCTION_MONEY, x + SCR_Gameplay.SCREEN_W * 0.5f, y - SCR_Gameplay.instance.cameraHeight);
 	}
 		
 	

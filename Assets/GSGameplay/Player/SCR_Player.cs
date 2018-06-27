@@ -356,11 +356,11 @@ public class SCR_Player : MonoBehaviour {
 		if (ricocheted == true) {
 			SCR_Gameplay.instance.ShowRicochet (bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
 			SCR_Audio.PlayPunchRicochetSound();
-			SCR_Gameplay.instance.AddMoney (RICOCHET_MONEY);
+			SCR_Gameplay.instance.AddMoneyAtPosition(RICOCHET_MONEY, bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
 		}
 		else {
 			SCR_Audio.PlayPunchNormalSound();
-			SCR_Gameplay.instance.AddMoney (PUNCH_MONEY[SCR_Gameplay.instance.comboCount]);
+			SCR_Gameplay.instance.AddMoneyAtPosition(PUNCH_MONEY[SCR_Gameplay.instance.comboCount], bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
 		}
 		
 		SCR_Gameplay.instance.PunchSuccess(bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
