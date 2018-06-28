@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073bee4373b27a443b0a44a72181864e, type: 3}
   m_Name: Boss_2_Data
   m_EditorClassIdentifier: 
-  dataName: Boss_02
+  dataName: Boss_2
   dragonBonesJSON: {fileID: 4900000, guid: 6ca8222a92f033041928b9868ee961e8, type: 3}
   textureAtlas:
   - textureAtlasJSON: {fileID: 4900000, guid: 99f6bacb06b12be4aafc02c56b5a3a86, type: 3}
