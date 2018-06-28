@@ -52,8 +52,8 @@ public class SCR_Player : MonoBehaviour {
 	
 	public const float PLAYER_MARKER_SCALE		= 0.5f;
 	
-	public int[] 		PUNCH_MONEY = new int []{10, 15, 20};
-	public const int 	RICOCHET_MONEY = 100;
+	public readonly int[]	PUNCH_MONEY		= new int []{10, 15, 20, 25, 30};
+	public const int 		RICOCHET_MONEY	= 100;
 	
 	// ==================================================
 	// Prefab

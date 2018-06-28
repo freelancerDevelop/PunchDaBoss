@@ -407,7 +407,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public void PunchSuccess (float x, float y) {
 		comboTime = COMBO_TIME;
 		comboCount ++;
-		if (comboCount == 3) {
+		if (comboCount == 5) {
 			security.GetComponent<SCR_Security>().PerformPunch();
 		}
 		
@@ -533,6 +533,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		GameObject text = SCR_Pool.GetFreeObject (PFB_Ricochet);
 		text.transform.SetParent (cvsMain.transform);
 		text.GetComponent<SCR_ComboText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
+		security.GetComponent<SCR_Security>().PerformPunch();
 	}
 	
 	public void ShakeCamera (float duration) {
