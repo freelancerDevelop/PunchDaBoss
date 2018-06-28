@@ -124,6 +124,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	private TextAnchor	txtMoneyAddOriginalAlignment;
 	private int			txtMoneyAddOriginalFontSize;
 	
+	private int			totalReward;
+	
 	// Init
 	private void Awake () {
 		// Don't do anything if menu state is not the first state
@@ -174,6 +176,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		txtMoneyAddOriginalAnchorMax = txtMoneyAdd.GetComponent<RectTransform>().anchorMax;
 		txtMoneyAddOriginalAlignment = txtMoneyAdd.GetComponent<Text>().alignment;
 		txtMoneyAddOriginalFontSize = txtMoneyAdd.GetComponent<Text>().fontSize;
+		
+		totalReward = 0;
 	}
 	
 	// Update
@@ -456,8 +460,9 @@ public class SCR_Gameplay : MonoBehaviour {
 		txtBestNumber.GetComponent<Text>().text = SCR_Profile.highScore.ToString();
 		
 		int money = (int)(maxBossY);
-		txtMoneyNumber.GetComponent<Text>().text = "$" + money.ToString();
 		AddMoney (money);
+		
+		txtMoneyNumber.GetComponent<Text>().text = "$" + totalReward.ToString();
 		
 		SCR_UnityAnalytics.FinishGame(maxBossY);
 	}
@@ -513,6 +518,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		txtMoneyAdd.GetComponent<Text>().alignment = txtMoneyAddOriginalAlignment;
 		txtMoneyAdd.GetComponent<Text>().fontSize = txtMoneyAddOriginalFontSize;
 		SCR_Profile.AddMoney (money);
+		
+		totalReward += money;
 	}
 	
 	public void AddMoneyAtPosition (int money, float x, float y) {
@@ -522,6 +529,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		txtMoneyAdd.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
 		txtMoneyAdd.GetComponent<Text>().fontSize = 80;
 		SCR_Profile.AddMoney (money);
+		
+		totalReward += money;
 	}
 	
 	public void ShowDestruction (float x, float y) {
