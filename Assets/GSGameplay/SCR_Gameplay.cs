@@ -84,7 +84,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject	imgHighScore;
 	public GameObject	imgClockContent;
 	public GameObject[]	imgCombo;
-	public GameObject	txtTapToBack;
+	public GameObject	btnReplay;
+	public GameObject	btnMainMenu;
 	public GameObject	txtTutorial;
 	public GameObject	pnlFlashWhite;
 	
@@ -159,7 +160,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		security	= Instantiate (PFB_Security[SCR_Profile.bossSelecting]);
 		
 		pnlResult.SetActive (false);
-		txtTapToBack.SetActive (false);
+		btnReplay.SetActive (false);
+		btnMainMenu.SetActive (false);
 		txtTutorial.SetActive (false);
 
 		SCR_Pool.Flush ();
@@ -225,14 +227,14 @@ public class SCR_Gameplay : MonoBehaviour {
 			}
 			tutorialCounter = 0;
 		}
-		
+		/*
 		if (Input.GetMouseButtonUp(0) && gameState == GameState.BOSS_RUNNING) {
 			if (boss.GetComponent<SCR_Boss>().IsRunning()) {
 				SceneManager.LoadScene("GSMenu/SCN_Menu");
 				SCR_Audio.PlayClickSound();
 			}
 		}
-		
+		*/
 		if (gameState == GameState.PUNCHING) {
 			cameraTarget = boss.GetComponent<SCR_Boss>().y - SCREEN_H + CAMERA_OFFSET_Y;
 			if (cameraTarget > cameraHeight) {
@@ -447,7 +449,11 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public void Lose () {
 		pnlResult.SetActive (true);
-		txtTapToBack.SetActive (true);
+		btnReplay.SetActive (true);
+		btnMainMenu.SetActive (true);
+		
+		SCR_WaitMusic.FadeIn();
+		SCR_PunchMusic.FadeOut();
 		
 		if (maxBossY > SCR_Profile.highScore)
 			imgHighScore.SetActive (true);
@@ -551,5 +557,15 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public void FlashWhite () {
 		flashWhiteAlpha = 0.9f;
+	}
+	
+	public void OnReplay () {
+		SceneManager.LoadScene("GSGameplay/SCN_Gameplay");
+		SCR_Audio.PlayClickSound();
+	}
+	
+	public void OnMainMenu () {
+		SceneManager.LoadScene("GSMenu/SCN_Menu");
+		SCR_Audio.PlayClickSound();
 	}
 }
