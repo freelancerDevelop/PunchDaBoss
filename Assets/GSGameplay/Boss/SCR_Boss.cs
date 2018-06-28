@@ -75,6 +75,7 @@ public class SCR_Boss : MonoBehaviour {
 	// Prefab
 	public	GameObject		PFB_Shadow;
 	public	GameObject[]	PFB_MoneyEffect;
+	public	GameObject		PFB_MoneyBagEffect;
 	public	GameObject		PFB_Smoke;
 	public	GameObject		PFB_Land;
 	public	GameObject		PFB_TalkBubble;
@@ -82,8 +83,8 @@ public class SCR_Boss : MonoBehaviour {
 	public	GameObject		PFB_BossName;
 	public 	GameObject 		PFB_TutorialRange;
 	
-	public	GameObject	PFB_TutorialTarget;
-	public	GameObject	PFB_TutorialFinger;
+	public	GameObject		PFB_TutorialTarget;
+	public	GameObject		PFB_TutorialFinger;
 	// ==================================================
 	// Stuff
 	private DragonBones.Animation	animation		= null;
@@ -101,17 +102,18 @@ public class SCR_Boss : MonoBehaviour {
 	[System.NonSerialized] public float	predictX	= 0;
 	[System.NonSerialized] public float	predictY	= 0;
 	
-	private	GameObject		shadow			= null;
-	private	GameObject[]	moneyParticle	= new GameObject[6];
-	private	GameObject		smokeParticle	= null;
-	private	GameObject		landParticle	= null;
-	private	GameObject		talkBubble		= null;
-	private	GameObject		atmosBurn		= null;
-	private	GameObject		bossName		= null;
-	private GameObject 		tutorialRange	= null;
+	private	GameObject		shadow				= null;
+	private	GameObject[]	moneyParticle		= new GameObject[6];
+	private GameObject		moneyBagParticle	= null;
+	private	GameObject		smokeParticle		= null;
+	private	GameObject		landParticle		= null;
+	private	GameObject		talkBubble			= null;
+	private	GameObject		atmosBurn			= null;
+	private	GameObject		bossName			= null;
+	private GameObject 		tutorialRange		= null;
 	
-	private	GameObject		tutorialTarget	= null;
-	private	GameObject		tutorialFinger	= null;
+	private	GameObject		tutorialTarget		= null;
+	private	GameObject		tutorialFinger		= null;
 	
 	
 	private string[][]	dialogues;
@@ -204,6 +206,10 @@ public class SCR_Boss : MonoBehaviour {
 			moneyParticle[i].transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
 			moneyParticle[i].SetActive (false);
 		}
+		
+		moneyBagParticle = Instantiate(PFB_MoneyBagEffect);
+		moneyBagParticle.transform.localScale = new Vector3(SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
+		moneyBagParticle.SetActive(false);
 		
 		smokeParticle = Instantiate (PFB_Smoke);
 		smokeParticle.transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
@@ -441,6 +447,8 @@ public class SCR_Boss : MonoBehaviour {
 			moneyParticle[i].transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, moneyParticle[i].transform.position.z);
 		}
 		
+		moneyBagParticle.transform.position = moneyParticle[0].transform.position;
+		
 		
 		
 		if (state == BossState.TALK) {
@@ -576,6 +584,9 @@ public class SCR_Boss : MonoBehaviour {
 			
 			SCR_Audio.PlayScreamSound();
 		}
+	}
+	public void ShowMoneyBag() {
+		moneyBagParticle.SetActive(true);
 	}
 	public void CrashIntoObject (float angle) {
 		float changeX = BOSS_CRASH_BONUS * SCR_Helper.Sin(angle);

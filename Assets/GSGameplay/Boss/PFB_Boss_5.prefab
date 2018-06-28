@@ -2279,6 +2279,8 @@ MonoBehaviour:
   - {fileID: 1983228885481184, guid: 2659f166342022a498b69670e3504a4c, type: 2}
   - {fileID: 1983228885481184, guid: 9396060ec8fde5843a30c8cf0d1e14cb, type: 2}
   - {fileID: 1983228885481184, guid: 2090632ed03360742a6990b06cd907c7, type: 2}
+  PFB_MoneyBagEffect: {fileID: 1983228885481184, guid: ddae1ce445936be479609ad201119fe7,
+    type: 2}
   PFB_Smoke: {fileID: 1873950423989702, guid: 33791ba17efbccf4c9ab73e6d539b925, type: 2}
   PFB_Land: {fileID: 1873950423989702, guid: ebd2a562cfaaeb64898eb46b5c43bc3c, type: 2}
   PFB_TalkBubble: {fileID: 1890845560413550, guid: e66ea7299c5766446bfbe24df5eac2b0,

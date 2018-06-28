@@ -354,6 +354,7 @@ public class SCR_Player : MonoBehaviour {
 		
 		bossScript.Punch (punchX, Mathf.Abs(punchY), false);
 		if (ricocheted == true) {
+			bossScript.ShowMoneyBag();
 			SCR_Gameplay.instance.ShowRicochet (bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
 			SCR_Audio.PlayPunchRicochetSound();
 			SCR_Gameplay.instance.AddMoneyAtPosition(RICOCHET_MONEY, bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
