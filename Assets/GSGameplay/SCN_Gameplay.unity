@@ -2644,8 +2644,8 @@ MonoBehaviour:
   - {fileID: 132605326}
   - {fileID: 448393306}
   - {fileID: 1870590968}
-  - {fileID: 1870590968}
-  - {fileID: 1870590968}
+  - {fileID: 1659275053}
+  - {fileID: 1130966545}
   txtTapToBack: {fileID: 275978593}
   txtTutorial: {fileID: 2139334261}
   pnlFlashWhite: {fileID: 1733519867}
