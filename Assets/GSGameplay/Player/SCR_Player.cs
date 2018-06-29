@@ -475,7 +475,7 @@ public class SCR_Player : MonoBehaviour {
 	}
 	public void AddDeltaCameraToPlayer (float amount) {
 		if (state == PlayerState.FLY_UP) {
-			y += amount * 0.5f;
+			y += amount * 0.7f;
 			
 			targetY += amount;
 			

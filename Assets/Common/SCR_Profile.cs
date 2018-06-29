@@ -27,10 +27,10 @@ public class SCR_Profile {
 		if (bosses == null) {
 			bosses = new Boss[5];
 			bosses[0] 	= new Boss ("The boss", 		    0);
-			bosses[1] 	= new Boss ("Mr President",		15000);
-			bosses[2] 	= new Boss ("The general", 		25000);
-			bosses[3] 	= new Boss ("The dictator", 	10000);
-			bosses[4] 	= new Boss ("Erix luke", 		15000);
+			bosses[1] 	= new Boss ("Mr President",		30000);
+			bosses[2] 	= new Boss ("The general", 		10000);
+			bosses[3] 	= new Boss ("The dictator", 	20000);
+			bosses[4] 	= new Boss ("Erix luke", 		50000);
 		}
 	}
 	
