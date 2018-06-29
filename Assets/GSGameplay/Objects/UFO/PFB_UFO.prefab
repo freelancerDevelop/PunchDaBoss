@@ -167,6 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c13ebc89a50e29b45b0e637276aaa0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PFB_MoneyBagEffect: {fileID: 1983228885481184, guid: c7e8a0244e5874d40b438d002b5ee513,
+    type: 2}
   PFB_Fragment: {fileID: 1102996860471224, guid: 5474be12301ea78438b8556575d349e0,
     type: 2}
   PFB_Smoke: {fileID: 1541031316637018, guid: ed10123d082abe340b4a9198b22cd4a4, type: 2}

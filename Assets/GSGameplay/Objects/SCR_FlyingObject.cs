@@ -16,7 +16,11 @@ public class SCR_FlyingObject : MonoBehaviour {
 	[System.NonSerialized] public float	speedX		= 0;
 	[System.NonSerialized] public float	speedY		= 0;
 	[System.NonSerialized] public bool	broken		= false;
+	
 	// ==================================================
+	public  GameObject PFB_MoneyBagEffect;
+	
+	private GameObject moneyBagParticle	= null;
 	
 	public void Spawn (float px, float py) {
 		x = px;
@@ -28,6 +32,10 @@ public class SCR_FlyingObject : MonoBehaviour {
 		transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 		
 		broken = false;
+		
+		moneyBagParticle = Instantiate(PFB_MoneyBagEffect);
+		moneyBagParticle.transform.localScale = new Vector3(SCR_Gameplay.SCREEN_SCALE * SCR_Boss.BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * SCR_Boss.BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * SCR_Boss.BOSS_SCALE);
+		moneyBagParticle.SetActive(false);
 	}
 	
 	public virtual void AddDeltaCameraToObject (float deltaCamera) {
@@ -38,6 +46,8 @@ public class SCR_FlyingObject : MonoBehaviour {
 		broken = true;
 		SCR_Gameplay.instance.ShowDestruction (x + SCR_Gameplay.SCREEN_W * 0.5f, y - SCR_Gameplay.instance.cameraHeight);
 		SCR_Gameplay.instance.AddMoneyAtPosition (DESTRUCTION_MONEY, x + SCR_Gameplay.SCREEN_W * 0.5f, y - SCR_Gameplay.instance.cameraHeight);
+		
+		moneyBagParticle.SetActive(true);
 	}
 		
 	
@@ -69,5 +79,7 @@ public class SCR_FlyingObject : MonoBehaviour {
 		}
 			
 		transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
+		
+		moneyBagParticle.transform.position = transform.position;
 	}
 }
