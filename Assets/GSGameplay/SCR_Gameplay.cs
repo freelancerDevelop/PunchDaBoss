@@ -560,12 +560,13 @@ public class SCR_Gameplay : MonoBehaviour {
 	}
 	
 	public void OnReplay () {
-		SceneManager.LoadScene("GSGameplay/SCN_Gameplay");
+		SCR_RunSound.Stop();
 		SCR_Audio.PlayClickSound();
+		SceneManager.LoadScene("GSGameplay/SCN_Gameplay");
 	}
 	
 	public void OnMainMenu () {
-		SceneManager.LoadScene("GSMenu/SCN_Menu");
 		SCR_Audio.PlayClickSound();
+		SceneManager.LoadScene("GSMenu/SCN_Menu");
 	}
 }

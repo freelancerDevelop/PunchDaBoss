@@ -27,6 +27,8 @@ public class SCR_Security : MonoBehaviour {
 	public const float SECURITY_SMOKE_OFFSET_Y	= -130;
 	
 	public const float SECURITY_LAUGH_DELAY		= 0.2f;
+	
+	public const int   SECURITY_MONEY			= 20;
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Shadow;
@@ -180,6 +182,8 @@ public class SCR_Security : MonoBehaviour {
 		
 		bossScript.Punch (punchX, Mathf.Abs(punchY), true);
 		SCR_Gameplay.instance.SecurityPunchSuccess();
+		
+		SCR_Gameplay.instance.AddMoneyAtPosition(SECURITY_MONEY, x + SCR_Gameplay.SCREEN_W * 0.5f, y - SCR_Gameplay.instance.cameraHeight);
 	}
 	// ==================================================
 	
