@@ -17,7 +17,9 @@ public class SCR_Balloon : SCR_FlyingObject {
 	private bool 		broken			= false;
 	// ==================================================
 	
-	private void Start () {
+	public override void Start () {
+		base.Start();
+		
 		transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * BALLOON_SCALE, SCR_Gameplay.SCREEN_SCALE * BALLOON_SCALE, 1);
 		
 		destroyParticle = Instantiate (PFB_Particle);

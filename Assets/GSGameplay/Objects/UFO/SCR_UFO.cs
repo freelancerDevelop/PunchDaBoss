@@ -24,7 +24,9 @@ public class SCR_UFO : SCR_FlyingObject {
 	private float		angle			= 0;
 	// ==================================================
 	
-	private void Start () {
+	public override void Start () {
+		base.Start();
+		
 		transform.localScale = new Vector3 (SCR_Gameplay.SCREEN_SCALE * UFO_SCALE, SCR_Gameplay.SCREEN_SCALE * UFO_SCALE, 1);
 		
 		smokeParticle = Instantiate (PFB_Smoke);
@@ -42,8 +44,6 @@ public class SCR_UFO : SCR_FlyingObject {
 		foreach(Transform child in crashParticle.transform) {
 			child.gameObject.SetActive (false);
 		}
-		
-		SCR_Audio.PlayUFOLoopSound(GetComponent<AudioSource>());
 	}
 	
 	public override void Break () {
@@ -114,5 +114,9 @@ public class SCR_UFO : SCR_FlyingObject {
 			angle = 0;
 			transform.localEulerAngles 	= new Vector3 (0, 0, angle);
 		}
+	}
+	
+	public override void PlayLoopSound() {
+		SCR_Audio.PlayUFOLoopSound(GetComponent<AudioSource>());
 	}
 }
