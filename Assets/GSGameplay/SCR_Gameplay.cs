@@ -465,7 +465,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		txtHeightNumber.GetComponent<Text>().text = maxBossY.ToString();
 		txtBestNumber.GetComponent<Text>().text = SCR_Profile.highScore.ToString();
 		
-		int money = (int)(maxBossY);
+		int money = (int)(maxBossY * 0.5);
 		AddMoney (money);
 		
 		txtMoneyNumber.GetComponent<Text>().text = "$" + totalReward.ToString();

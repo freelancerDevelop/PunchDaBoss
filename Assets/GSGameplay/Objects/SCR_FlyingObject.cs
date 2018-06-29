@@ -8,7 +8,7 @@ public class SCR_FlyingObject : MonoBehaviour {
 	public const float OBJECT_SIZE 				= 300;
 	public const float OBJECT_SPEED_X 			= 500;
 	public const float OBJECT_SPEED_Y 			= 1000;
-	public const int   DESTRUCTION_MONEY 		= 500;
+	public const int   DESTRUCTION_MONEY 		= 50;
 	
 	public const float	SOUND_FADE_OUT_SPEED	= 1.5f;
 	public const float	SOUND_FADE_IN_SPEED		= 1.75f;
