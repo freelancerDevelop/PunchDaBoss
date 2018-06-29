@@ -64,7 +64,7 @@ public class SCR_UFO : SCR_FlyingObject {
 		
 		GetComponent<AudioSource>().Stop();
 		SCR_Audio.PlayObjectHitSound();
-		SCR_Audio.PlayUFOCollisionSound();
+		SCR_Audio.PlayUFOCollisionSound(transform.GetChild(0).GetComponent<AudioSource>());
 	}
 	
 	private void Crash() {
@@ -90,6 +90,7 @@ public class SCR_UFO : SCR_FlyingObject {
 		SCR_Gameplay.instance.ShakeCamera (0.3f);
 		SCR_Gameplay.instance.FlashWhite();
 		
+		transform.GetChild(0).GetComponent<AudioSource>().Stop();
 		SCR_Audio.PlayUFOExplosionSound();
 	}
 	

@@ -300,9 +300,10 @@ public class SCR_Audio : MonoBehaviour {
 			s.Play();
 		}
 	}
-	public static void PlayDroneCollisionSound () {
+	public static void PlayDroneCollisionSound (AudioSource s) {
 		if (SCR_Profile.soundOn == 1) {
-			source.PlayOneShot(instance.droneCollision);
+			s.clip = instance.droneCollision;
+			s.Play();
 		}
 	}
 	public static void PlayDroneExplosionSound () {
@@ -323,9 +324,10 @@ public class SCR_Audio : MonoBehaviour {
 			s.Play();
 		}
 	}
-	public static void PlayUFOCollisionSound () {
+	public static void PlayUFOCollisionSound (AudioSource s) {
 		if (SCR_Profile.soundOn == 1) {
-			source.PlayOneShot(instance.ufoCollision);
+			s.clip = instance.ufoCollision;
+			s.Play();
 		}
 	}
 	public static void PlayUFOExplosionSound () {
