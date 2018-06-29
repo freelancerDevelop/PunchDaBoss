@@ -109,13 +109,11 @@ public class SCR_FlyingObject : MonoBehaviour {
 			gameObject.SetActive (false);
 			SCR_Gameplay.instance.flyingObject = null;
 			SCR_Gameplay.instance.objectCounter = SCR_Gameplay.OBJECT_SPAWN_TIME * 0.5f;
-			Debug.Log("Nullified");
 		}
 		else if (y >= SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H * 2 + OBJECT_SIZE && volume <= 0.01f) {
 			gameObject.SetActive (false);
 			SCR_Gameplay.instance.flyingObject = null;
 			SCR_Gameplay.instance.objectCounter = SCR_Gameplay.OBJECT_SPAWN_TIME * 0.5f;
-			Debug.Log("Nullified2");
 		}
 			
 		transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
