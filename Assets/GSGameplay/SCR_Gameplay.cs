@@ -39,7 +39,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float CAMERA_ENDING_Y			= 100.0f;
 	public static float CAMERA_SHAKE_AMOUNT		= 4.0f;
 	
-	public static float COMBO_TIME				= 1.5f;
+	public static float COMBO_TIME				= 1.8f;
 	
 	public static float FURNITURE_Y				= 1470.0f;
 	public static float FRAGMENT_Y				= 1308.0f;
