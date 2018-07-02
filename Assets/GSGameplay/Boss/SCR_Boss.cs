@@ -42,12 +42,12 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_SLIDE_FRICTION		= 700;
 	public const float BOSS_RUN_SPEED			= 600;
 	public const float BOSS_MIN_HANDICAP		= 0.0f;
-	public const float BOSS_HANDICAP_HEIGHT		= 100000;
-	public const float BOSS_MAX_SPEED_X			= 1300;
+	public const float BOSS_HANDICAP_HEIGHT		= 70000;
+	public const float BOSS_MAX_SPEED_X			= 1500;
 	public const float BOSS_MAX_SPEED_Y			= 5000;
 	public const float BOSS_MAX_SPEED_Y_BONUS	= 5500;
 	public const float BOSS_SIZE				= 200;
-	public const float BOSS_CRASH_BONUS			= 1000;
+	public const float BOSS_CRASH_BONUS			= 5000;
 	
 	public const float BOSS_SHADOW_OFFSET		= -120;
 	public const float BOSS_SHADOW_DISTANCE		= 1500;

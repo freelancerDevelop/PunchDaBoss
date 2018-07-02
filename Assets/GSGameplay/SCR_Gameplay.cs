@@ -47,7 +47,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public static float PUNCH_TEXT_OFFSET_Y		= 200.0f;
 	
-	public static float OBJECT_SPAWN_TIME		= 15.0f;
+	public static float OBJECT_SPAWN_TIME		= 8.0f;
 	
 	public static int	MONEY_FOR_HIGHLIGHT		= 5;
 	public static float	TUTORIAL_FADE_SPEED		= 0.3f;
