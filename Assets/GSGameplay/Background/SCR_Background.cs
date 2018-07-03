@@ -31,6 +31,12 @@ public class SCR_Background : MonoBehaviour {
 	public Sprite[]		SPR_Layer_Trump_4			= null;
 	public Sprite[]		SPR_Layer_Trump_5			= null;
 	
+	public Sprite[]		SPR_Layer_Dictator_1		= null;
+	public Sprite[]		SPR_Layer_Dictator_2		= null;
+	public Sprite[]		SPR_Layer_Dictator_3		= null;
+	public Sprite[]		SPR_Layer_Dictator_4		= null;
+	public Sprite[]		SPR_Layer_Dictator_5		= null;
+	
 	
 	public Sprite[]		SPR_Furniture				= null;
 	
@@ -79,6 +85,7 @@ public class SCR_Background : MonoBehaviour {
 		
 		
 		if (SCR_Profile.bossSelecting == 0 || SCR_Profile.bossSelecting == 4) {
+			// boss
 			sprLayer1 = SPR_Layer_Boss_1;
 			sprLayer2 = SPR_Layer_Boss_2;
 			sprLayer3 = SPR_Layer_Boss_3;
@@ -133,7 +140,8 @@ public class SCR_Background : MonoBehaviour {
 			furniture[10].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[8];
 			furniture[10].GetComponent<SCR_Furniture>().Spawn (250, 1570);
 		}
-		else if (SCR_Profile.bossSelecting == 1 || SCR_Profile.bossSelecting == 2 || SCR_Profile.bossSelecting == 3) {
+		else if (SCR_Profile.bossSelecting == 1 || SCR_Profile.bossSelecting == 3) {
+			// Trump
 			sprLayer1 = SPR_Layer_Trump_1;
 			sprLayer2 = SPR_Layer_Trump_2;
 			sprLayer3 = SPR_Layer_Trump_3;
@@ -186,6 +194,62 @@ public class SCR_Background : MonoBehaviour {
 			furniture[9].GetComponent<SCR_Furniture>().Spawn (-450, 1600);
 			furniture[10].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[14];
 			furniture[10].GetComponent<SCR_Furniture>().Spawn (250, 1600);
+		}
+		else if (SCR_Profile.bossSelecting == 2) {
+			// dictator
+			sprLayer1 = SPR_Layer_Dictator_1;
+			sprLayer2 = SPR_Layer_Dictator_2;
+			sprLayer3 = SPR_Layer_Dictator_3;
+			sprLayer4 = SPR_Layer_Dictator_4;
+			sprLayer5 = SPR_Layer_Dictator_5;
+			
+			layer_1_offset = 800;
+			layer_2_offset = 200;
+			layer_3_offset = 80;
+			layer_4_offset = 0;
+			layer_5_offset = -150;
+			
+			layer_1_scroll = 0.02f;
+			layer_2_scroll = 0.03f;
+			layer_3_scroll = 0.05f;
+			layer_4_scroll = 1.0f;
+			layer_5_scroll = 1.0f;
+			
+			layer_1_z = 0;
+			layer_2_z = -1;
+			layer_3_z = -6;
+			layer_4_z = -7;
+			layer_5_z = -50;
+			
+			// Place furniture
+			furniture = new GameObject[11];
+			for (int i=0; i<furniture.Length; i++) {
+				furniture[i] = Instantiate(PFB_Furniture);
+			}
+			// Fragment
+			furniture[0].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[3];
+			furniture[0].GetComponent<SCR_Furniture>().Spawn (-500, 1308);
+			furniture[1].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[4];
+			furniture[1].GetComponent<SCR_Furniture>().Spawn (-250, 1308);
+			furniture[2].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[5];
+			furniture[2].GetComponent<SCR_Furniture>().Spawn (0, 1308);
+			furniture[3].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[6];
+			furniture[3].GetComponent<SCR_Furniture>().Spawn (250, 1308);
+			furniture[4].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[7];
+			furniture[4].GetComponent<SCR_Furniture>().Spawn (500, 1308);
+			// Desk, chair, and laptop
+			furniture[5].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[0];
+			furniture[5].GetComponent<SCR_Furniture>().Spawn (-450, 1470);
+			furniture[6].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[1];
+			furniture[6].GetComponent<SCR_Furniture>().Spawn (-150, 1470);
+			furniture[7].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[0];
+			furniture[7].GetComponent<SCR_Furniture>().Spawn (200, 1470);
+			furniture[8].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[2];
+			furniture[8].GetComponent<SCR_Furniture>().Spawn (450, 1470);
+			furniture[9].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[8];
+			furniture[9].GetComponent<SCR_Furniture>().Spawn (-450, 1570);
+			furniture[10].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[8];
+			furniture[10].GetComponent<SCR_Furniture>().Spawn (250, 1570);
 		}
 		
 		layer1 = new GameObject[sprLayer1.Length];

@@ -98,7 +98,7 @@ public class SCR_Menu : MonoBehaviour {
 	}
 	
 	public void OnBuy () {
-		if (bossSelecting == 0 || bossSelecting == 1) {
+		if (bossSelecting <= 2) {
 			SCR_Profile.BuyBoss (bossSelecting);
 			UpdateBoss();
 			UpdateMoneyNumber();
@@ -126,7 +126,7 @@ public class SCR_Menu : MonoBehaviour {
 			
 			btnBuy.transform.GetChild(0).gameObject.GetComponent<Text>().text = SCR_Profile.bosses[bossSelecting].cost.ToString();
 			btnBuy.transform.GetChild(1).gameObject.GetComponent<Text>().text = SCR_Profile.bosses[bossSelecting].cost.ToString();
-			if (SCR_Profile.money >= SCR_Profile.bosses[bossSelecting].cost) {
+			if (SCR_Profile.money >= SCR_Profile.bosses[bossSelecting].cost && bossSelecting <= 2) {
 				btnBuy.GetComponent<Button>().interactable = true;
 			}
 			else {

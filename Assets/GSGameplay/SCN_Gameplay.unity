@@ -2352,6 +2352,21 @@ MonoBehaviour:
   SPR_Layer_Trump_5:
   - {fileID: 21300000, guid: ec9326e9e6412b84e9a0a145d6e51816, type: 3}
   - {fileID: 21300000, guid: 5b70253948658a14983660b494ecc1f1, type: 3}
+  SPR_Layer_Dictator_1:
+  - {fileID: 21300000, guid: cd3f007dd489f894dab663084312e82d, type: 3}
+  - {fileID: 21300000, guid: 8dc43e8dceb81f94e84533b11bf74396, type: 3}
+  - {fileID: 21300000, guid: d26be44ef1bf66145ba17d255a6e7f2b, type: 3}
+  - {fileID: 21300000, guid: c3c9a9b3474706248afdc068af670002, type: 3}
+  - {fileID: 21300000, guid: d26be44ef1bf66145ba17d255a6e7f2b, type: 3}
+  SPR_Layer_Dictator_2:
+  - {fileID: 21300000, guid: 01c400a43cc2c444ab5e0926faa2cc82, type: 3}
+  SPR_Layer_Dictator_3:
+  - {fileID: 21300000, guid: 406d1b2b34e3ac64394586cb8a80268e, type: 3}
+  SPR_Layer_Dictator_4:
+  - {fileID: 21300000, guid: fad59d316d2747948879b9a63823aea8, type: 3}
+  - {fileID: 21300000, guid: 99bdcbd0a27b4fc4c83c8d59e01e36ae, type: 3}
+  SPR_Layer_Dictator_5:
+  - {fileID: 21300000, guid: 330fcbdd72c04844f8ac33bdc1dca9dd, type: 3}
   SPR_Furniture:
   - {fileID: 21300000, guid: e9ec5e7ff9b6fb04c8424cc52afc5912, type: 3}
   - {fileID: 21300000, guid: 27fb3f2891335f84eb2af654a7cdd716, type: 3}
