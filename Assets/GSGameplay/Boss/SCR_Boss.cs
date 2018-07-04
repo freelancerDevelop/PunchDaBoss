@@ -311,9 +311,12 @@ public class SCR_Boss : MonoBehaviour {
 				}
 				
 				x += speedX * dt;
-				
+				/*
 				if (speedY > maxSpeedY)	y += maxSpeedY * dt;
 				else 					y += speedY * dt;
+				*/
+				if (speedY > maxSpeedY)	speedY = maxSpeedY;
+				y += speedY * dt;
 				
 				if (x <= -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X)) {
 					x = -(SCR_Gameplay.SCREEN_W * 0.5f - BOSS_REVERSE_X);
