@@ -10,6 +10,9 @@ public enum BossState {
 	FLY_1,
 	FLY_2,
 	FLY_3,
+	FLY_4,
+	FLY_5,
+	FLY_6,
 	FALL,
 	SLIDE,
 	RUN
@@ -275,7 +278,7 @@ public class SCR_Boss : MonoBehaviour {
 			dt = 0;
 		}
 		
-		if (state >= BossState.FLY_1 && state <= BossState.FLY_3) {
+		if (state >= BossState.FLY_1 && state <= BossState.FLY_6) {
 			if (SCR_Profile.showTutorial == 1) {
 				if (SCR_Gameplay.instance.tutorialStep == TutorialStep.AIM) {
 					predictY = y - (SCR_Gameplay.GRAVITY * BOSS_TUTORIAL_DELTA * BOSS_TUTORIAL_DELTA) * 0.5f;
@@ -479,16 +482,13 @@ public class SCR_Boss : MonoBehaviour {
 	}
 	
 	private void RandomFlyPose () {
-		int random = Random.Range(0, 100);
-		if (random % 3 == 0) {
-			SwitchState (BossState.FLY_1);
-		}
-		else if (random % 3 == 1) {
-			SwitchState (BossState.FLY_2);
-		}
-		else if (random % 3 == 2) {
-			SwitchState (BossState.FLY_3);
-		}
+		BossState s = state;
+		while (s == state) {
+			int random = Random.Range(0, 1000) % 6;
+			int i = (int)BossState.FLY_1 + random;
+			s = (BossState)i;
+		};
+		SwitchState (s);
 	}
 	// ==================================================
 	
@@ -533,13 +533,13 @@ public class SCR_Boss : MonoBehaviour {
 		}
 	}
 	public bool IsFlying () {
-		return (state >= BossState.FLY_1 && state <= BossState.FLY_3) || state == BossState.FALL;
+		return (state >= BossState.FLY_1 && state <= BossState.FLY_6) || state == BossState.FALL;
 	}
 	public bool IsRunning () {
 		return state == BossState.RUN;
 	}
 	public void Punch (float px, float py, bool isSecurityGuy) {
-		if (state >= BossState.FLY_1 && state <= BossState.FLY_3) {
+		if (state >= BossState.FLY_1 && state <= BossState.FLY_6) {
 			float handicap = BOSS_MIN_HANDICAP + (y / BOSS_HANDICAP_HEIGHT) * (1 - BOSS_MIN_HANDICAP);
 			if (handicap > 1) handicap = 1;
 			
