@@ -29,7 +29,7 @@ public class SCR_Player : MonoBehaviour {
 	public const float PLAYER_GRAB_HEIGHT		= 9;
 	public const float PLAYER_REVERSE_X			= 100;
 	public const float PLAYER_PUNCH_RANGE		= 200;
-	public const float PLAYER_PUNCH_FORCE		= 9000;
+	public const float PLAYER_PUNCH_FORCE		= 10000;
 	public const float PLAYER_FLY_SPEED			= 4500;
 	public const float PLAYER_TUTORIAL_RANGE	= 100;
 	

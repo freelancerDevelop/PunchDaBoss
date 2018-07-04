@@ -33,7 +33,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float SCREEN_SCALE			= 0;
 	public static float TOUCH_SCALE				= 0;
 	
-	public static float GRAVITY					= 3500.0f;
+	public static float GRAVITY					= 4000.0f;
 	public static float CAMERA_OFFSET_Y			= 650.0f; // Distance from top of the screen to the boss
 	public static float CAMERA_SPEED_MULTIPLIER = 15.0f;
 	public static float CAMERA_ENDING_Y			= 100.0f;

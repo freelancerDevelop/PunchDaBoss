@@ -20,7 +20,7 @@ public class SCR_Security : MonoBehaviour {
 	public const float SECURITY_SIZE			= 200;
 	public const float SECURITY_RANGE			= 200;
 	public const float SECURITY_SPEED			= 4500;
-	public const float SECURITY_FORCE			= 7000;
+	public const float SECURITY_FORCE			= 10000;
 	
 	public const float SECURITY_SHADOW_OFFSET	= 0;
 	public const float SECURITY_SHADOW_DISTANCE	= 1500;
