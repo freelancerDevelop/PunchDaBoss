@@ -66,7 +66,7 @@ public class SCR_Boss : MonoBehaviour {
 	
 	public const float BOSS_BURN_OFFSET_X		= 0;
 	public const float BOSS_BURN_OFFSET_Y		= 150;
-	public const float BOSS_BURN_SPEED_MIN		= 5001;
+	public const float BOSS_BURN_SPEED_MIN		= 3000;
 	public const float BOSS_BURN_SPEED_MAX		= 5500;
 	public const float BOSS_BURN_ALPHA			= 0.5f;
 	
