@@ -76,6 +76,7 @@ public class SCR_FlyingObject : MonoBehaviour {
 					PlayLoopSound();
 				}
 				targetVol = 1;
+				SCR_Gameplay.instance.HideDanger();
 			}
 			else {
 				targetVol = 0;
@@ -108,12 +109,12 @@ public class SCR_FlyingObject : MonoBehaviour {
 		if (y <= SCR_Gameplay.instance.cameraHeight - OBJECT_SIZE && volume <= 0.01f) {
 			gameObject.SetActive (false);
 			SCR_Gameplay.instance.flyingObject = null;
-			SCR_Gameplay.instance.objectCounter = SCR_Gameplay.OBJECT_SPAWN_TIME * 0.5f;
+			SCR_Gameplay.instance.objectCounter = SCR_Gameplay.instance.objectSpawnTime * 0.5f;
 		}
 		else if (y >= SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H * 2 + OBJECT_SIZE && volume <= 0.01f) {
 			gameObject.SetActive (false);
 			SCR_Gameplay.instance.flyingObject = null;
-			SCR_Gameplay.instance.objectCounter = SCR_Gameplay.OBJECT_SPAWN_TIME * 0.5f;
+			SCR_Gameplay.instance.objectCounter = SCR_Gameplay.instance.objectSpawnTime * 0.5f;
 		}
 			
 		transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);

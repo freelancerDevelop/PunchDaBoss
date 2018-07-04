@@ -34,7 +34,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float TOUCH_SCALE				= 0;
 	
 	public static float GRAVITY					= 4000.0f;
-	public static float CAMERA_OFFSET_Y			= 650.0f; // Distance from top of the screen to the boss
+	public static float CAMERA_OFFSET_Y			= 750.0f; // Distance from top of the screen to the boss
 	public static float CAMERA_SPEED_MULTIPLIER = 15.0f;
 	public static float CAMERA_ENDING_Y			= 100.0f;
 	public static float CAMERA_SHAKE_AMOUNT		= 4.0f;
@@ -47,7 +47,9 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public static float PUNCH_TEXT_OFFSET_Y		= 200.0f;
 	
-	public static float OBJECT_SPAWN_TIME		= 8.0f;
+	public static float OBJECT_SPAWN_TIME_MIN	= 6.0f;
+	public static float OBJECT_SPAWN_TIME_MAX	= 10.0f;
+	public static float OBJECT_DANGER_TIME		= 2.0f;
 	
 	public static int	MONEY_FOR_HIGHLIGHT		= 5;
 	public static float	TUTORIAL_FADE_SPEED		= 0.3f;
@@ -89,6 +91,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject	txtTutorial;
 	public GameObject	pnlFlashWhite;
 	
+	public Image		imgDanger;
+	
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player			= null;
@@ -118,6 +122,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public float			tutorialAlpha	= 0;
 	[System.NonSerialized] public float			tutorialCounter	= 0;
 	
+	[System.NonSerialized] public float			objectSpawnTime	= 0;
+	
 	
 	private Vector2		txtMoneyAddOriginalPosition;
 	private Vector2		txtMoneyAddOriginalAnchorMin;
@@ -126,6 +132,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	private int			txtMoneyAddOriginalFontSize;
 	
 	private int			totalReward;
+	
+	private bool		hidingDanger;
 	
 	// Init
 	private void Awake () {
@@ -163,6 +171,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		btnReplay.SetActive (false);
 		btnMainMenu.SetActive (false);
 		txtTutorial.SetActive (false);
+		
+		imgDanger.gameObject.SetActive (false);
 
 		SCR_Pool.Flush ();
 		TriggerTutorial (TutorialStep.GRAB);
@@ -180,6 +190,9 @@ public class SCR_Gameplay : MonoBehaviour {
 		txtMoneyAddOriginalFontSize = txtMoneyAdd.GetComponent<Text>().fontSize;
 		
 		totalReward = 0;
+		
+		objectSpawnTime = Random.Range(OBJECT_SPAWN_TIME_MIN, OBJECT_SPAWN_TIME_MAX);
+		hidingDanger = false;
 	}
 	
 	// Update
@@ -260,8 +273,13 @@ public class SCR_Gameplay : MonoBehaviour {
 			
 			if (flyingObject == null) {
 				objectCounter += dt;
-				if (objectCounter >= OBJECT_SPAWN_TIME) {
+				if (objectCounter >= objectSpawnTime - OBJECT_DANGER_TIME && imgDanger.gameObject.active == false) {
+					ShowDanger();
+				}
+				
+				if (objectCounter >= objectSpawnTime) {
 					objectCounter = 0;
+					objectSpawnTime = Random.Range(OBJECT_SPAWN_TIME_MIN, OBJECT_SPAWN_TIME_MAX);
 					
 					if (cameraHeight > 300000) {
 						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[2]);	
@@ -557,6 +575,27 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public void FlashWhite () {
 		flashWhiteAlpha = 0.9f;
+	}
+	
+	public void ShowDanger () {
+		const float duration = 0.5f;
+		imgDanger.gameObject.active = true;
+		iTween.ValueTo(gameObject, iTween.Hash("from", 0, "to", 0.65f, "time", duration, "easetype", "easeInOutSine", "onupdate", "UpdateDanger", "oncomplete", "CompleteDanger", "looptype", "pingPong", "ignoretimescale", true));
+	}
+	
+	public void HideDanger () {
+		hidingDanger = true;
+	}
+	
+	private void UpdateDanger(float alpha) {
+		imgDanger.color = new Color(imgDanger.color.r, imgDanger.color.g, imgDanger.color.b, alpha);
+	}
+	
+	private void CompleteDanger() {
+		if ((objectCounter < objectSpawnTime - OBJECT_DANGER_TIME && hidingDanger) || gameState != GameState.PUNCHING) {
+			imgDanger.gameObject.active = false;
+			hidingDanger = false;
+		}
 	}
 	
 	public void OnReplay () {
