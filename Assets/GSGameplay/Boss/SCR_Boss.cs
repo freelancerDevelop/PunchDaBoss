@@ -20,8 +20,8 @@ public enum BossState {
 
 public enum BossType {
 	THE_BOSS,
-	MR_PRESIDENT,
 	THE_DICTATOR,
+	MR_PRESIDENT,
 	THE_GENERAL,
 	ERIX_LUKE,
 	// -- //
@@ -147,7 +147,7 @@ public class SCR_Boss : MonoBehaviour {
 			,"You working result is pathetic..."
 			,"You should feel ashamed."};
 		
-		dialogues[(int)BossType.MR_PRESIDENT] = new string[] 
+		dialogues[(int)BossType.THE_DICTATOR] = new string[] 
 			{"It's the 3rd time you're late!"
 			,"You're such a slow worker!"
 			,"You'll never be promoted!"
@@ -158,7 +158,7 @@ public class SCR_Boss : MonoBehaviour {
 			,"You working result is pathetic..."
 			,"You should feel ashamed."};
 		
-		dialogues[(int)BossType.THE_DICTATOR] = new string[] 
+		dialogues[(int)BossType.MR_PRESIDENT] = new string[] 
 			{"It's the 3rd time you're late!"
 			,"You're such a slow worker!"
 			,"You'll never be promoted!"

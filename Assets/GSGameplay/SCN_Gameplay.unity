@@ -3015,8 +3015,8 @@ MonoBehaviour:
   PFB_Player: {fileID: 1575559229493114, guid: 6a5f85f3e5d131b4696c275b5aca0ea3, type: 2}
   PFB_Boss:
   - {fileID: 1497654104202820, guid: 65b48a6fcb2ef244dbca4440ca5f483b, type: 2}
-  - {fileID: 1497654104202820, guid: a927e79ac1cac554c819c3785d2a1de3, type: 2}
   - {fileID: 1497654104202820, guid: 50b481d24d1d34746b84de44f6d39995, type: 2}
+  - {fileID: 1497654104202820, guid: a927e79ac1cac554c819c3785d2a1de3, type: 2}
   - {fileID: 1497654104202820, guid: 4fb89f3acb7ed8e46b69c0a03e3924a6, type: 2}
   - {fileID: 1497654104202820, guid: df33e07931e799c4ea03540b48725382, type: 2}
   PFB_Security:

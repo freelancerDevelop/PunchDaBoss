@@ -84,7 +84,7 @@ public class SCR_Background : MonoBehaviour {
 		Sprite[] sprLayer5 = SPR_Layer_Boss_5;
 		
 		
-		if (SCR_Profile.bossSelecting == 0 || SCR_Profile.bossSelecting == 4) {
+		if (SCR_Profile.bossSelecting == (int)BossType.THE_BOSS || SCR_Profile.bossSelecting == (int)BossType.ERIX_LUKE) {
 			// boss
 			sprLayer1 = SPR_Layer_Boss_1;
 			sprLayer2 = SPR_Layer_Boss_2;
@@ -140,7 +140,8 @@ public class SCR_Background : MonoBehaviour {
 			furniture[10].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[8];
 			furniture[10].GetComponent<SCR_Furniture>().Spawn (250, 1570);
 		}
-		else if (SCR_Profile.bossSelecting == 1 || SCR_Profile.bossSelecting == 3) {
+		else if (SCR_Profile.bossSelecting == (int)BossType.MR_PRESIDENT
+		||       SCR_Profile.bossSelecting == (int)BossType.THE_GENERAL) {
 			// Trump
 			sprLayer1 = SPR_Layer_Trump_1;
 			sprLayer2 = SPR_Layer_Trump_2;
@@ -195,7 +196,7 @@ public class SCR_Background : MonoBehaviour {
 			furniture[10].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[14];
 			furniture[10].GetComponent<SCR_Furniture>().Spawn (250, 1600);
 		}
-		else if (SCR_Profile.bossSelecting == 2) {
+		else if (SCR_Profile.bossSelecting == (int)BossType.THE_DICTATOR) {
 			// dictator
 			sprLayer1 = SPR_Layer_Dictator_1;
 			sprLayer2 = SPR_Layer_Dictator_2;
@@ -302,10 +303,12 @@ public class SCR_Background : MonoBehaviour {
 			instance.furniture[i].GetComponent<SCR_Furniture>().Break (x, y, force);
 		}
 		
-		if (SCR_Profile.bossSelecting == 0 || SCR_Profile.bossSelecting == 4) {
+		if (SCR_Profile.bossSelecting == (int)BossType.THE_BOSS || SCR_Profile.bossSelecting == (int)BossType.THE_DICTATOR) {
 			SCR_Audio.PlayBreakSound(0); // Furniture breaking
 		}
-		else if (SCR_Profile.bossSelecting == 1 || SCR_Profile.bossSelecting == 2 || SCR_Profile.bossSelecting == 3) {
+		else if (SCR_Profile.bossSelecting == (int)BossType.MR_PRESIDENT
+		||       SCR_Profile.bossSelecting == (int)BossType.THE_GENERAL
+		||       SCR_Profile.bossSelecting == (int)BossType.ERIX_LUKE) {
 			SCR_Audio.PlayBreakSound(1); // Leaf break
 		}
 	}
