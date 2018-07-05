@@ -76,7 +76,6 @@ public class SCR_FlyingObject : MonoBehaviour {
 					PlayLoopSound();
 				}
 				targetVol = 1;
-				SCR_Gameplay.instance.HideDanger();
 			}
 			else {
 				targetVol = 0;

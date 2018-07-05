@@ -49,7 +49,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public static float OBJECT_SPAWN_TIME_MIN	= 6.0f;
 	public static float OBJECT_SPAWN_TIME_MAX	= 10.0f;
-	public static float OBJECT_DANGER_TIME		= 2.0f;
+	public static float OBJECT_DANGER_BEFORE	= 1.0f;
+	public static int 	OBJECT_DANGER_TIMES		= 2;
 	
 	public static int	MONEY_FOR_HIGHLIGHT		= 5;
 	public static float	TUTORIAL_FADE_SPEED		= 0.3f;
@@ -133,7 +134,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	private int			totalReward;
 	
-	private bool		hidingDanger;
+	private bool		dangerShowed;
+	private int			dangerCounter;
 	
 	// Init
 	private void Awake () {
@@ -192,7 +194,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		totalReward = 0;
 		
 		objectSpawnTime = Random.Range(OBJECT_SPAWN_TIME_MIN, OBJECT_SPAWN_TIME_MAX);
-		hidingDanger = false;
+		dangerShowed = false;
+		dangerCounter = 0;
 	}
 	
 	// Update
@@ -273,13 +276,16 @@ public class SCR_Gameplay : MonoBehaviour {
 			
 			if (flyingObject == null) {
 				objectCounter += dt;
-				if (objectCounter >= objectSpawnTime - OBJECT_DANGER_TIME && imgDanger.gameObject.active == false) {
+				if (objectCounter >= objectSpawnTime - OBJECT_DANGER_BEFORE && !dangerShowed) {
 					ShowDanger();
+					dangerShowed = true;
 				}
 				
 				if (objectCounter >= objectSpawnTime) {
 					objectCounter = 0;
 					objectSpawnTime = Random.Range(OBJECT_SPAWN_TIME_MIN, OBJECT_SPAWN_TIME_MAX);
+					
+					dangerShowed = false;
 					
 					if (cameraHeight > 300000) {
 						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[2]);	
@@ -578,13 +584,10 @@ public class SCR_Gameplay : MonoBehaviour {
 	}
 	
 	public void ShowDanger () {
-		const float duration = 0.5f;
-		imgDanger.gameObject.active = true;
+		const float duration = 0.4f;
+		imgDanger.color = new Color(imgDanger.color.r, imgDanger.color.g, imgDanger.color.b, 0);
+		imgDanger.gameObject.SetActive(true);
 		iTween.ValueTo(gameObject, iTween.Hash("from", 0, "to", 0.65f, "time", duration, "easetype", "easeInOutSine", "onupdate", "UpdateDanger", "oncomplete", "CompleteDanger", "looptype", "pingPong", "ignoretimescale", true));
-	}
-	
-	public void HideDanger () {
-		hidingDanger = true;
 	}
 	
 	private void UpdateDanger(float alpha) {
@@ -592,9 +595,11 @@ public class SCR_Gameplay : MonoBehaviour {
 	}
 	
 	private void CompleteDanger() {
-		if ((objectCounter < objectSpawnTime - OBJECT_DANGER_TIME && hidingDanger) || gameState != GameState.PUNCHING) {
-			imgDanger.gameObject.active = false;
-			hidingDanger = false;
+		dangerCounter++;
+		if (dangerCounter == OBJECT_DANGER_TIMES * 2) {	// because 1 cycle has 2 phases
+			iTween.Stop(gameObject);
+			imgDanger.gameObject.SetActive(false);
+			dangerCounter = 0;
 		}
 	}
 	
