@@ -37,9 +37,9 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_REVERSE_X			= 50;
 	public const float BOSS_THROWN_SPEED_X		= 100;
 	public const float BOSS_THROWN_SPEED_Y		= 6500;
-	public const float BOSS_TUTORIAL_SPEED_X	= 1200;
+	public const float BOSS_TUTORIAL_SPEED_X	= 1400;
 	public const float BOSS_TUTORIAL_SPEED_Y	= 4500;
-	public const float BOSS_TUTORIAL_DELTA		= 0.3f;
+	public const float BOSS_TUTORIAL_DELTA		= 0.25f;
 	public const float BOSS_ROTATE_MIN			= 50;
 	public const float BOSS_ROTATE_MAX			= 300;
 	public const float BOSS_SLIDE_FRICTION		= 700;
