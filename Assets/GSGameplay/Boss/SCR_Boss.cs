@@ -192,6 +192,7 @@ public class SCR_Boss : MonoBehaviour {
 			,"You should feel ashamed."};
 			
 		dialogue = dialogues[(int)bossType];
+		System.Array.Sort(dialogue, RandomSort);
 		
 		animation = transform.GetChild(0).gameObject.GetComponent<DragonBones.UnityArmatureComponent>().animation;
 		
@@ -622,4 +623,11 @@ public class SCR_Boss : MonoBehaviour {
 		if (tutorialRange) tutorialRange.SetActive (false);
 	}
 	// ==================================================
+	
+	// this function just returns a number in the range -1 to +1
+	// and is used by Array.Sort to 'shuffle' the array
+	private int RandomSort(string a, string b) {
+		return Random.Range(-1, 2);
+	}
+
 }
