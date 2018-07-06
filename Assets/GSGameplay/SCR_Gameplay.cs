@@ -89,6 +89,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject[]	imgCombo;
 	public GameObject	btnReplay;
 	public GameObject	btnMainMenu;
+	public GameObject	imgNotice;
 	public GameObject	txtTutorial;
 	public GameObject	pnlFlashWhite;
 	
@@ -172,6 +173,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		pnlResult.SetActive (false);
 		btnReplay.SetActive (false);
 		btnMainMenu.SetActive (false);
+		imgNotice.SetActive (false);
 		txtTutorial.SetActive (false);
 		
 		imgDanger.gameObject.SetActive (false);
@@ -494,6 +496,24 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		txtMoneyNumber.GetComponent<Text>().text = "$" + totalReward.ToString();
 		
+		// -- //
+		bool found = false;
+		
+		for (int i = 0; i < SCR_Profile.bosses.Length; i++) {
+			if (SCR_Profile.bosses[i].unlocked == 0 && SCR_Profile.money >= SCR_Profile.bosses[i].cost) {
+				if (SCR_Profile.bosses[i].recommended == 0) {
+					SCR_Profile.SelectBoss(i);
+					found = true;
+					break;
+				}
+			}
+		}
+		
+		if (found) {
+			imgNotice.SetActive (true);
+		}
+		// -- //
+		
 		SCR_UnityAnalytics.FinishGame(maxBossY);
 	}
 	
@@ -610,6 +630,11 @@ public class SCR_Gameplay : MonoBehaviour {
 	}
 	
 	public void OnMainMenu () {
+		if (imgNotice.activeSelf) {
+			SCR_Profile.bosses[SCR_Profile.bossSelecting].recommended = 1;
+			SCR_Profile.SaveProfile();
+		}
+		
 		SCR_Audio.PlayClickSound();
 		SceneManager.LoadScene("GSMenu/SCN_Menu");
 	}

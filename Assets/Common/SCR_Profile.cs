@@ -6,6 +6,7 @@ public class Boss {
 	public string	name		= "";
 	public int 		cost 		= 0;
 	public int	 	unlocked	= 0;
+	public int		recommended = 0;
 	
 	public Boss (string n, int c) {
 		name = n;
@@ -50,11 +51,9 @@ public class SCR_Profile {
 		SaveProfile();
 	}
 	
-	public static void SelectBoss (int index) {
-		if (bosses[index].unlocked == 1) {
-			bossSelecting = index;
-			PlayerPrefs.SetInt("bossSelecting", bossSelecting);
-		}
+	public static void SelectBoss (int index) {	// can select locked boss to display
+		bossSelecting = index;
+		PlayerPrefs.SetInt("bossSelecting", bossSelecting);
 	}
 	
 	public static void AddMoney (int m) {
@@ -83,6 +82,7 @@ public class SCR_Profile {
 		
 		for (int i=0; i<bosses.Length; i++) {
 			PlayerPrefs.SetInt("bossesUnlocked" + i.ToString(), bosses[i].unlocked);
+			PlayerPrefs.SetInt("bossesRecommended" + i.ToString(), bosses[i].recommended);
 			PlayerPrefs.SetString("bossesName" + i.ToString(), bosses[i].name);
 		}
 	}
@@ -96,6 +96,7 @@ public class SCR_Profile {
 		
 		for (int i=0; i<bosses.Length; i++) {
 			bosses[i].unlocked = PlayerPrefs.GetInt("bossesUnlocked" + i.ToString(), 0);
+			bosses[i].recommended = PlayerPrefs.GetInt("bossesRecommended" + i.ToString(), 0);
 			//bosses[i].name = PlayerPrefs.GetString("bossesName" + i.ToString(), bosses[i].name);
 		}
 		bosses[0].unlocked = 1;
@@ -109,6 +110,7 @@ public class SCR_Profile {
 		soundOn = 1;
 		for (int i=1; i<bosses.Length; i++) {
 			bosses[i].unlocked = 0;
+			bosses[i].recommended = 0;
 		}
 		
 		SaveProfile ();
