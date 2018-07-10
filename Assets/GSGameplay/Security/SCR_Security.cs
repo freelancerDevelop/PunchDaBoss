@@ -181,9 +181,14 @@ public class SCR_Security : MonoBehaviour {
 		}
 		
 		bossScript.Punch (punchX, Mathf.Abs(punchY), true);
-		SCR_Gameplay.instance.SecurityPunchSuccess();
+		SCR_Gameplay.instance.SecurityPunchSuccess(bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
 		
-		SCR_Gameplay.instance.AddMoneyAtPosition(SECURITY_MONEY, x + SCR_Gameplay.SCREEN_W * 0.5f, y - SCR_Gameplay.instance.cameraHeight);
+		//SCR_Gameplay.instance.AddMoneyAtPosition(SECURITY_MONEY, x + SCR_Gameplay.SCREEN_W * 0.5f, y - SCR_Gameplay.instance.cameraHeight);
+		
+		SCR_Gameplay.instance.AddMoneyAtPosition(
+			SCR_Player.PUNCH_MONEY_START + SCR_Player.PUNCH_MONEY_STEP * (SCR_Gameplay.instance.comboCount - 1),
+			x + SCR_Gameplay.SCREEN_W * 0.5f,
+			y - SCR_Gameplay.instance.cameraHeight);
 	}
 	// ==================================================
 	

@@ -945,7 +945,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &512249187
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3118,6 +3118,8 @@ MonoBehaviour:
   - {fileID: 1966006480992714, guid: 7a721ec910c64754aa1bbabce3bec31e, type: 2}
   - {fileID: 1966006480992714, guid: 2bc2488af9c4a7f42bc1dbab7d70393e, type: 2}
   - {fileID: 1966006480992714, guid: 95a65d761438f6e4f8bcfb87b15e6c84, type: 2}
+  PFB_ComboText: {fileID: 1004847343921096, guid: 5ab52af4a45d35949aebddbece8d9608,
+    type: 2}
   cvsMain: {fileID: 309050413}
   pnlResult: {fileID: 1505503516}
   txtMoney: {fileID: 1641464860}
@@ -3128,14 +3130,6 @@ MonoBehaviour:
   txtMoneyNumber: {fileID: 678998224}
   txtCurrentHeight: {fileID: 263437445}
   imgHighScore: {fileID: 1652411964}
-  imgClockContent: {fileID: 1937054033}
-  imgCombo:
-  - {fileID: 161560824}
-  - {fileID: 132605326}
-  - {fileID: 448393306}
-  - {fileID: 1870590968}
-  - {fileID: 1659275053}
-  - {fileID: 1130966545}
   btnReplay: {fileID: 10767425}
   btnMainMenu: {fileID: 1043412688}
   imgNotice: {fileID: 1229692780}

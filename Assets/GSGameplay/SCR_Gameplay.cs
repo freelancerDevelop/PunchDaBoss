@@ -39,7 +39,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float CAMERA_ENDING_Y			= 100.0f;
 	public static float CAMERA_SHAKE_AMOUNT		= 4.0f;
 	
-	public static float COMBO_TIME				= 1.8f;
+	public static float COMBO_TIME				= 1.333f;
 	
 	public static float FURNITURE_Y				= 1470.0f;
 	public static float FRAGMENT_Y				= 1308.0f;
@@ -67,6 +67,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject 	PFB_Destruction			= null;
 	public GameObject 	PFB_Ricochet			= null;
 	public GameObject[]	PFB_Combo				= null;
+	public GameObject	PFB_ComboText			= null;
 	
 	
 	
@@ -85,8 +86,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject	txtMoneyNumber;
 	public GameObject	txtCurrentHeight;
 	public GameObject	imgHighScore;
-	public GameObject	imgClockContent;
-	public GameObject[]	imgCombo;
+	//public GameObject	imgClockContent;
+	//public GameObject[]	imgCombo;
 	public GameObject	btnReplay;
 	public GameObject	btnMainMenu;
 	public GameObject	imgNotice;
@@ -137,6 +138,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	private bool		dangerShowed;
 	private int			dangerCounter;
+	
+	private int			shouldSelect;
 	
 	// Init
 	private void Awake () {
@@ -198,6 +201,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		objectSpawnTime = Random.Range(OBJECT_SPAWN_TIME_MIN, OBJECT_SPAWN_TIME_MAX);
 		dangerShowed = false;
 		dangerCounter = 0;
+		
+		shouldSelect = 0;
 	}
 	
 	// Update
@@ -358,13 +363,15 @@ public class SCR_Gameplay : MonoBehaviour {
 			if (comboTime <= 0) {
 				comboTime = 0;
 				comboCount = 0;
+				/*
 				for (int i=1; i<imgCombo.Length; i++) {
 					imgCombo[i].SetActive (false);
 				}
 				imgCombo[0].SetActive (true);
+				*/
 			}
 		}
-		imgClockContent.GetComponent<Image>().fillAmount = comboTime / COMBO_TIME;
+		//imgClockContent.GetComponent<Image>().fillAmount = comboTime / COMBO_TIME;
 		
 		if (boss.GetComponent<SCR_Boss>().y * 0.01f - 3 > maxBossY) {
 			maxBossY = (int)(boss.GetComponent<SCR_Boss>().y * 0.01f - 3);
@@ -442,12 +449,12 @@ public class SCR_Gameplay : MonoBehaviour {
 		if (comboCount == 5) {
 			security.GetComponent<SCR_Security>().PerformPunch();
 		}
-		
+		/*
 		for (int i=0; i<imgCombo.Length; i++) {
 			imgCombo[i].SetActive (false);
 		}
 		imgCombo[comboCount].SetActive (true);
-		
+		*/
 		punchNumber ++;
 		if (SCR_Profile.showTutorial == 1) {
 			txtTutorial.GetComponent<Text>().text = "Keep on punching (" + punchNumber.ToString() + "/3)";
@@ -456,22 +463,57 @@ public class SCR_Gameplay : MonoBehaviour {
 			}
 		}
 		
-		if (comboCount >= 1) {
-			GameObject text = SCR_Pool.GetFreeObject (PFB_Combo[comboCount-1]);
-			text.transform.SetParent (cvsMain.transform);
-			text.GetComponent<SCR_ComboText>().Spawn (x, y);
-		}
+		ShowCombo(x, y);
 	}
 	
-	public void SecurityPunchSuccess () {
+	public void SecurityPunchSuccess (float x, float y) {
+		/*
 		comboCount = 0;
 		
 		for (int i=1; i<imgCombo.Length; i++) {
 			imgCombo[i].SetActive (false);
 		}
 		imgCombo[0].SetActive (true);
+		*/
+		
+		comboTime = COMBO_TIME;
+		comboCount++;
+		ShowCombo(x, y);
 	}
 	
+	private void ShowCombo (float x, float y) {
+		if (comboCount >= 1) {
+			//GameObject text = SCR_Pool.GetFreeObject (PFB_Combo[comboCount-1]);
+			GameObject text = SCR_Pool.GetFreeObject (PFB_ComboText);
+			text.GetComponent<Text>().text = "X" + comboCount;
+			text.transform.SetParent (cvsMain.transform);
+			text.GetComponent<SCR_ComboText>().Spawn (x, y);
+			
+			float startR = 255;
+			float startG = 226;
+			float startB = 0;
+			
+			float endR = 255;
+			float endG = 0;
+			float endB = 0;
+			
+			float startIndex = 2;
+			float endIndex = 10;
+			
+			if (comboCount < startIndex) {
+				text.GetComponent<SCR_ComboText>().SetColor (255, 255, 255);
+			}
+			else if (comboCount >= endIndex) {
+				text.GetComponent<SCR_ComboText>().SetColor (endR, endG, endB);
+			}
+			else {
+				text.GetComponent<SCR_ComboText>().SetColor (
+					startR + (comboCount - startIndex) / (endIndex - startIndex) * (endR - startR),
+					startG + (comboCount - startIndex) / (endIndex - startIndex) * (endG - startG),
+					startB + (comboCount - startIndex) / (endIndex - startIndex) * (endB - startB));
+			}
+		}
+	}
 	
 	public void Lose () {
 		pnlResult.SetActive (true);
@@ -502,7 +544,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		for (int i = 0; i < SCR_Profile.bosses.Length; i++) {
 			if (SCR_Profile.bosses[i].unlocked == 0 && SCR_Profile.money >= SCR_Profile.bosses[i].cost) {
 				if (SCR_Profile.bosses[i].recommended == 0) {
-					SCR_Profile.SelectBoss(i);
+					shouldSelect = i;
 					found = true;
 					break;
 				}
@@ -586,12 +628,12 @@ public class SCR_Gameplay : MonoBehaviour {
 	public void ShowDestruction (float x, float y) {
 		GameObject text = SCR_Pool.GetFreeObject (PFB_Destruction);
 		text.transform.SetParent (cvsMain.transform);
-		text.GetComponent<SCR_ComboText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
+		text.GetComponent<SCR_SpecialText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
 	}
 	public void ShowRicochet (float x, float y) {
 		GameObject text = SCR_Pool.GetFreeObject (PFB_Ricochet);
 		text.transform.SetParent (cvsMain.transform);
-		text.GetComponent<SCR_ComboText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
+		text.GetComponent<SCR_SpecialText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
 		security.GetComponent<SCR_Security>().PerformPunch();
 	}
 	
@@ -631,7 +673,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public void OnMainMenu () {
 		if (imgNotice.activeSelf) {
-			SCR_Profile.bosses[SCR_Profile.bossSelecting].recommended = 1;
+			SCR_Profile.SelectBoss(shouldSelect);
+			SCR_Profile.bosses[shouldSelect].recommended = 1;
 			SCR_Profile.SaveProfile();
 		}
 		

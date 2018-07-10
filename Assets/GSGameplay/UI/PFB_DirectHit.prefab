@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224186330071431964}
   - component: {fileID: 222343784609569804}
   - component: {fileID: 114807932212021892}
-  - component: {fileID: 114834622450127746}
+  - component: {fileID: 114003508577567760}
   m_Layer: 5
   m_Name: PFB_DirectHit
   m_TagString: Untagged
@@ -29,6 +29,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114003508577567760
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1966006480992714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7ecd9e9e2dc1f54a8d84b75241da9b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  special: 0
+  alpha: 0
+  x: 0
+  y: 0
 --- !u!114 &114807932212021892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,20 +71,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114834622450127746
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1966006480992714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56f7887e949b751479b2d0e7072099b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alpha: 0
-  x: 0
-  y: 0
 --- !u!222 &222343784609569804
 CanvasRenderer:
   m_ObjectHideFlags: 1

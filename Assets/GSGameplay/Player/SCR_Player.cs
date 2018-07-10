@@ -52,8 +52,9 @@ public class SCR_Player : MonoBehaviour {
 	
 	public const float PLAYER_MARKER_SCALE		= 0.5f;
 	
-	public readonly int[]	PUNCH_MONEY		= new int []{5, 6, 7, 8, 9};
-	public const int 		RICOCHET_MONEY	= 50;
+	public const int   PUNCH_MONEY_START		= 5;
+	public const int   PUNCH_MONEY_STEP			= 1;
+	public const int   RICOCHET_MONEY			= 50;
 	
 	// ==================================================
 	// Prefab
@@ -361,7 +362,10 @@ public class SCR_Player : MonoBehaviour {
 		}
 		else {
 			SCR_Audio.PlayPunchNormalSound();
-			SCR_Gameplay.instance.AddMoneyAtPosition(PUNCH_MONEY[SCR_Gameplay.instance.comboCount], bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
+			SCR_Gameplay.instance.AddMoneyAtPosition(
+				PUNCH_MONEY_START + PUNCH_MONEY_STEP * SCR_Gameplay.instance.comboCount,
+				bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f,
+				bossScript.y - SCR_Gameplay.instance.cameraHeight);
 		}
 		
 		SCR_Gameplay.instance.PunchSuccess(bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
