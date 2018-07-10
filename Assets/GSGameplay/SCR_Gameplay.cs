@@ -33,28 +33,28 @@ public class SCR_Gameplay : MonoBehaviour {
 	public static float SCREEN_SCALE			= 0;
 	public static float TOUCH_SCALE				= 0;
 	
-	public static float GRAVITY					= 4000.0f;
-	public static float CAMERA_OFFSET_Y			= 750.0f; // Distance from top of the screen to the boss
-	public static float CAMERA_SPEED_MULTIPLIER = 15.0f;
-	public static float CAMERA_ENDING_Y			= 100.0f;
-	public static float CAMERA_SHAKE_AMOUNT		= 4.0f;
+	public const  float GRAVITY					= 4000.0f;
+	public const  float CAMERA_OFFSET_Y			= 750.0f; // Distance from top of the screen to the boss
+	public const  float CAMERA_SPEED_MULTIPLIER = 15.0f;
+	public const  float CAMERA_ENDING_Y			= 100.0f;
+	public const  float CAMERA_SHAKE_AMOUNT		= 4.0f;
 	
-	public static float COMBO_TIME				= 1.333f;
+	public const  float COMBO_TIME				= 1.333f;
 	
-	public static float FURNITURE_Y				= 1470.0f;
-	public static float FRAGMENT_Y				= 1308.0f;
-	public static float LAPTOP_Y				= 1570.0f;
+	public const  float FURNITURE_Y				= 1470.0f;
+	public const  float FRAGMENT_Y				= 1308.0f;
+	public const  float LAPTOP_Y				= 1570.0f;
 	
-	public static float PUNCH_TEXT_OFFSET_Y		= 200.0f;
+	public const  float PUNCH_TEXT_OFFSET_Y		= 200.0f;
 	
-	public static float OBJECT_SPAWN_TIME_MIN	= 6.0f;
-	public static float OBJECT_SPAWN_TIME_MAX	= 10.0f;
-	public static float OBJECT_DANGER_BEFORE	= 1.0f;
-	public static int 	OBJECT_DANGER_TIMES		= 2;
+	public const  float OBJECT_SPAWN_TIME_MIN	= 6.0f;
+	public const  float OBJECT_SPAWN_TIME_MAX	= 10.0f;
+	public const  float OBJECT_DANGER_BEFORE	= 1.0f;
+	public const  int 	OBJECT_DANGER_TIMES		= 2;
 	
-	public static int	MONEY_FOR_HIGHLIGHT		= 5;
-	public static float	TUTORIAL_FADE_SPEED		= 0.3f;
-	public static float	TUTORIAL_HOLD_DURATION	= 0.5f;
+	public const  int	MONEY_FOR_HIGHLIGHT		= 5;
+	public const  float	TUTORIAL_FADE_SPEED		= 0.3f;
+	public const  float	TUTORIAL_HOLD_DURATION	= 0.5f;
 	
 	
 	// Prefab
@@ -93,6 +93,9 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject	imgNotice;
 	public GameObject	txtTutorial;
 	public GameObject	pnlFlashWhite;
+	
+	public Image		imgSecurityProgressBG;
+	public Image		imgSecurityProgressFG;
 	
 	public Image		imgDanger;
 	
@@ -140,6 +143,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	private int			dangerCounter;
 	
 	private int			shouldSelect;
+	
+	private int			securityProgress;
 	
 	// Init
 	private void Awake () {
@@ -203,6 +208,12 @@ public class SCR_Gameplay : MonoBehaviour {
 		dangerCounter = 0;
 		
 		shouldSelect = 0;
+		
+		securityProgress = 0;
+		imgSecurityProgressFG.fillAmount = 0;
+		
+		imgSecurityProgressBG.gameObject.SetActive(false);
+		imgSecurityProgressFG.gameObject.SetActive(false);
 	}
 	
 	// Update
@@ -446,7 +457,11 @@ public class SCR_Gameplay : MonoBehaviour {
 	public void PunchSuccess (float x, float y) {
 		comboTime = COMBO_TIME;
 		comboCount ++;
-		if (comboCount == 5) {
+		
+		securityProgress++;
+		imgSecurityProgressFG.GetComponent<SCR_SecurityProgress>().SetTargetProgress((float)securityProgress / SCR_Security.SECURITY_PROGRESS_STEPS);
+
+		if (securityProgress == SCR_Security.SECURITY_PROGRESS_STEPS) {
 			security.GetComponent<SCR_Security>().PerformPunch();
 		}
 		/*
@@ -479,6 +494,9 @@ public class SCR_Gameplay : MonoBehaviour {
 		comboTime = COMBO_TIME;
 		comboCount++;
 		ShowCombo(x, y);
+		
+		securityProgress = 0;
+		imgSecurityProgressFG.GetComponent<SCR_SecurityProgress>().SetTargetProgress(0);
 	}
 	
 	private void ShowCombo (float x, float y) {
@@ -538,6 +556,9 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		txtMoneyNumber.GetComponent<Text>().text = "$" + totalReward.ToString();
 		
+		imgSecurityProgressBG.color = new Color(1, 1, 1, 0);
+		imgSecurityProgressFG.color = new Color(1, 1, 1, 0);
+		
 		// -- //
 		bool found = false;
 		
@@ -557,6 +578,23 @@ public class SCR_Gameplay : MonoBehaviour {
 		// -- //
 		
 		SCR_UnityAnalytics.FinishGame(maxBossY);
+	}
+	
+	public void ShowSecurityProgress () {
+		if (!imgSecurityProgressBG.gameObject.activeSelf) {
+			imgSecurityProgressBG.gameObject.SetActive(true);
+			imgSecurityProgressFG.gameObject.SetActive(true);
+			
+			imgSecurityProgressBG.color = new Color(1, 1, 1, 0);
+			imgSecurityProgressFG.color = new Color(1, 1, 1, 0);
+			
+			iTween.ValueTo(gameObject, iTween.Hash("from", 0, "to", 1, "time", 0.25f, "easetype", "easeInOutSine", "onupdate", "UpdateSecurityProgressAlpha", "ignoretimescale", true));
+		}
+	}
+	
+	private void UpdateSecurityProgressAlpha (float alpha) {
+		imgSecurityProgressBG.color = new Color(1, 1, 1, alpha);
+		imgSecurityProgressFG.color = new Color(1, 1, 1, alpha);
 	}
 	
 	
@@ -634,7 +672,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		GameObject text = SCR_Pool.GetFreeObject (PFB_Ricochet);
 		text.transform.SetParent (cvsMain.transform);
 		text.GetComponent<SCR_SpecialText>().Spawn (x, y + PUNCH_TEXT_OFFSET_Y);
-		security.GetComponent<SCR_Security>().PerformPunch();
+		//security.GetComponent<SCR_Security>().PerformPunch();
 	}
 	
 	public void ShakeCamera (float duration) {

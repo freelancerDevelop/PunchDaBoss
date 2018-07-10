@@ -29,6 +29,8 @@ public class SCR_Security : MonoBehaviour {
 	public const float SECURITY_LAUGH_DELAY		= 0.2f;
 	
 	public const int   SECURITY_MONEY			= 20;
+	
+	public const int   SECURITY_PROGRESS_STEPS	= 5;
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Shadow;

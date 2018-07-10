@@ -221,6 +221,10 @@ public class SCR_Player : MonoBehaviour {
 				foreach(Transform child in punchParticle.transform) {
 					child.gameObject.SetActive (true);
 				}
+				
+				if (SCR_Profile.showTutorial == 0) {
+					SCR_Gameplay.instance.ShowSecurityProgress();
+				}
 			}
 			else if (chargeCount >= PLAYER_CHARGE_TIME + PLAYER_THROW_TIME) {
 				SwitchState (PlayerState.WATCH);
