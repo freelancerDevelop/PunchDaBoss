@@ -437,6 +437,7 @@ public class SCR_Player : MonoBehaviour {
 			targetY = currentAimY;
 			
 			if (SCR_Profile.showTutorial == 1) {
+				SCR_Gameplay.instance.ShowSecurityProgress();
 				if (SCR_Gameplay.instance.tutorialStep == TutorialStep.AIM) {
 					target.SetActive (false);
 					return;

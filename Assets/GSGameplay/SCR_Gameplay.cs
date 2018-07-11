@@ -293,34 +293,36 @@ public class SCR_Gameplay : MonoBehaviour {
 			}
 			
 			if (flyingObject == null) {
-				objectCounter += dt;
-				if (objectCounter >= objectSpawnTime - OBJECT_DANGER_BEFORE && !dangerShowed) {
-					ShowDanger();
-					dangerShowed = true;
-				}
-				
-				if (objectCounter >= objectSpawnTime) {
-					objectCounter = 0;
-					objectSpawnTime = Random.Range(OBJECT_SPAWN_TIME_MIN, OBJECT_SPAWN_TIME_MAX);
-					
-					dangerShowed = false;
-					
-					if (cameraHeight > 300000) {
-						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[2]);	
-					}
-					else if (cameraHeight > 150000) {
-						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[1]);	
-					}
-					else {
-						flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[0]);	
+				if (SCR_Profile.showTutorial == 0) {
+					objectCounter += dt;
+					if (objectCounter >= objectSpawnTime - OBJECT_DANGER_BEFORE && !dangerShowed) {
+						ShowDanger();
+						dangerShowed = true;
 					}
 					
-					//int choose = Random.Range (0, PFB_FlyingObject.Length);
-					//flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[choose]);
-					
-					float x = Random.Range (-(SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f, (SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f);
-					float y = cameraHeight + Random.Range (1.0f, 1.5f) * SCREEN_H;
-					flyingObject.GetComponent<SCR_FlyingObject>().Spawn (x, y);
+					if (objectCounter >= objectSpawnTime) {
+						objectCounter = 0;
+						objectSpawnTime = Random.Range(OBJECT_SPAWN_TIME_MIN, OBJECT_SPAWN_TIME_MAX);
+						
+						dangerShowed = false;
+						
+						if (cameraHeight > 300000) {
+							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[2]);	
+						}
+						else if (cameraHeight > 150000) {
+							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[1]);	
+						}
+						else {
+							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[0]);	
+						}
+						
+						//int choose = Random.Range (0, PFB_FlyingObject.Length);
+						//flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[choose]);
+						
+						float x = Random.Range (-(SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f, (SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f);
+						float y = cameraHeight + Random.Range (1.0f, 1.5f) * SCREEN_H;
+						flyingObject.GetComponent<SCR_FlyingObject>().Spawn (x, y);
+					}
 				}
 			}
 			else {
