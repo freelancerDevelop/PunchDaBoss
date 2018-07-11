@@ -21,40 +21,41 @@ public enum PlayerState {
 public class SCR_Player : MonoBehaviour {
 	// ==================================================
 	// Const
-	public const float PLAYER_START_X			= 250;
-	public const float PLAYER_START_Y			= 300;
-	public const float PLAYER_SCALE				= 0.84f;
-	public const float PLAYER_WALK_SPEED		= 400;
-	public const float PLAYER_GRAB_RANGE		= 105;
-	public const float PLAYER_GRAB_HEIGHT		= 9;
-	public const float PLAYER_REVERSE_X			= 100;
-	public const float PLAYER_PUNCH_RANGE		= 200;
-	public const float PLAYER_PUNCH_FORCE		= 10000;
-	public const float PLAYER_FLY_SPEED			= 4500;
-	public const float PLAYER_TUTORIAL_RANGE	= 100;
+	public const float PLAYER_START_X				= 250;
+	public const float PLAYER_START_Y				= 300;
+	public const float PLAYER_SCALE					= 0.84f;
+	public const float PLAYER_WALK_SPEED			= 400;
+	public const float PLAYER_GRAB_RANGE			= 105;
+	public const float PLAYER_GRAB_HEIGHT			= 9;
+	public const float PLAYER_REVERSE_X				= 100;
+	public const float PLAYER_PUNCH_RANGE			= 200;
+	public const float PLAYER_PUNCH_FORCE			= 10000;
+	public const float PLAYER_FLY_SPEED				= 4500;
+	public const float PLAYER_TUTORIAL_RANGE		= 100;
 	
-	public const float PLAYER_TEAR_TIME			= 0.1f;
-	public const float PLAYER_TRANSFORM_TIME	= 0.5f;
-	public const float PLAYER_CHARGE_TIME		= 1.15f;
-	public const float PLAYER_PUNCH_TIME		= 0.3f;
-	public const float PLAYER_THROW_TIME		= 0.4f;
-	public const float PLAYER_LAND_TIME			= 0.5f;
-	public const float PLAYER_SIZE				= 200;
-	public const float PLAYER_UP_FRICTION		= 5000;
-	public const float PLAYER_SLAV_RANDOM		= 200;
-	public const float PLAYER_MAX_SPEED_BONUS	= 1.45f;
+	public const float PLAYER_TEAR_TIME				= 0.1f;
+	public const float PLAYER_TRANSFORM_TIME		= 0.5f;
+	public const float PLAYER_CHARGE_TIME			= 1.15f;
+	public const float PLAYER_PUNCH_TIME			= 0.3f;
+	public const float PLAYER_THROW_TIME			= 0.4f;
+	public const float PLAYER_LAND_TIME				= 0.5f;
+	public const float PLAYER_SIZE					= 200;
+	public const float PLAYER_UP_FRICTION			= 5000;
+	public const float PLAYER_SLAV_RANDOM			= 200;
+	public const float PLAYER_MAX_SPEED_BONUS		= 1.45f;
 	
-	public const float PLAYER_SHADOW_OFFSET		= -120;
-	public const float PLAYER_SHADOW_DISTANCE	= 1500;
-	public const float PLAYER_SHADOW_SCALE		= 0.8f;
-	public const float PLAYER_SMOKE_SCALE		= 0.72f;
-	public const float PLAYER_SMOKE_OFFSET_Y	= -100;
+	public const float PLAYER_SHADOW_OFFSET			= -120;
+	public const float PLAYER_SHADOW_DISTANCE		= 1500;
+	public const float PLAYER_SHADOW_SCALE			= 0.8f;
+	public const float PLAYER_SMOKE_SCALE			= 0.72f;
+	public const float PLAYER_SMOKE_OFFSET_Y		= -100;
 	
-	public const float PLAYER_MARKER_SCALE		= 0.5f;
+	public const float PLAYER_MARKER_SCALE			= 0.5f;
 	
-	public const int   PUNCH_MONEY_START		= 5;
-	public const int   PUNCH_MONEY_STEP			= 1;
-	public const int   RICOCHET_MONEY			= 50;
+	public const int   PUNCH_MONEY_START			= 5;
+	public const int   PUNCH_MONEY_STEP				= 1;
+	public const int   RICOCHET_MONEY				= 50;
+	public const int   PUNCH_MONEY_BIG_MULTIPLIER	= 2;
 	
 	// ==================================================
 	// Prefab
@@ -241,7 +242,7 @@ public class SCR_Player : MonoBehaviour {
 		else if (state == PlayerState.FLY_UP || state == PlayerState.PUNCH || state == PlayerState.FLY_DOWN) {
 			if (state == PlayerState.FLY_UP) {
 				var distance = SCR_Helper.DistanceBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
-				if (distance <= PLAYER_PUNCH_RANGE) {
+				if (distance <= PLAYER_PUNCH_RANGE * bossScript.currentScale.x / bossScript.originalScale.x) {
 					Punch (distance);
 					SwitchState (PlayerState.PUNCH);
 					speedY = 0;
@@ -362,12 +363,26 @@ public class SCR_Player : MonoBehaviour {
 			bossScript.ShowMoneyBag();
 			SCR_Gameplay.instance.ShowRicochet (bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
 			SCR_Audio.PlayPunchRicochetSound();
-			SCR_Gameplay.instance.AddMoneyAtPosition(RICOCHET_MONEY, bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
+			
+			int money = RICOCHET_MONEY;
+			
+			if (bossScript.size == BossSize.BIG) {
+				money *= PUNCH_MONEY_BIG_MULTIPLIER;
+			}
+			
+			SCR_Gameplay.instance.AddMoneyAtPosition(money, bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f, bossScript.y - SCR_Gameplay.instance.cameraHeight);
 		}
 		else {
 			SCR_Audio.PlayPunchNormalSound();
+			
+			int money = PUNCH_MONEY_START + PUNCH_MONEY_STEP * SCR_Gameplay.instance.comboCount;
+			
+			if (bossScript.size == BossSize.BIG) {
+				money *= PUNCH_MONEY_BIG_MULTIPLIER;
+			}
+			
 			SCR_Gameplay.instance.AddMoneyAtPosition(
-				PUNCH_MONEY_START + PUNCH_MONEY_STEP * SCR_Gameplay.instance.comboCount,
+				money,
 				bossScript.x + SCR_Gameplay.SCREEN_W * 0.5f,
 				bossScript.y - SCR_Gameplay.instance.cameraHeight);
 		}

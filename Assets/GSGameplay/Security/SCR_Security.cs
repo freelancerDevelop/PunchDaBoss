@@ -113,7 +113,7 @@ public class SCR_Security : MonoBehaviour {
 			speedY = SECURITY_SPEED * SCR_Helper.Cos (flyAngle);
 			
 			var distance = SCR_Helper.DistanceBetweenTwoPoint (x, y, bossScript.x, bossScript.y);
-			if (distance <= SECURITY_RANGE) {
+			if (distance <= SECURITY_RANGE * bossScript.currentScale.x / bossScript.originalScale.x) {
 				speedY = 0;
 				trail.GetComponent<SCR_Trail>().TurnParticleOff();
 				Punch();

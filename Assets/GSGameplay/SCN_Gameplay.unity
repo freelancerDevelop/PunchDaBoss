@@ -3248,6 +3248,8 @@ MonoBehaviour:
   - {fileID: 1506333755554936, guid: 5764941fb94a9454fbf9c28af4a30a98, type: 2}
   - {fileID: 1528480053973212, guid: 737f8f42d127a1141a8256a165fb9871, type: 2}
   - {fileID: 1754142401317628, guid: 700bb29e7e9ced347a873f16591326c0, type: 2}
+  PFB_PowerUp:
+  - {fileID: 1586945123722412, guid: adbfb4f56f747cb4a869337b1469c02e, type: 2}
   PFB_Furniture:
   - {fileID: 1294153175443702, guid: 423a84814e00d214ba9e85b3f09dbfa1, type: 2}
   - {fileID: 0}

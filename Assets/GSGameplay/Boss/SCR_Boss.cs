@@ -28,12 +28,23 @@ public enum BossType {
 	BOSS_COUNT
 }
 
+public enum BossSize {
+	SMALL,
+	BIG,
+	ENLARGING,
+	SHRINKING
+}
+
 public class SCR_Boss : MonoBehaviour {
 	// ==================================================
 	// Const
 	public const float BOSS_START_X				= -50;
 	public const float BOSS_START_Y				= 300;
 	public const float BOSS_SCALE				= 0.8f;
+	public const float BOSS_ENLARGE_MULTIPLIER	= 2.0f;
+	public const float BOSS_ENLARGE_DURATION	= 5.0f;
+	public const float BOSS_FLASH_DURATION		= 2.0f;
+	public const int   BOSS_FLASH_TIMES 		= 3;
 	public const float BOSS_REVERSE_X			= 50;
 	public const float BOSS_THROWN_SPEED_X		= 100;
 	public const float BOSS_THROWN_SPEED_Y		= 6500;
@@ -92,19 +103,21 @@ public class SCR_Boss : MonoBehaviour {
 	// Stuff
 	private DragonBones.Animation	animation		= null;
 	private BossState 	state						= BossState.TALK;
+	private float		enlargeTime					= 0;
 	// ==================================================
 	// More stuff
-	[System.NonSerialized] public int	direction	= 1;
-	[System.NonSerialized] public float	x			= 0;
-	[System.NonSerialized] public float	y			= 0;
-	[System.NonSerialized] public float	speedX		= 0;
-	[System.NonSerialized] public float	speedY		= 0;
-	[System.NonSerialized] public float	maxSpeedY	= BOSS_MAX_SPEED_Y;
-	[System.NonSerialized] public float	rotation	= 0;
-	[System.NonSerialized] public float	rotateSpeed	= 0;
-	[System.NonSerialized] public float	predictX	= 0;
-	[System.NonSerialized] public float	predictY	= 0;
-	
+	[System.NonSerialized] public int		direction	= 1;
+	[System.NonSerialized] public float		x			= 0;
+	[System.NonSerialized] public float		y			= 0;
+	[System.NonSerialized] public float		speedX		= 0;
+	[System.NonSerialized] public float		speedY		= 0;
+	[System.NonSerialized] public float		maxSpeedY	= BOSS_MAX_SPEED_Y;
+	[System.NonSerialized] public float		rotation	= 0;
+	[System.NonSerialized] public float		rotateSpeed	= 0;
+	[System.NonSerialized] public float		predictX	= 0;
+	[System.NonSerialized] public float		predictY	= 0;
+	[System.NonSerialized] public BossSize	size		= BossSize.SMALL;
+
 	private	GameObject		shadow				= null;
 	private	GameObject[]	moneyParticle		= new GameObject[6];
 	private GameObject		moneyBagParticle	= null;
@@ -118,6 +131,8 @@ public class SCR_Boss : MonoBehaviour {
 	private	GameObject		tutorialTarget		= null;
 	private	GameObject		tutorialFinger		= null;
 	
+	private Material		material			= null;
+	
 	
 	private string[][]	dialogues;
 	private string[]	dialogue;
@@ -125,6 +140,10 @@ public class SCR_Boss : MonoBehaviour {
 	private int 		particleID = 0;
 	private float 		talkCounter = 1.2f;
 	private float 		tutorialCounter = 0;
+	private int			flashCount = 0;
+	
+	public Vector3		originalScale;
+	public Vector3		currentScale;
 	// ==================================================
 	
 	
@@ -198,8 +217,16 @@ public class SCR_Boss : MonoBehaviour {
 		
 		x = BOSS_START_X;
 		y = BOSS_START_Y;
+		
+		originalScale = new Vector3 (
+			SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE,
+			SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE,
+			1);
+			
+		currentScale = originalScale;
+
 		transform.position 		= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 	= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * direction, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
+		transform.localScale 	= new Vector3 (currentScale.x * (-direction), currentScale.y, currentScale.z);
 		
 		shadow = Instantiate (PFB_Shadow);
 		shadow.transform.position 	= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + BOSS_SHADOW_OFFSET, shadow.transform.position.z);
@@ -255,6 +282,9 @@ public class SCR_Boss : MonoBehaviour {
 		}
 		
 		rotation = 0;
+		
+		material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
+		material.SetFloat("_FlashAmount", 0);
 		
 		SwitchState (BossState.TALK);
 	}
@@ -340,13 +370,21 @@ public class SCR_Boss : MonoBehaviour {
 					SCR_Gameplay.instance.gameState = GameState.BOSS_FALLING;
 					SCR_Gameplay.instance.Lose();
 					
+					if (size == BossSize.BIG) {
+						Shrink();
+					}
+					
 					SCR_Audio.PlayFallSound();
 				}
 				
 				rotation += rotateSpeed * dt;
 				
+				float r = currentScale.x / originalScale.x;
 				atmosBurn.SetActive (true);
-				atmosBurn.transform.localPosition = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x + BOSS_BURN_OFFSET_X, y + BOSS_BURN_OFFSET_Y, atmosBurn.transform.localPosition.z);
+				atmosBurn.transform.localPosition = new Vector3 (
+					SCR_Gameplay.SCREEN_W * 0.5f + x + BOSS_BURN_OFFSET_X * r,
+					y + BOSS_BURN_OFFSET_Y * r,
+					atmosBurn.transform.localPosition.z);
 				
 				float alpha = (speedY - BOSS_BURN_SPEED_MIN) / (BOSS_BURN_SPEED_MAX - BOSS_BURN_SPEED_MIN);
 				if (alpha > BOSS_BURN_ALPHA) alpha = BOSS_BURN_ALPHA;
@@ -439,10 +477,13 @@ public class SCR_Boss : MonoBehaviour {
 		}
 		
 		transform.position 			= new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
-		transform.localScale 		= new Vector3 (SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE * (-direction), SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * BOSS_SCALE);
+		transform.localScale 		= new Vector3 (currentScale.x * (-direction), currentScale.y, currentScale.z);
 		transform.localEulerAngles 	= new Vector3 (0, 0, rotation);
 		
-		bossName.transform.localPosition = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y + BOSS_NAME_OFFSET_Y, bossName.transform.localPosition.z);
+		bossName.transform.localPosition = new Vector3 (
+			SCR_Gameplay.SCREEN_W * 0.5f + x,
+			y + BOSS_NAME_OFFSET_Y * currentScale.x / originalScale.x,
+			bossName.transform.localPosition.z);
 		
 		
 		float shadowScale = 1 - (y - BOSS_START_Y) / BOSS_SHADOW_DISTANCE;
@@ -455,6 +496,14 @@ public class SCR_Boss : MonoBehaviour {
 		}
 		
 		moneyBagParticle.transform.position = moneyParticle[0].transform.position;
+		
+		if (size == BossSize.BIG) {
+			enlargeTime += dt;
+			if (enlargeTime >= BOSS_ENLARGE_DURATION - BOSS_FLASH_DURATION) {
+				enlargeTime = 0;
+				Flash();
+			}
+		}
 		
 		
 		
@@ -573,6 +622,15 @@ public class SCR_Boss : MonoBehaviour {
 			
 			if (particleID == 0) {
 				for (int i=0; i<3; i++) {
+					ParticleSystem.EmissionModule emission = moneyParticle[i].GetComponent<ParticleSystem>().emission;
+					
+					if (size == BossSize.BIG) {
+						emission.rateOverTimeMultiplier = 120;
+					}
+					else {
+						emission.rateOverTimeMultiplier = 40;
+					}
+					
 					moneyParticle[i].GetComponent<ParticleSystem>().startSpeed = Random.Range (py * 0.012f, py * 0.014f);
 					moneyParticle[i].SetActive(true);
 				}
@@ -580,6 +638,15 @@ public class SCR_Boss : MonoBehaviour {
 			}
 			else {
 				for (int i=3; i<6; i++) {
+					ParticleSystem.EmissionModule emission = moneyParticle[i].GetComponent<ParticleSystem>().emission;
+					
+					if (size == BossSize.BIG) {
+						emission.rateOverTimeMultiplier = 120;
+					}
+					else {
+						emission.rateOverTimeMultiplier = 40;
+					}
+					
 					moneyParticle[i].GetComponent<ParticleSystem>().startSpeed = Random.Range (py * 0.012f, py * 0.014f);
 					moneyParticle[i].SetActive(true);
 				}
@@ -621,6 +688,40 @@ public class SCR_Boss : MonoBehaviour {
 		tutorialFinger.SetActive (false);
 		tutorialTarget.SetActive (false);
 		if (tutorialRange) tutorialRange.SetActive (false);
+	}
+	public void Enlarge () {
+		enlargeTime = 0;
+		
+		if (size == BossSize.SMALL) {
+			float newScale = originalScale.x * BOSS_ENLARGE_MULTIPLIER;
+			iTween.ValueTo(gameObject, iTween.Hash("from", Mathf.Abs(transform.localScale.x), "to", newScale, "time", 1.0f, "easetype", "easeOutElastic", "onupdate", "UpdateScale"));
+			size = BossSize.BIG;
+		}
+	}
+	public void Shrink () {
+		if (size == BossSize.BIG) {
+			iTween.ValueTo(gameObject, iTween.Hash("from", Mathf.Abs(transform.localScale.x), "to", originalScale.x, "time", 1.0f, "easetype", "easeOutElastic", "onupdate", "UpdateScale"));
+			size = BossSize.SMALL;
+		}
+	}
+	public void Flash () {
+		if (size == BossSize.BIG) {
+			iTween.ValueTo(gameObject, iTween.Hash("from", 0, "to", 1.0f, "time", BOSS_FLASH_DURATION / BOSS_FLASH_TIMES * 0.5f, "easetype", "easeInOutSine", "onupdate", "UpdateFlashAmount", "oncomplete", "CompleteFlash", "looptype", "pingPong"));
+		}
+	}
+	private void UpdateScale (float scale) {
+		currentScale = new Vector3(scale, scale, 1);
+	}
+	private void UpdateFlashAmount (float amount) {
+		material.SetFloat("_FlashAmount", amount);
+	}
+	private void CompleteFlash () {
+		flashCount++;
+		if (flashCount >= BOSS_FLASH_TIMES * 2) {
+			flashCount = 0;
+			iTween.Stop(gameObject);
+			Shrink();
+		}
 	}
 	// ==================================================
 	

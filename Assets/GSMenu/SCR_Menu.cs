@@ -44,6 +44,8 @@ public class SCR_Menu : MonoBehaviour {
 		UpdateMoneyNumber();
 		UpdateBoss();
 		
+		dgbBoss[0].GetComponentInChildren<MeshRenderer>().sharedMaterial.SetFloat("_FlashAmount", 0);
+		
 		// Music
 		SCR_WaitMusic.FadeIn();
 		SCR_PunchMusic.FadeOut();

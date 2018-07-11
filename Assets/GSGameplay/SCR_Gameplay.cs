@@ -52,6 +52,9 @@ public class SCR_Gameplay : MonoBehaviour {
 	public const  float OBJECT_DANGER_BEFORE	= 1.0f;
 	public const  int 	OBJECT_DANGER_TIMES		= 2;
 	
+	public const  float POWER_UP_SPAWN_TIME_MIN = 6.0f;
+	public const  float POWER_UP_SPAWN_TIME_MAX = 10.0f;
+	
 	public const  int	MONEY_FOR_HIGHLIGHT		= 5;
 	public const  float	TUTORIAL_FADE_SPEED		= 0.3f;
 	public const  float	TUTORIAL_HOLD_DURATION	= 0.5f;
@@ -62,6 +65,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public GameObject[]	PFB_Boss				= null;
 	public GameObject[]	PFB_Security			= null;
 	public GameObject[]	PFB_FlyingObject		= null;
+	public GameObject[] PFB_PowerUp				= null;
 	public GameObject[]	PFB_Furniture			= null;
 	
 	public GameObject 	PFB_Destruction			= null;
@@ -101,34 +105,37 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	
 	// Object
-	[System.NonSerialized] public GameObject 	player			= null;
-	[System.NonSerialized] public GameObject 	boss			= null;
-	[System.NonSerialized] public GameObject 	security		= null;
-	[System.NonSerialized] public GameObject 	flyingObject	= null;
+	[System.NonSerialized] public GameObject 	player				= null;
+	[System.NonSerialized] public GameObject 	boss				= null;
+	[System.NonSerialized] public GameObject 	security			= null;
+	[System.NonSerialized] public GameObject 	flyingObject		= null;
+	[System.NonSerialized] public GameObject 	powerUp				= null;
 	
 	// Game
-	[System.NonSerialized] public GameState 	gameState		= GameState.TALKING;
-	[System.NonSerialized] public float 		cameraHeight	= 0.0f;
-	[System.NonSerialized] public float 		cameraTarget	= 0.0f;
-	[System.NonSerialized] public float 		cameraShakeTime	= 0.0f;
-	[System.NonSerialized] public int			maxBossY		= 0;
-	[System.NonSerialized] public int			punchNumber		= 0;
-	[System.NonSerialized] public float			punchVolume		= 0;
-	[System.NonSerialized] public bool			breakFurniture	= false;
+	[System.NonSerialized] public GameState 	gameState			= GameState.TALKING;
+	[System.NonSerialized] public float 		cameraHeight		= 0.0f;
+	[System.NonSerialized] public float 		cameraTarget		= 0.0f;
+	[System.NonSerialized] public float 		cameraShakeTime		= 0.0f;
+	[System.NonSerialized] public int			maxBossY			= 0;
+	[System.NonSerialized] public int			punchNumber			= 0;
+	[System.NonSerialized] public float			punchVolume			= 0;
+	[System.NonSerialized] public bool			breakFurniture		= false;
 	
-	[System.NonSerialized] public int			comboCount		= 0;
-	[System.NonSerialized] public float			comboTime		= 0;
+	[System.NonSerialized] public int			comboCount			= 0;
+	[System.NonSerialized] public float			comboTime			= 0;
 	
-	[System.NonSerialized] public float			objectCounter	= 0;
-	[System.NonSerialized] public float			internalMoney	= 0;
+	[System.NonSerialized] public float			objectCounter		= 0;
+	[System.NonSerialized] public float			powerUpCounter		= 0;
+	[System.NonSerialized] public float			internalMoney		= 0;
 	
-	[System.NonSerialized] public float			flashWhiteAlpha	= 0;
+	[System.NonSerialized] public float			flashWhiteAlpha		= 0;
 	
-	[System.NonSerialized] public TutorialStep	tutorialStep	= TutorialStep.NONE;
-	[System.NonSerialized] public float			tutorialAlpha	= 0;
-	[System.NonSerialized] public float			tutorialCounter	= 0;
+	[System.NonSerialized] public TutorialStep	tutorialStep		= TutorialStep.NONE;
+	[System.NonSerialized] public float			tutorialAlpha		= 0;
+	[System.NonSerialized] public float			tutorialCounter		= 0;
 	
-	[System.NonSerialized] public float			objectSpawnTime	= 0;
+	[System.NonSerialized] public float			objectSpawnTime		= 0;
+	[System.NonSerialized] public float			powerUpSpawnTime	= 0;
 	
 	
 	private Vector2		txtMoneyAddOriginalPosition;
@@ -207,6 +214,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		dangerShowed = false;
 		dangerCounter = 0;
 		
+		powerUpSpawnTime = Random.Range(POWER_UP_SPAWN_TIME_MIN, POWER_UP_SPAWN_TIME_MAX);
+		
 		shouldSelect = 0;
 		
 		securityProgress = 0;
@@ -283,6 +292,10 @@ public class SCR_Gameplay : MonoBehaviour {
 				if (flyingObject != null) {
 					flyingObject.GetComponent<SCR_FlyingObject>().AddDeltaCameraToObject (deltaCamera);
 				}
+				
+				if (powerUp != null) {
+					powerUp.GetComponent<SCR_PowerUp>().AddDeltaCameraToObject (deltaCamera);
+				}
 			}
 			
 			if (!breakFurniture) {
@@ -336,6 +349,32 @@ public class SCR_Gameplay : MonoBehaviour {
 					else if (SCR_Helper.DistanceBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, player.GetComponent<SCR_Player>().x, player.GetComponent<SCR_Player>().y) < (SCR_FlyingObject.OBJECT_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f) {
 						flyingObject.GetComponent<SCR_FlyingObject>().Break();
 					}
+				}
+			}
+			
+			if (powerUp == null) {
+				powerUpCounter += dt;
+				if (powerUpCounter >= powerUpSpawnTime) {
+					powerUpCounter = 0;
+					powerUpSpawnTime = Random.Range(POWER_UP_SPAWN_TIME_MIN, POWER_UP_SPAWN_TIME_MAX);
+					powerUp = SCR_Pool.GetFreeObject(PFB_PowerUp[0]);
+					
+					float x = Random.Range (-(SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f, (SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f);
+					float y = cameraHeight + SCREEN_H;
+					powerUp.GetComponent<SCR_PowerUp>().Spawn (x, y);
+				}
+			}
+			else {
+				float powerUpX = powerUp.GetComponent<SCR_PowerUp>().x;
+				float powerUpY = powerUp.GetComponent<SCR_PowerUp>().y;
+				float bossX = boss.GetComponent<SCR_Boss>().x;
+				float bossY = boss.GetComponent<SCR_Boss>().y;
+				float distance = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
+				if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) < distance) {
+					powerUp.SetActive(false);
+					powerUp = null;
+					
+					boss.GetComponent<SCR_Boss>().Enlarge();
 				}
 			}
 		}
