@@ -3290,6 +3290,7 @@ MonoBehaviour:
   imgSecurityProgressBG: {fileID: 132536270}
   imgSecurityProgressFG: {fileID: 974453706}
   imgDanger: {fileID: 291124920}
+  txtResultTitle: {fileID: 975489492}
 --- !u!4 &1967119624
 Transform:
   m_ObjectHideFlags: 0

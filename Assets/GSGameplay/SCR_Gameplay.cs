@@ -103,6 +103,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public Image		imgDanger;
 	
+	public Text			txtResultTitle;
 	
 	// Object
 	[System.NonSerialized] public GameObject 	player				= null;
@@ -578,6 +579,9 @@ public class SCR_Gameplay : MonoBehaviour {
 		pnlResult.SetActive (true);
 		btnReplay.SetActive (true);
 		btnMainMenu.SetActive (true);
+		
+		txtResultTitle.text = boss.GetComponent<SCR_Boss>().resultTitle[SCR_Profile.bossSelecting];
+		txtResultTitle.fontSize = boss.GetComponent<SCR_Boss>().resultTitleFontSize[SCR_Profile.bossSelecting];
 		
 		SCR_WaitMusic.FadeIn();
 		SCR_PunchMusic.FadeOut();

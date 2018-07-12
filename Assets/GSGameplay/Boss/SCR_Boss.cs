@@ -142,8 +142,11 @@ public class SCR_Boss : MonoBehaviour {
 	private float 		tutorialCounter = 0;
 	private int			flashCount = 0;
 	
-	public Vector3		originalScale;
-	public Vector3		currentScale;
+	public  Vector3		originalScale;
+	public  Vector3		currentScale;
+	
+	public  string[]	resultTitle;
+	public  int[]		resultTitleFontSize;
 	// ==================================================
 	
 	
@@ -153,6 +156,20 @@ public class SCR_Boss : MonoBehaviour {
 	// Private functions
 	// ==================================================
 	private void Start () {
+		resultTitle = new string[(int)BossType.BOSS_COUNT];
+		resultTitle[(int)BossType.THE_BOSS]		= "Your Boss";
+		resultTitle[(int)BossType.THE_DICTATOR]	= "The dictator";
+		resultTitle[(int)BossType.MR_PRESIDENT]	= "Mr President";
+		resultTitle[(int)BossType.THE_GENERAL]	= "The general";
+		resultTitle[(int)BossType.ERIX_LUKE]	= "Erix Luke";
+		
+		resultTitleFontSize = new int[(int)BossType.BOSS_COUNT];
+		resultTitleFontSize[(int)BossType.THE_BOSS]		= 155;
+		resultTitleFontSize[(int)BossType.THE_DICTATOR]	= 120;
+		resultTitleFontSize[(int)BossType.MR_PRESIDENT]	= 120;
+		resultTitleFontSize[(int)BossType.THE_GENERAL]	= 130;
+		resultTitleFontSize[(int)BossType.ERIX_LUKE]	= 150;
+		
 		dialogues = new string[(int)BossType.BOSS_COUNT][];
 		
 		dialogues[(int)BossType.THE_BOSS] = new string[] 
