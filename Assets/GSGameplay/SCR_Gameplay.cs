@@ -54,9 +54,9 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MIN		= 7.0f;
 	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 12.0f;
-	public const  float POWER_UP_SECURITY_SPAWN_TIME_MIN	= 7.0f;
-	public const  float POWER_UP_SECURITY_SPAWN_TIME_MAX	= 12.0f;
-	public const  float POWER_UP_SECURITY_DURATION			= 7.0f;
+	public const  float POWER_UP_SECURITY_SPAWN_TIME_MIN	= 8.0f;
+	public const  float POWER_UP_SECURITY_SPAWN_TIME_MAX	= 13.0f;
+	public const  float POWER_UP_SECURITY_DURATION			= 6.0f;
 	
 	public const  int	MONEY_FOR_HIGHLIGHT		= 5;
 	public const  float	TUTORIAL_FADE_SPEED		= 0.3f;
@@ -382,8 +382,14 @@ public class SCR_Gameplay : MonoBehaviour {
 				float powerUpY = powerUpEnlarge.GetComponent<SCR_PowerUp>().y;
 				float bossX = boss.GetComponent<SCR_Boss>().x;
 				float bossY = boss.GetComponent<SCR_Boss>().y;
-				float distance = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
-				if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) < distance) {
+				float playerX = player.GetComponent<SCR_Player>().x;
+				float playerY = player.GetComponent<SCR_Player>().y;
+				
+				float distanceBoss = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
+				float distancePlayer = (SCR_PowerUp.POWER_UP_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
+				
+				if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) < distanceBoss
+				||  SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY) < distancePlayer) {
 					powerUpEnlarge.SetActive(false);
 					powerUpEnlarge = null;
 					
@@ -413,8 +419,14 @@ public class SCR_Gameplay : MonoBehaviour {
 				float powerUpY = powerUpSecurity.GetComponent<SCR_PowerUp>().y;
 				float bossX = boss.GetComponent<SCR_Boss>().x;
 				float bossY = boss.GetComponent<SCR_Boss>().y;
-				float distance = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
-				if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) < distance) {
+				float playerX = player.GetComponent<SCR_Player>().x;
+				float playerY = player.GetComponent<SCR_Player>().y;
+				
+				float distanceBoss = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
+				float distancePlayer = (SCR_PowerUp.POWER_UP_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
+				
+				if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) < distanceBoss
+				||  SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY) < distancePlayer) {
 					powerUpSecurity.SetActive(false);
 					powerUpSecurity = null;
 					
