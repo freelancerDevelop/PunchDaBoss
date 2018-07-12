@@ -41,7 +41,7 @@ public class SCR_Boss : MonoBehaviour {
 	public const float BOSS_START_X				= -50;
 	public const float BOSS_START_Y				= 300;
 	public const float BOSS_SCALE				= 0.8f;
-	public const float BOSS_ENLARGE_MULTIPLIER	= 2.0f;
+	public const float BOSS_ENLARGE_MULTIPLIER	= 1.8f;
 	public const float BOSS_ENLARGE_DURATION	= 5.0f;
 	public const float BOSS_FLASH_DURATION		= 2.0f;
 	public const int   BOSS_FLASH_TIMES 		= 3;

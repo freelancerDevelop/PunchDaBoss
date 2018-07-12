@@ -14,23 +14,23 @@ public enum SecurityState {
 public class SCR_Security : MonoBehaviour {
 	// ==================================================
 	// Const
-	public const float SECURITY_START_X			= -350;
-	public const float SECURITY_START_Y			= 230;
-	public const float SECURITY_SCALE			= 0.8f;
-	public const float SECURITY_SIZE			= 200;
-	public const float SECURITY_RANGE			= 200;
-	public const float SECURITY_SPEED			= 4500;
-	public const float SECURITY_FORCE			= 10000;
+	public const float SECURITY_START_X				= -350;
+	public const float SECURITY_START_Y				= 230;
+	public const float SECURITY_SCALE				= 0.8f;
+	public const float SECURITY_SIZE				= 200;
+	public const float SECURITY_RANGE				= 200;
+	public const float SECURITY_SPEED				= 4500;
+	public const float SECURITY_FORCE				= 10000;
 	
-	public const float SECURITY_SHADOW_OFFSET	= 0;
-	public const float SECURITY_SHADOW_DISTANCE	= 1500;
-	public const float SECURITY_SMOKE_OFFSET_Y	= -130;
+	public const float SECURITY_SHADOW_OFFSET		= 0;
+	public const float SECURITY_SHADOW_DISTANCE		= 1500;
+	public const float SECURITY_SMOKE_OFFSET_Y		= -130;
 	
-	public const float SECURITY_LAUGH_DELAY		= 0.2f;
+	public const float SECURITY_LAUGH_DELAY			= 0.2f;
 	
-	public const int   SECURITY_MONEY			= 20;
+	public const int   SECURITY_MONEY				= 20;
 	
-	public const int   SECURITY_PROGRESS_STEPS	= 5;
+	public const int   SECURITY_PROGRESS_STEPS		= 5;
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Shadow;
@@ -44,11 +44,11 @@ public class SCR_Security : MonoBehaviour {
 	private SCR_Boss				bossScript	= null;
 	// ==================================================
 	// More stuff
-	[System.NonSerialized] public int	direction	= 1;
-	[System.NonSerialized] public float	x			= 0;
-	[System.NonSerialized] public float	y			= 0;
-	[System.NonSerialized] public float	speedX		= 0;
-	[System.NonSerialized] public float	speedY		= 0;
+	[System.NonSerialized] public int	direction				= 1;
+	[System.NonSerialized] public float	x						= 0;
+	[System.NonSerialized] public float	y						= 0;
+	[System.NonSerialized] public float	speedX					= 0;
+	[System.NonSerialized] public float	speedY					= 0;
 	
 	private	GameObject	shadow			= null;
 	private	GameObject	trail			= null;

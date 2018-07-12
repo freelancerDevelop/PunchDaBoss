@@ -1671,7 +1671,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: fa405305e0f67794a972cd3d2683e463, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -3250,6 +3250,7 @@ MonoBehaviour:
   - {fileID: 1754142401317628, guid: 700bb29e7e9ced347a873f16591326c0, type: 2}
   PFB_PowerUp:
   - {fileID: 1586945123722412, guid: adbfb4f56f747cb4a869337b1469c02e, type: 2}
+  - {fileID: 1578721326366952, guid: 00bc207c56c141442bbb04ded05318e9, type: 2}
   PFB_Furniture:
   - {fileID: 1294153175443702, guid: 423a84814e00d214ba9e85b3f09dbfa1, type: 2}
   - {fileID: 0}
