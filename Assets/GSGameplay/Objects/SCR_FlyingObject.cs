@@ -49,6 +49,10 @@ public class SCR_FlyingObject : MonoBehaviour {
 		moneyBagParticle = Instantiate(PFB_MoneyBagEffect);
 		moneyBagParticle.transform.localScale = new Vector3(SCR_Gameplay.SCREEN_SCALE * SCR_Boss.BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * SCR_Boss.BOSS_SCALE, SCR_Gameplay.SCREEN_SCALE * SCR_Boss.BOSS_SCALE);
 		moneyBagParticle.SetActive(false);
+		
+		if (SCR_Profile.soundOn == 1 && source != null) {
+			source.Play();
+		}
 	}
 	
 	public virtual void AddDeltaCameraToObject (float deltaCamera) {
@@ -72,9 +76,6 @@ public class SCR_FlyingObject : MonoBehaviour {
 		// fade loop sound
 		if (source != null) {
 			if (y >= SCR_Gameplay.instance.cameraHeight && y <= SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H) {
-				if (!source.isPlaying) {
-					PlayLoopSound();
-				}
 				targetVol = 1;
 			}
 			else {

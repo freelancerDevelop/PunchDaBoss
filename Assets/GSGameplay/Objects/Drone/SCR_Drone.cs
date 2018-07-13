@@ -64,7 +64,7 @@ public class SCR_Drone : SCR_FlyingObject {
 		
 		GetComponent<AudioSource>().Stop();
 		SCR_Audio.PlayObjectHitSound();
-		SCR_Audio.PlayDroneCollisionSound(transform.GetChild(0).GetComponent<AudioSource>());
+		SCR_Audio.PlayDroneCollisionSound();
 	}
 	
 	private void Crash() {
@@ -91,8 +91,6 @@ public class SCR_Drone : SCR_FlyingObject {
 		
 		SCR_Gameplay.instance.ShakeCamera (0.3f);
 		SCR_Gameplay.instance.FlashWhite();
-		
-		transform.GetChild(0).GetComponent<AudioSource>().Stop();
 		SCR_Audio.PlayDroneExplosionSound();
 	}
 	
@@ -116,9 +114,5 @@ public class SCR_Drone : SCR_FlyingObject {
 			angle = 0;
 			transform.localEulerAngles 	= new Vector3 (0, 0, angle);
 		}
-	}
-	
-	public override void PlayLoopSound() {
-		SCR_Audio.PlayDroneLoopSound(GetComponent<AudioSource>());
 	}
 }

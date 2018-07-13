@@ -339,7 +339,7 @@ public class SCR_Gameplay : MonoBehaviour {
 							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[1]);	
 						}
 						else if (cameraHeight > 100000) {
-							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[0]);	
+							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[0]);
 						}
 						
 						//int choose = Random.Range (0, PFB_FlyingObject.Length);
