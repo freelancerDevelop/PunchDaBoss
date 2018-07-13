@@ -128,6 +128,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	[System.NonSerialized] public int			comboCount					= 0;
 	[System.NonSerialized] public float			comboTime					= 0;
+	[System.NonSerialized] public int			maxCombo					= 1;
 	
 	[System.NonSerialized] public float			objectCounter				= 0;
 	[System.NonSerialized] public float			powerUpEnlargeCounter		= 0;
@@ -641,6 +642,10 @@ public class SCR_Gameplay : MonoBehaviour {
 					startB + (comboCount - startIndex) / (endIndex - startIndex) * (endB - startB));
 			}
 		}
+		
+		if (maxCombo < comboCount) {
+			maxCombo = comboCount;
+		}
 	}
 	
 	public void Lose () {
@@ -663,7 +668,7 @@ public class SCR_Gameplay : MonoBehaviour {
 			imgHighScore.SetActive (false);
 		
 		SCR_Profile.ReportScore (maxBossY);
-		txtPunchNumber.GetComponent<Text>().text = punchNumber.ToString();
+		txtPunchNumber.GetComponent<Text>().text = maxCombo.ToString();
 		txtHeightNumber.GetComponent<Text>().text = maxBossY.ToString();
 		txtBestNumber.GetComponent<Text>().text = SCR_Profile.highScore.ToString();
 		
