@@ -39,7 +39,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	public const  float CAMERA_ENDING_Y			= 100.0f;
 	public const  float CAMERA_SHAKE_AMOUNT		= 4.0f;
 	
-	public const  float COMBO_TIME				= 1.5f;
+	public const  float COMBO_TIME				= 1.8f;
 	
 	public const  float FURNITURE_Y				= 1470.0f;
 	public const  float FRAGMENT_Y				= 1308.0f;
@@ -52,10 +52,10 @@ public class SCR_Gameplay : MonoBehaviour {
 	public const  float OBJECT_DANGER_BEFORE	= 1.0f;
 	public const  int 	OBJECT_DANGER_TIMES		= 2;
 	
-	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MIN		= 7.0f;
-	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 12.0f;
-	public const  float POWER_UP_SECURITY_SPAWN_TIME_MIN	= 8.0f;
-	public const  float POWER_UP_SECURITY_SPAWN_TIME_MAX	= 13.0f;
+	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MIN		= 8.0f;
+	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 15.0f;
+	public const  float POWER_UP_SECURITY_SPAWN_TIME_MIN	= 12.0f;
+	public const  float POWER_UP_SECURITY_SPAWN_TIME_MAX	= 17.0f;
 	public const  float POWER_UP_SECURITY_DURATION			= 6.0f;
 	
 	public const  int	MONEY_FOR_HIGHLIGHT		= 5;
@@ -332,22 +332,24 @@ public class SCR_Gameplay : MonoBehaviour {
 						
 						dangerShowed = false;
 						
-						if (cameraHeight > 300000) {
+						if (cameraHeight > 400000) {
 							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[2]);	
 						}
-						else if (cameraHeight > 150000) {
+						else if (cameraHeight > 250000) {
 							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[1]);	
 						}
-						else {
+						else if (cameraHeight > 100000) {
 							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[0]);	
 						}
 						
 						//int choose = Random.Range (0, PFB_FlyingObject.Length);
 						//flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[choose]);
 						
-						float x = Random.Range (-(SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f, (SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f);
-						float y = cameraHeight + Random.Range (1.0f, 1.5f) * SCREEN_H;
-						flyingObject.GetComponent<SCR_FlyingObject>().Spawn (x, y);
+						if (flyingObject != null) {
+							float x = Random.Range (-(SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f, (SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f);
+							float y = cameraHeight + Random.Range (1.0f, 1.5f) * SCREEN_H;
+							flyingObject.GetComponent<SCR_FlyingObject>().Spawn (x, y);
+						}
 					}
 				}
 			}
