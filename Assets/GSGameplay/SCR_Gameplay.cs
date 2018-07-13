@@ -431,6 +431,7 @@ public class SCR_Gameplay : MonoBehaviour {
 					powerUpSecurity = null;
 					
 					imgSecurityProgressFG.GetComponent<SCR_SecurityProgress>().Flash();
+					security.GetComponent<SCR_Security>().PerformPunch();
 				}
 				else if (powerUpY <= cameraHeight - SCR_PowerUp.POWER_UP_SIZE) {
 					powerUpSecurity.SetActive (false);
@@ -557,7 +558,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	public void PunchSuccess (float x, float y) {
 		comboTime = COMBO_TIME;
-		comboCount ++;
+		comboCount++;
 		
 		if (imgSecurityProgressFG.GetComponent<SCR_SecurityProgress>().powerUpTime < 0) {
 			securityProgress++;
