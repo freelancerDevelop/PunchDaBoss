@@ -53,7 +53,9 @@ public class SCR_Gameplay : MonoBehaviour {
 	public const  int 	OBJECT_DANGER_TIMES		= 2;
 	
 	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MIN		= 8.0f;
-	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 15.0f;
+	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 13.0f;
+	//public const  float POWER_UP_ENLARGE_SPAWN_TIME_MIN		= 2.0f;
+	//public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 3.0f;
 	public const  float POWER_UP_SECURITY_SPAWN_TIME_MIN	= 12.0f;
 	public const  float POWER_UP_SECURITY_SPAWN_TIME_MAX	= 17.0f;
 	public const  float POWER_UP_SECURITY_DURATION			= 6.0f;
@@ -160,6 +162,9 @@ public class SCR_Gameplay : MonoBehaviour {
 	
 	private int			shouldSelect;
 	
+	private bool		firstPizza;
+	private bool		firstDrone;
+	
 	
 	// Init
 	private void Awake () {
@@ -222,7 +227,8 @@ public class SCR_Gameplay : MonoBehaviour {
 		dangerShowed = false;
 		dangerCounter = 0;
 		
-		powerUpEnlargeSpawnTime = Random.Range(POWER_UP_ENLARGE_SPAWN_TIME_MIN, POWER_UP_ENLARGE_SPAWN_TIME_MAX);
+		//powerUpEnlargeSpawnTime = Random.Range(POWER_UP_ENLARGE_SPAWN_TIME_MIN, POWER_UP_ENLARGE_SPAWN_TIME_MAX);
+		powerUpEnlargeSpawnTime = Random.Range(3.5f, 7.0f);
 		powerUpSecuritySpawnTime = Random.Range(POWER_UP_SECURITY_SPAWN_TIME_MIN, POWER_UP_SECURITY_SPAWN_TIME_MAX);
 		
 		shouldSelect = 0;
@@ -232,6 +238,9 @@ public class SCR_Gameplay : MonoBehaviour {
 		
 		imgSecurityProgressBG.gameObject.SetActive(false);
 		imgSecurityProgressFG.gameObject.SetActive(false);
+		
+		firstPizza = true;
+		firstDrone = true;
 	}
 	
 	// Update
@@ -321,7 +330,7 @@ public class SCR_Gameplay : MonoBehaviour {
 			if (flyingObject == null) {
 				if (SCR_Profile.showTutorial == 0) {
 					objectCounter += dt;
-					if (objectCounter >= objectSpawnTime - OBJECT_DANGER_BEFORE && !dangerShowed) {
+					if (objectCounter >= objectSpawnTime - OBJECT_DANGER_BEFORE && !dangerShowed && cameraHeight > 100000) {
 						ShowDanger();
 						dangerShowed = true;
 					}
@@ -354,30 +363,64 @@ public class SCR_Gameplay : MonoBehaviour {
 				}
 			}
 			else {
+				if (firstDrone) {
+					float minScale = 0.1f;
+					float maxScale = 1f;
+					
+					float objectX = flyingObject.GetComponent<SCR_FlyingObject>().x;
+					float objectY = flyingObject.GetComponent<SCR_FlyingObject>().y;
+					float bossX = boss.GetComponent<SCR_Boss>().x;
+					float bossY = boss.GetComponent<SCR_Boss>().y;
+					float playerX = player.GetComponent<SCR_Player>().x;
+					float playerY = player.GetComponent<SCR_Player>().y;
+					
+					float distanceBoss = (SCR_FlyingObject.OBJECT_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
+					float distancePlayer = (SCR_FlyingObject.OBJECT_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
+					
+					float dBoss = SCR_Helper.DistanceBetweenTwoPoint(objectX, objectY, bossX, bossY);
+					float dPlayer = SCR_Helper.DistanceBetweenTwoPoint(objectX, objectY, playerX, playerY);
+					
+					float slowMotionDistance = 1.4f * (SCR_FlyingObject.OBJECT_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
+					if (dBoss <= slowMotionDistance || dPlayer <= slowMotionDistance) {
+						SCR_Boss scrBoss = boss.GetComponent<SCR_Boss>();
+						float p = 1 - scrBoss.speedY / scrBoss.maxSpeedY;
+						float timeScale = Easings.Interpolate(p, Easings.Functions.QuadraticEaseIn);
+						if (timeScale > maxScale) timeScale = maxScale;
+						if (timeScale < minScale) timeScale = minScale;
+						Time.timeScale = timeScale;
+					}
+				}
+				
 				if (flyingObject.GetComponent<SCR_FlyingObject>().broken == false) {
 					if (SCR_Helper.DistanceBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, boss.GetComponent<SCR_Boss>().x, boss.GetComponent<SCR_Boss>().y) < (SCR_FlyingObject.OBJECT_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f) {
 						float bossAngle = SCR_Helper.AngleBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, boss.GetComponent<SCR_Boss>().x, boss.GetComponent<SCR_Boss>().y);
 						boss.GetComponent<SCR_Boss>().CrashIntoObject (bossAngle);
 						flyingObject.GetComponent<SCR_FlyingObject>().Break();
+						
+						firstDrone = false;
 					}
 					
 					else if (SCR_Helper.DistanceBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, player.GetComponent<SCR_Player>().x, player.GetComponent<SCR_Player>().y) < (SCR_FlyingObject.OBJECT_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f) {
 						flyingObject.GetComponent<SCR_FlyingObject>().Break();
+						
+						firstDrone = false;
 					}
 				}
 			}
 			
 			if (powerUpEnlarge == null) {
-				powerUpEnlargeCounter += dt;
-				if (powerUpEnlargeCounter >= powerUpEnlargeSpawnTime) {
-					powerUpEnlargeCounter = 0;
-					powerUpEnlargeSpawnTime = Random.Range(POWER_UP_ENLARGE_SPAWN_TIME_MIN, POWER_UP_ENLARGE_SPAWN_TIME_MAX);
-					
-					powerUpEnlarge = SCR_Pool.GetFreeObject(PFB_PowerUp[0]);
-					
-					float x = Random.Range (-(SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f, (SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f);
-					float y = cameraHeight + SCREEN_H;
-					powerUpEnlarge.GetComponent<SCR_PowerUp>().Spawn (x, y);
+				if (SCR_Profile.showTutorial == 0) {
+					powerUpEnlargeCounter += dt;
+					if (powerUpEnlargeCounter >= powerUpEnlargeSpawnTime) {
+						powerUpEnlargeCounter = 0;
+						powerUpEnlargeSpawnTime = Random.Range(POWER_UP_ENLARGE_SPAWN_TIME_MIN, POWER_UP_ENLARGE_SPAWN_TIME_MAX);
+						
+						powerUpEnlarge = SCR_Pool.GetFreeObject(PFB_PowerUp[0]);
+						
+						float x = Random.Range (-(SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f, (SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f);
+						float y = cameraHeight + SCREEN_H;
+						powerUpEnlarge.GetComponent<SCR_PowerUp>().Spawn (x, y);
+					}
 				}
 			}
 			else {
@@ -391,19 +434,53 @@ public class SCR_Gameplay : MonoBehaviour {
 				float distanceBoss = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
 				float distancePlayer = (SCR_PowerUp.POWER_UP_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
 				
-				if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) < distanceBoss
-				||  SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY) < distancePlayer) {
+				float dBoss = SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY);
+				float dPlayer = SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY);
+				
+				if (firstPizza) {
+					float minScale = 0.1f;
+					float maxScale = 1f;
+					
+					//if (dBoss < dPlayer) {
+						float slowMotionDistance = 1.4f * distanceBoss;
+						if (dBoss <= slowMotionDistance || dPlayer <= slowMotionDistance) {
+							SCR_Boss scrBoss = boss.GetComponent<SCR_Boss>();
+							float p = 1 - scrBoss.speedY / scrBoss.maxSpeedY;
+							float timeScale = Easings.Interpolate(p, Easings.Functions.QuadraticEaseIn);
+							if (timeScale > maxScale) timeScale = maxScale;
+							if (timeScale < minScale) timeScale = minScale;
+							Time.timeScale = timeScale;
+						}
+					/*
+					}
+					else {
+						float slowMotionDistance = 1.35f * distancePlayer;
+						if (dPlayer <= slowMotionDistance) {
+							SCR_Boss scrBoss = boss.GetComponent<SCR_Boss>();
+							float p = 1 - scrBoss.speedY / scrBoss.maxSpeedY;
+							float timeScale = Easings.Interpolate(p, Easings.Functions.SineEaseIn);
+							if (timeScale > maxScale) timeScale = maxScale;
+							if (timeScale < minScale) timeScale = minScale;
+							Time.timeScale = timeScale;
+						}
+					}
+					*/
+				}
+				
+				if (dBoss < distanceBoss ||  dPlayer < distancePlayer) {
 					powerUpEnlarge.SetActive(false);
 					powerUpEnlarge = null;
 					
 					boss.GetComponent<SCR_Boss>().Enlarge();
+					
+					firstPizza = false;
 				}
 				else if (powerUpY <= cameraHeight - SCR_PowerUp.POWER_UP_SIZE) {
 					powerUpEnlarge.SetActive (false);
 					powerUpEnlarge = null;
 				}
 			}
-			
+			/*
 			if (powerUpSecurity == null) {
 				powerUpSecurityCounter += dt;
 				if (powerUpSecurityCounter >= powerUpSecuritySpawnTime) {
@@ -441,6 +518,7 @@ public class SCR_Gameplay : MonoBehaviour {
 					powerUpSecurity = null;
 				}
 			}
+			*/
 		}
 		else if (gameState == GameState.BOSS_FALLING) {
 			float deltaCamera = -cameraHeight * dt * CAMERA_SPEED_MULTIPLIER;
@@ -653,6 +731,9 @@ public class SCR_Gameplay : MonoBehaviour {
 	public void Lose () {
 		iTween.Stop(imgSecurityProgressFG.gameObject);
 		imgSecurityProgressFG.GetComponent<SCR_SecurityProgress>().UpdateFlashAmount(0);
+		
+		imgSecurityProgressBG.gameObject.SetActive(false);
+		imgSecurityProgressFG.gameObject.SetActive(false);
 		
 		pnlResult.SetActive (true);
 		btnReplay.SetActive (true);
