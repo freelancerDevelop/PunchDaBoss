@@ -52,13 +52,8 @@ public class SCR_Gameplay : MonoBehaviour {
 	public const  float OBJECT_DANGER_BEFORE	= 1.0f;
 	public const  int 	OBJECT_DANGER_TIMES		= 2;
 	
-	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MIN		= 8.0f;
-	public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 13.0f;
-	//public const  float POWER_UP_ENLARGE_SPAWN_TIME_MIN		= 2.0f;
-	//public const  float POWER_UP_ENLARGE_SPAWN_TIME_MAX		= 3.0f;
-	public const  float POWER_UP_SECURITY_SPAWN_TIME_MIN	= 12.0f;
-	public const  float POWER_UP_SECURITY_SPAWN_TIME_MAX	= 17.0f;
-	public const  float POWER_UP_SECURITY_DURATION			= 6.0f;
+	public const  float POWER_UP_SPAWN_TIME_MIN	= 8.0f;
+	public const  float POWER_UP_SPAWN_TIME_MAX	= 13.0f;
 	
 	public const  int	MONEY_FOR_HIGHLIGHT		= 5;
 	public const  float	TUTORIAL_FADE_SPEED		= 0.3f;
@@ -115,8 +110,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public GameObject 	boss						= null;
 	[System.NonSerialized] public GameObject 	security					= null;
 	[System.NonSerialized] public GameObject 	flyingObject				= null;
-	[System.NonSerialized] public GameObject 	powerUpEnlarge				= null;
-	[System.NonSerialized] public GameObject 	powerUpSecurity				= null;
+	[System.NonSerialized] public GameObject 	powerUp						= null;
 	
 	// Game
 	[System.NonSerialized] public GameState 	gameState					= GameState.TALKING;
@@ -133,8 +127,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public int			maxCombo					= 1;
 	
 	[System.NonSerialized] public float			objectCounter				= 0;
-	[System.NonSerialized] public float			powerUpEnlargeCounter		= 0;
-	[System.NonSerialized] public float			powerUpSecurityCounter		= 0;
+	[System.NonSerialized] public float			powerUpCounter				= 0;
 	[System.NonSerialized] public float			internalMoney				= 0;
 	
 	[System.NonSerialized] public float			flashWhiteAlpha				= 0;
@@ -144,8 +137,7 @@ public class SCR_Gameplay : MonoBehaviour {
 	[System.NonSerialized] public float			tutorialCounter				= 0;
 	
 	[System.NonSerialized] public float			objectSpawnTime				= 0;
-	[System.NonSerialized] public float			powerUpEnlargeSpawnTime		= 0;
-	[System.NonSerialized] public float			powerUpSecuritySpawnTime	= 0;
+	[System.NonSerialized] public float			powerUpSpawnTime			= 0;
 	[System.NonSerialized] public int			securityProgress			= 0;
 	
 	
@@ -227,9 +219,7 @@ public class SCR_Gameplay : MonoBehaviour {
 		dangerShowed = false;
 		dangerCounter = 0;
 		
-		//powerUpEnlargeSpawnTime = Random.Range(POWER_UP_ENLARGE_SPAWN_TIME_MIN, POWER_UP_ENLARGE_SPAWN_TIME_MAX);
-		powerUpEnlargeSpawnTime = Random.Range(3.5f, 7.0f);
-		powerUpSecuritySpawnTime = Random.Range(POWER_UP_SECURITY_SPAWN_TIME_MIN, POWER_UP_SECURITY_SPAWN_TIME_MAX);
+		powerUpSpawnTime = Random.Range(POWER_UP_SPAWN_TIME_MIN, POWER_UP_SPAWN_TIME_MAX);
 		
 		shouldSelect = 0;
 		
@@ -311,12 +301,8 @@ public class SCR_Gameplay : MonoBehaviour {
 					flyingObject.GetComponent<SCR_FlyingObject>().AddDeltaCameraToObject (deltaCamera);
 				}
 				
-				if (powerUpEnlarge != null) {
-					powerUpEnlarge.GetComponent<SCR_PowerUp>().AddDeltaCameraToObject (deltaCamera);
-				}
-				
-				if (powerUpSecurity != null) {
-					powerUpSecurity.GetComponent<SCR_PowerUp>().AddDeltaCameraToObject (deltaCamera);
+				if (powerUp != null) {
+					powerUp.GetComponent<SCR_PowerUp>().AddDeltaCameraToObject (deltaCamera);
 				}
 			}
 			
@@ -351,9 +337,6 @@ public class SCR_Gameplay : MonoBehaviour {
 							flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[0]);
 						}
 						
-						//int choose = Random.Range (0, PFB_FlyingObject.Length);
-						//flyingObject = SCR_Pool.GetFreeObject (PFB_FlyingObject[choose]);
-						
 						if (flyingObject != null) {
 							float x = Random.Range (-(SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f, (SCREEN_W - SCR_FlyingObject.OBJECT_SIZE) * 0.5f);
 							float y = cameraHeight + Random.Range (1.0f, 1.5f) * SCREEN_H;
@@ -363,34 +346,6 @@ public class SCR_Gameplay : MonoBehaviour {
 				}
 			}
 			else {
-				if (firstDrone) {
-					float minScale = 0.1f;
-					float maxScale = 1f;
-					
-					float objectX = flyingObject.GetComponent<SCR_FlyingObject>().x;
-					float objectY = flyingObject.GetComponent<SCR_FlyingObject>().y;
-					float bossX = boss.GetComponent<SCR_Boss>().x;
-					float bossY = boss.GetComponent<SCR_Boss>().y;
-					float playerX = player.GetComponent<SCR_Player>().x;
-					float playerY = player.GetComponent<SCR_Player>().y;
-					
-					float distanceBoss = (SCR_FlyingObject.OBJECT_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
-					float distancePlayer = (SCR_FlyingObject.OBJECT_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
-					
-					float dBoss = SCR_Helper.DistanceBetweenTwoPoint(objectX, objectY, bossX, bossY);
-					float dPlayer = SCR_Helper.DistanceBetweenTwoPoint(objectX, objectY, playerX, playerY);
-					
-					float slowMotionDistance = 1.4f * (SCR_FlyingObject.OBJECT_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
-					if (dBoss <= slowMotionDistance || dPlayer <= slowMotionDistance) {
-						SCR_Boss scrBoss = boss.GetComponent<SCR_Boss>();
-						float p = 1 - scrBoss.speedY / scrBoss.maxSpeedY;
-						float timeScale = Easings.Interpolate(p, Easings.Functions.QuadraticEaseIn);
-						if (timeScale > maxScale) timeScale = maxScale;
-						if (timeScale < minScale) timeScale = minScale;
-						Time.timeScale = timeScale;
-					}
-				}
-				
 				if (flyingObject.GetComponent<SCR_FlyingObject>().broken == false) {
 					if (SCR_Helper.DistanceBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, boss.GetComponent<SCR_Boss>().x, boss.GetComponent<SCR_Boss>().y) < (SCR_FlyingObject.OBJECT_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f) {
 						float bossAngle = SCR_Helper.AngleBetweenTwoPoint(flyingObject.GetComponent<SCR_FlyingObject>().x, flyingObject.GetComponent<SCR_FlyingObject>().y, boss.GetComponent<SCR_Boss>().x, boss.GetComponent<SCR_Boss>().y);
@@ -408,117 +363,71 @@ public class SCR_Gameplay : MonoBehaviour {
 				}
 			}
 			
-			if (powerUpEnlarge == null) {
+			if (powerUp == null || !powerUp.activeSelf) {
 				if (SCR_Profile.showTutorial == 0) {
-					powerUpEnlargeCounter += dt;
-					if (powerUpEnlargeCounter >= powerUpEnlargeSpawnTime) {
-						powerUpEnlargeCounter = 0;
-						powerUpEnlargeSpawnTime = Random.Range(POWER_UP_ENLARGE_SPAWN_TIME_MIN, POWER_UP_ENLARGE_SPAWN_TIME_MAX);
+					powerUpCounter += dt;
+					if (powerUpCounter >= powerUpSpawnTime) {
+						powerUpCounter = 0;
+						powerUpSpawnTime = Random.Range(POWER_UP_SPAWN_TIME_MIN, POWER_UP_SPAWN_TIME_MAX);
 						
-						powerUpEnlarge = SCR_Pool.GetFreeObject(PFB_PowerUp[0]);
-						
-						float x = Random.Range (-(SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f, (SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f);
-						float y = cameraHeight + SCREEN_H;
-						powerUpEnlarge.GetComponent<SCR_PowerUp>().Spawn (x, y);
+						int choose = Random.Range (0, (int)PowerUpType.COUNT);
+						powerUp = SCR_Pool.GetFreeObject(PFB_PowerUp[choose]);
+						powerUp.GetComponent<SCR_PowerUp>().Spawn ();
 					}
 				}
 			}
 			else {
-				float powerUpX = powerUpEnlarge.GetComponent<SCR_PowerUp>().x;
-				float powerUpY = powerUpEnlarge.GetComponent<SCR_PowerUp>().y;
+				float powerUpX = powerUp.GetComponent<SCR_PowerUp>().x;
+				float powerUpY = powerUp.GetComponent<SCR_PowerUp>().y;
 				float bossX = boss.GetComponent<SCR_Boss>().x;
 				float bossY = boss.GetComponent<SCR_Boss>().y;
 				float playerX = player.GetComponent<SCR_Player>().x;
 				float playerY = player.GetComponent<SCR_Player>().y;
 				
-				float distanceBoss = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
-				float distancePlayer = (SCR_PowerUp.POWER_UP_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
-				
-				float dBoss = SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY);
-				float dPlayer = SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY);
+				float bossEdibleDistance = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
+				float playerEdibleDistance = (SCR_PowerUp.POWER_UP_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
+				float bossDistanceToPowerUp = SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY);
+				float playerDistanceToPowerUp = SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY);
 				
 				if (firstPizza) {
-					float minScale = 0.1f;
-					float maxScale = 1f;
-					
-					//if (dBoss < dPlayer) {
-						float slowMotionDistance = 1.4f * distanceBoss;
-						if (dBoss <= slowMotionDistance || dPlayer <= slowMotionDistance) {
-							SCR_Boss scrBoss = boss.GetComponent<SCR_Boss>();
-							float p = 1 - scrBoss.speedY / scrBoss.maxSpeedY;
-							float timeScale = Easings.Interpolate(p, Easings.Functions.QuadraticEaseIn);
-							if (timeScale > maxScale) timeScale = maxScale;
-							if (timeScale < minScale) timeScale = minScale;
-							Time.timeScale = timeScale;
+					for (int i=0; i<5; i++) {
+						bossX += boss.GetComponent<SCR_Boss>().speedX * dt;
+						bossY += boss.GetComponent<SCR_Boss>().speedY * dt;
+						if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) <= bossEdibleDistance) {
+							Time.timeScale = 0.01f;
+							firstPizza = false;
+							break;
 						}
-					/*
-					}
-					else {
-						float slowMotionDistance = 1.35f * distancePlayer;
-						if (dPlayer <= slowMotionDistance) {
-							SCR_Boss scrBoss = boss.GetComponent<SCR_Boss>();
-							float p = 1 - scrBoss.speedY / scrBoss.maxSpeedY;
-							float timeScale = Easings.Interpolate(p, Easings.Functions.SineEaseIn);
-							if (timeScale > maxScale) timeScale = maxScale;
-							if (timeScale < minScale) timeScale = minScale;
-							Time.timeScale = timeScale;
+						
+						playerX += player.GetComponent<SCR_Player>().speedX * dt;
+						playerY += player.GetComponent<SCR_Player>().speedY * dt;
+						if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY) <= playerEdibleDistance) {
+							Time.timeScale = 0.01f;
+							firstPizza = false;
+							break;
 						}
 					}
-					*/
 				}
 				
-				if (dBoss < distanceBoss ||  dPlayer < distancePlayer) {
-					powerUpEnlarge.SetActive(false);
-					powerUpEnlarge = null;
+				if (bossDistanceToPowerUp < bossEdibleDistance || playerDistanceToPowerUp < playerEdibleDistance) {
+					if (powerUp.GetComponent<SCR_PowerUp>().type == PowerUpType.PIZZA) {
+						boss.GetComponent<SCR_Boss>().Enlarge();
+					}
+					else if (powerUp.GetComponent<SCR_PowerUp>().type == PowerUpType.BUBBLE) {
+						boss.GetComponent<SCR_Boss>().Bubble();
+					}
+					else if (powerUp.GetComponent<SCR_PowerUp>().type == PowerUpType.MAGNET) {
+						boss.GetComponent<SCR_Boss>().Magnet();
+					}
 					
-					boss.GetComponent<SCR_Boss>().Enlarge();
-					
-					firstPizza = false;
+					powerUp.SetActive(false);
+					powerUp = null;
 				}
 				else if (powerUpY <= cameraHeight - SCR_PowerUp.POWER_UP_SIZE) {
-					powerUpEnlarge.SetActive (false);
-					powerUpEnlarge = null;
+					powerUp.SetActive (false);
+					powerUp = null;
 				}
 			}
-			/*
-			if (powerUpSecurity == null) {
-				powerUpSecurityCounter += dt;
-				if (powerUpSecurityCounter >= powerUpSecuritySpawnTime) {
-					powerUpSecurityCounter = 0;
-					powerUpSecuritySpawnTime = Random.Range(POWER_UP_SECURITY_SPAWN_TIME_MIN, POWER_UP_SECURITY_SPAWN_TIME_MAX);
-					
-					powerUpSecurity = SCR_Pool.GetFreeObject(PFB_PowerUp[1]);
-					
-					float x = Random.Range (-(SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f, (SCREEN_W - SCR_PowerUp.POWER_UP_SIZE) * 0.5f);
-					float y = cameraHeight + SCREEN_H;
-					powerUpSecurity.GetComponent<SCR_PowerUp>().Spawn (x, y);
-				}
-			}
-			else {
-				float powerUpX = powerUpSecurity.GetComponent<SCR_PowerUp>().x;
-				float powerUpY = powerUpSecurity.GetComponent<SCR_PowerUp>().y;
-				float bossX = boss.GetComponent<SCR_Boss>().x;
-				float bossY = boss.GetComponent<SCR_Boss>().y;
-				float playerX = player.GetComponent<SCR_Player>().x;
-				float playerY = player.GetComponent<SCR_Player>().y;
-				
-				float distanceBoss = (SCR_PowerUp.POWER_UP_SIZE + SCR_Boss.BOSS_SIZE) * 0.5f;
-				float distancePlayer = (SCR_PowerUp.POWER_UP_SIZE + SCR_Player.PLAYER_SIZE) * 0.5f;
-				
-				if (SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, bossX, bossY) < distanceBoss
-				||  SCR_Helper.DistanceBetweenTwoPoint(powerUpX, powerUpY, playerX, playerY) < distancePlayer) {
-					powerUpSecurity.SetActive(false);
-					powerUpSecurity = null;
-					
-					imgSecurityProgressFG.GetComponent<SCR_SecurityProgress>().Flash();
-					security.GetComponent<SCR_Security>().PerformPunch();
-				}
-				else if (powerUpY <= cameraHeight - SCR_PowerUp.POWER_UP_SIZE) {
-					powerUpSecurity.SetActive (false);
-					powerUpSecurity = null;
-				}
-			}
-			*/
 		}
 		else if (gameState == GameState.BOSS_FALLING) {
 			float deltaCamera = -cameraHeight * dt * CAMERA_SPEED_MULTIPLIER;

@@ -2,14 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PowerUpType {
+	PIZZA = 0,
+	BUBBLE,
+	MAGNET,
+	COUNT
+}
+
 public class SCR_PowerUp : MonoBehaviour {
 	public const float POWER_UP_SIZE 			= 300;
 	public const float POWER_UP_SCALE			= 0.8f;
 	public const float POWER_UP_SPEED_Y 		= 1000;
 	public const float POWER_UP_ROTATION_SPEED	= -200;
 	
+	
 	[System.NonSerialized] public float	x		= 0;
 	[System.NonSerialized] public float	y		= 0;
+	
+	public PowerUpType type;
 	
 	private float angle = 0;
 
@@ -28,10 +38,10 @@ public class SCR_PowerUp : MonoBehaviour {
 		transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, angle);
 	}
 	
-	public void Spawn (float px, float py) {
-		x = px;
-		y = py;
-		
+	public void Spawn () {
+		x = Random.Range (-(SCR_Gameplay.SCREEN_W - POWER_UP_SIZE) * 0.5f, (SCR_Gameplay.SCREEN_W - POWER_UP_SIZE) * 0.5f);
+		y = SCR_Gameplay.instance.cameraHeight + SCR_Gameplay.SCREEN_H;
+						
 		transform.position = new Vector3 (SCR_Gameplay.SCREEN_W * 0.5f + x, y, transform.position.z);
 	}
 	

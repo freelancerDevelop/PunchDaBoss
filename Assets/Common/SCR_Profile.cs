@@ -26,6 +26,7 @@ public class SCR_Profile {
 	
 	public static void Init() {
 		if (bosses == null) {
+			//bosses = new Boss[5];
 			bosses = new Boss[4];
 			bosses[0] 	= new Boss ("The boss", 		    0);
 			bosses[1] 	= new Boss ("The dictator", 	10000);

@@ -23,9 +23,11 @@ public class SCR_SecurityProgress : MonoBehaviour {
 	void Update () {
 		if (powerUpTime >= 0) {
 			powerUpTime += Time.deltaTime;
+			/*
 			if (powerUpTime >= SCR_Gameplay.POWER_UP_SECURITY_DURATION) {
 				StopFlashing();
 			}
+			*/
 		}
 	}
 	

@@ -62,7 +62,9 @@ public class SCR_Drone : SCR_FlyingObject {
 			child.gameObject.SetActive (true);
 		}
 		
-		GetComponent<AudioSource>().Stop();
+		if (SCR_Profile.soundOn == 1) {
+			GetComponent<AudioSource>().Stop();
+		}
 		SCR_Audio.PlayObjectHitSound();
 		SCR_Audio.PlayDroneCollisionSound();
 	}

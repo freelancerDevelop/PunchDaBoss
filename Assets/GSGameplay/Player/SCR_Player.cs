@@ -415,6 +415,9 @@ public class SCR_Player : MonoBehaviour {
 	public bool IsGrabbingTheBoss () {
 		return state == PlayerState.GRAB;
 	}
+	public bool IsFlyingUp () {
+		return state == PlayerState.FLY_UP;
+	}
 	public void ThrowTheBoss () {
 		if (state == PlayerState.GRAB) {
 			SCR_Audio.PlayFirstPunchSound();

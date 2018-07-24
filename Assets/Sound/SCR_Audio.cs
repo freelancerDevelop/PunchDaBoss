@@ -10,7 +10,6 @@ public class SCR_Audio : MonoBehaviour {
 	private static AudioSource 		source					= null;
 	
 	public AudioSource 				talkSource				= null;
-	public AudioSource				sourceConstantVolume	= null;
 
 	
 	public AudioClip[] scream;
@@ -57,7 +56,6 @@ public class SCR_Audio : MonoBehaviour {
 			source = GetComponent<AudioSource>();
 			DontDestroyOnLoad(gameObject);
 			DontDestroyOnLoad(talkSource);
-			DontDestroyOnLoad(sourceConstantVolume);
 			
 			if (LOAD_FROM_FILE == true) {
 				scream = new AudioClip[8];
@@ -292,35 +290,35 @@ public class SCR_Audio : MonoBehaviour {
 	public static void PlayObjectHitSound () {
 		if (SCR_Profile.soundOn == 1) {
 			int choose = Random.Range(0, instance.objectHit.Length);
-			instance.sourceConstantVolume.PlayOneShot(instance.objectHit[choose]);
+			source.PlayOneShot(instance.objectHit[choose]);
 		}
 	}
 	
 	public static void PlayDroneCollisionSound () {
 		if (SCR_Profile.soundOn == 1) {
-			instance.sourceConstantVolume.PlayOneShot(instance.droneCollision);
+			source.PlayOneShot(instance.droneCollision);
 		}
 	}
 	public static void PlayDroneExplosionSound () {
 		if (SCR_Profile.soundOn == 1) {
-			instance.sourceConstantVolume.PlayOneShot(instance.droneExplosion);
+			source.PlayOneShot(instance.droneExplosion);
 		}
 	}
 	
 	public static void PlayBalloonExplosionSound () {
 		if (SCR_Profile.soundOn == 1) {
-			instance.sourceConstantVolume.PlayOneShot(instance.balloonExplosion);
+			source.PlayOneShot(instance.balloonExplosion);
 		}
 	}
 	
 	public static void PlayUFOCollisionSound () {
 		if (SCR_Profile.soundOn == 1) {
-			instance.sourceConstantVolume.PlayOneShot(instance.ufoCollision);
+			source.PlayOneShot(instance.ufoCollision);
 		}
 	}
 	public static void PlayUFOExplosionSound () {
 		if (SCR_Profile.soundOn == 1) {
-			instance.sourceConstantVolume.PlayOneShot(instance.ufoExplosion);
+			source.PlayOneShot(instance.ufoExplosion);
 		}
 	}
 }
