@@ -27,7 +27,7 @@ public class SCR_Furniture : MonoBehaviour {
 	
 	public void Break (float px, float py, float force) {
 		speedX = Random.Range(force * 0.1f, force * 0.3f);
-		speedY = Random.Range(force * 0.3f, force);
+		speedY = Random.Range(force * 0.7f, force * 1.0f);
 		
 		speedA = Random.Range (ROTATION_SPEED * 0.4f, ROTATION_SPEED);
 		if (Random.Range(0, 100) % 2 == 0) {

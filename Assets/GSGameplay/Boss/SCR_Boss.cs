@@ -154,9 +154,10 @@ public class SCR_Boss : MonoBehaviour {
 	
 	public  Vector3		originalScale;
 	public  Vector3		currentScale;
-	
+	/*
 	public  string[]	resultTitle;
 	public  int[]		resultTitleFontSize;
+	*/
 	// ==================================================
 	
 	
@@ -166,6 +167,7 @@ public class SCR_Boss : MonoBehaviour {
 	// Private functions
 	// ==================================================
 	private void Start () {
+		/*
 		resultTitle = new string[(int)BossType.BOSS_COUNT];
 		resultTitle[(int)BossType.THE_BOSS]		= "Your Boss";
 		resultTitle[(int)BossType.THE_DICTATOR]	= "The dictator";
@@ -179,6 +181,7 @@ public class SCR_Boss : MonoBehaviour {
 		resultTitleFontSize[(int)BossType.MR_PRESIDENT]	= 120;
 		resultTitleFontSize[(int)BossType.THE_GENERAL]	= 130;
 		resultTitleFontSize[(int)BossType.ERIX_LUKE]	= 150;
+		*/
 		
 		dialogues = new string[(int)BossType.BOSS_COUNT][];
 		

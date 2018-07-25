@@ -1733,6 +1733,7 @@ GameObject:
   - component: {fileID: 975489491}
   - component: {fileID: 975489493}
   - component: {fileID: 975489492}
+  - component: {fileID: 975489494}
   m_Layer: 5
   m_Name: TXT_Title
   m_TagString: Untagged
@@ -1755,8 +1756,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -3.2}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 26, y: 504}
-  m_SizeDelta: {x: 800, y: 193.5}
+  m_AnchoredPosition: {x: 26, y: 480}
+  m_SizeDelta: {x: 695.0735, y: 182.08966}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &975489492
 MonoBehaviour:
@@ -1770,7 +1771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.23746459, g: 0.20981668, b: 0.38679248, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1783,7 +1784,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 160
+    m_MaxSize: 172
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 0
@@ -1798,6 +1799,19 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 975489490}
   m_CullTransparentMesh: 0
+--- !u!114 &975489494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 975489490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
 --- !u!1 &993129911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1830,7 +1844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -3.2}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 345}
+  m_AnchoredPosition: {x: 22, y: 330}
   m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &993129913
@@ -1845,7 +1859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.23921569, g: 0.21176471, b: 0.3882353, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2701,6 +2715,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 50bf66eacfd96b64587c17396f4dcbc6, type: 3}
   - {fileID: 21300000, guid: 2f15e327d9ef39e4aa38f04f3e01e36d, type: 3}
   - {fileID: 21300000, guid: 668a96a8236e2e141be11c1aa0c35779, type: 3}
+  - {fileID: 21300000, guid: 47742a45ddb1e204599c782b13f8f1a2, type: 3}
+  - {fileID: 21300000, guid: 80091a822f708c94e97827c366f21cfc, type: 3}
+  - {fileID: 21300000, guid: 84433dc290a4275449502b860451878e, type: 3}
+  - {fileID: 21300000, guid: 26bc1612968d6994e9a4e7506588aa1e, type: 3}
+  - {fileID: 21300000, guid: 127bad7b807101145a6e8599c3a7456e, type: 3}
+  - {fileID: 21300000, guid: 41676f10066f7f74db70a1c88f04a693, type: 3}
 --- !u!4 &1592109947
 Transform:
   m_ObjectHideFlags: 0

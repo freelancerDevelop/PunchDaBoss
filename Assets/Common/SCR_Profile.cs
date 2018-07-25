@@ -98,7 +98,7 @@ public class SCR_Profile {
 		for (int i=0; i<bosses.Length; i++) {
 			bosses[i].unlocked = PlayerPrefs.GetInt("bossesUnlocked" + i.ToString(), 0);
 			bosses[i].recommended = PlayerPrefs.GetInt("bossesRecommended" + i.ToString(), 0);
-			//bosses[i].name = PlayerPrefs.GetString("bossesName" + i.ToString(), bosses[i].name);
+			bosses[i].name = PlayerPrefs.GetString("bossesName" + i.ToString(), bosses[i].name);
 		}
 		bosses[0].unlocked = 1;
 	}

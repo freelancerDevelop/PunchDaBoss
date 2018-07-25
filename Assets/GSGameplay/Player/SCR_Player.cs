@@ -57,6 +57,25 @@ public class SCR_Player : MonoBehaviour {
 	public const int   RICOCHET_MONEY				= 50;
 	public const int   PUNCH_MONEY_BIG_MULTIPLIER	= 2;
 	
+	public readonly Color[] PUNCH_PARTICLE_COLORS = new Color[] {
+		new Color(0.5f, 0.5f, 0.5f, 0.5f),
+		new Color(0x72 / 255.0f, 0xCB / 255.0f, 0xD2 / 255.0f, 96 / 255.0f),
+		new Color(0x72 / 255.0f, 0xCB / 255.0f, 0xD2 / 255.0f, 96 / 255.0f),
+		new Color(0x72 / 255.0f, 0xCB / 255.0f, 0xD2 / 255.0f, 96 / 255.0f),
+		new Color(0xDE / 255.0f, 0xD5 / 255.0f, 0x62 / 255.0f, 96 / 255.0f),
+		new Color(0xDE / 255.0f, 0xD5 / 255.0f, 0x62 / 255.0f, 96 / 255.0f),
+		new Color(0xDE / 255.0f, 0xD5 / 255.0f, 0x62 / 255.0f, 96 / 255.0f),
+		new Color(0xEC / 255.0f, 0x91 / 255.0f, 0x1F / 255.0f, 0.5f),
+		new Color(0xEC / 255.0f, 0x91 / 255.0f, 0x1F / 255.0f, 0.5f),
+		new Color(0xEC / 255.0f, 0x91 / 255.0f, 0x1F / 255.0f, 0.5f),
+	};
+	/*
+	72CBD2 96
+	DED562 96
+	EC911F 96
+	EC381E 96
+	*/
+	
 	// ==================================================
 	// Prefab
 	public	GameObject	PFB_Target;
@@ -222,6 +241,8 @@ public class SCR_Player : MonoBehaviour {
 				foreach(Transform child in punchParticle.transform) {
 					child.gameObject.SetActive (true);
 				}
+				Material shockMaterial = punchParticle.transform.Find("Shock").GetComponent<Renderer>().sharedMaterial;
+				shockMaterial.SetColor("_TintColor", PUNCH_PARTICLE_COLORS[0]);
 				
 				if (SCR_Profile.showTutorial == 0) {
 					SCR_Gameplay.instance.ShowSecurityProgress();
@@ -357,6 +378,11 @@ public class SCR_Player : MonoBehaviour {
 		foreach(Transform child in punchParticle.transform) {
 			child.gameObject.SetActive (true);
 		}
+		Material shockMaterial = punchParticle.transform.Find("Shock").GetComponent<Renderer>().sharedMaterial;
+		int index = SCR_Gameplay.instance.comboCount;
+		if (index < 0) index = 0;
+		if (index > PUNCH_PARTICLE_COLORS.Length - 1) index = PUNCH_PARTICLE_COLORS.Length - 1;
+		shockMaterial.SetColor("_TintColor", PUNCH_PARTICLE_COLORS[index]);
 		
 		bossScript.Punch (punchX, Mathf.Abs(punchY), false);
 		if (ricocheted == true) {

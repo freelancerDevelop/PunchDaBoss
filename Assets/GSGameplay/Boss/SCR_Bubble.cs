@@ -8,6 +8,7 @@ public class SCR_Bubble : MonoBehaviour {
 	
 	public const float DEFAULT_VIBRATE	= 0.1f;
 	public const float HIT_VIBRATE		= 0.2f;
+	public const float START_VIBRATE	= 0.2f;
 	public const float VIBRATE_SUPRESS	= 0.05f;
 	
 	public bool 	live = false;
@@ -42,7 +43,7 @@ public class SCR_Bubble : MonoBehaviour {
 			vibrateMax -= VIBRATE_SUPRESS * dt;
 		}
 		
-		float vibrateSpeed = (vibrateMax * 10) * (vibrateMax * 10) * 0.01f; // vibrateSpeed from 0.01 to 0.04 now
+		float vibrateSpeed = (vibrateMax * 10) * (vibrateMax * 10) * 0.008f; // vibrateSpeed from 0.01 to 0.04 now
 		vibrate += vibrateSpeed * vibrateDir;
 		if ((vibrate > vibrateMax && vibrateDir > 0) || (vibrate < -vibrateMax && vibrateDir < 0)) {
 			vibrateDir = -vibrateDir;
@@ -54,6 +55,7 @@ public class SCR_Bubble : MonoBehaviour {
 	
 	public void FadeIn () {
 		live = true;
+		vibrateMax = START_VIBRATE;
 	}
 	
 	public void FadeOut () {

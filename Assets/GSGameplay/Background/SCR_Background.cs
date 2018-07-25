@@ -95,7 +95,7 @@ public class SCR_Background : MonoBehaviour {
 			layer_1_offset = 800;
 			layer_2_offset = 200;
 			layer_3_offset = 80;
-			layer_4_offset = 0;
+			layer_4_offset = -260;
 			layer_5_offset = -150;
 			
 			layer_1_scroll = 0.02f;
@@ -167,7 +167,7 @@ public class SCR_Background : MonoBehaviour {
 			layer_4_z = -7;
 			layer_5_z = -50;
 			
-			furniture = new GameObject[11];
+			furniture = new GameObject[15];
 			for (int i=0; i<furniture.Length; i++) {
 				furniture[i] = Instantiate(PFB_Furniture);
 			}
@@ -180,6 +180,14 @@ public class SCR_Background : MonoBehaviour {
 			furniture[2].GetComponent<SCR_Furniture>().Spawn (0, 1600);
 			furniture[3].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[12];
 			furniture[3].GetComponent<SCR_Furniture>().Spawn (250, 1600);
+			furniture[11].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[9];
+			furniture[11].GetComponent<SCR_Furniture>().Spawn (-500, 1600);
+			furniture[12].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[10];
+			furniture[12].GetComponent<SCR_Furniture>().Spawn (-250, 1600);
+			furniture[13].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[11];
+			furniture[13].GetComponent<SCR_Furniture>().Spawn (0, 1600);
+			furniture[14].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[12];
+			furniture[14].GetComponent<SCR_Furniture>().Spawn (250, 1600);
 			// Leaf
 			furniture[4].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[13];
 			furniture[4].GetComponent<SCR_Furniture>().Spawn (500, 1600);
@@ -228,29 +236,29 @@ public class SCR_Background : MonoBehaviour {
 				furniture[i] = Instantiate(PFB_Furniture);
 			}
 			// Fragment
-			furniture[0].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[3];
-			furniture[0].GetComponent<SCR_Furniture>().Spawn (-500, 1308);
-			furniture[1].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[4];
-			furniture[1].GetComponent<SCR_Furniture>().Spawn (-250, 1308);
-			furniture[2].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[5];
-			furniture[2].GetComponent<SCR_Furniture>().Spawn (0, 1308);
-			furniture[3].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[6];
-			furniture[3].GetComponent<SCR_Furniture>().Spawn (250, 1308);
-			furniture[4].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[7];
-			furniture[4].GetComponent<SCR_Furniture>().Spawn (500, 1308);
-			// Desk, chair, and laptop
-			furniture[5].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[0];
-			furniture[5].GetComponent<SCR_Furniture>().Spawn (-450, 1470);
-			furniture[6].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[1];
-			furniture[6].GetComponent<SCR_Furniture>().Spawn (-150, 1470);
-			furniture[7].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[0];
-			furniture[7].GetComponent<SCR_Furniture>().Spawn (200, 1470);
-			furniture[8].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[2];
-			furniture[8].GetComponent<SCR_Furniture>().Spawn (450, 1470);
-			furniture[9].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[8];
-			furniture[9].GetComponent<SCR_Furniture>().Spawn (-450, 1570);
-			furniture[10].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[8];
-			furniture[10].GetComponent<SCR_Furniture>().Spawn (250, 1570);
+			furniture[0].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[15];
+			furniture[0].GetComponent<SCR_Furniture>().Spawn (-500, 1310);
+			furniture[1].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[16];
+			furniture[1].GetComponent<SCR_Furniture>().Spawn (-250, 1310);
+			furniture[2].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[17];
+			furniture[2].GetComponent<SCR_Furniture>().Spawn (0, 1310);
+			furniture[3].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[18];
+			furniture[3].GetComponent<SCR_Furniture>().Spawn (250, 1310);
+			furniture[4].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[19];
+			furniture[4].GetComponent<SCR_Furniture>().Spawn (500, 1310);
+			// Flower pot
+			furniture[5].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[20];
+			furniture[5].GetComponent<SCR_Furniture>().Spawn (-496, 1438);
+			furniture[6].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[20];
+			furniture[6].GetComponent<SCR_Furniture>().Spawn (-278, 1438);
+			furniture[7].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[20];
+			furniture[7].GetComponent<SCR_Furniture>().Spawn (-68, 1438);
+			furniture[8].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[20];
+			furniture[8].GetComponent<SCR_Furniture>().Spawn (109, 1438);
+			furniture[9].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[20];
+			furniture[9].GetComponent<SCR_Furniture>().Spawn (314, 1438);
+			furniture[10].GetComponent<SpriteRenderer>().sprite = SPR_Furniture[20];
+			furniture[10].GetComponent<SCR_Furniture>().Spawn (526, 1438);
 		}
 		
 		layer1 = new GameObject[sprLayer1.Length];

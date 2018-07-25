@@ -648,8 +648,19 @@ public class SCR_Gameplay : MonoBehaviour {
 		btnReplay.SetActive (true);
 		btnMainMenu.SetActive (true);
 		
-		txtResultTitle.text = boss.GetComponent<SCR_Boss>().resultTitle[SCR_Profile.bossSelecting];
-		txtResultTitle.fontSize = boss.GetComponent<SCR_Boss>().resultTitleFontSize[SCR_Profile.bossSelecting];
+		//txtResultTitle.text = boss.GetComponent<SCR_Boss>().resultTitle[SCR_Profile.bossSelecting];
+		//txtResultTitle.fontSize = boss.GetComponent<SCR_Boss>().resultTitleFontSize[SCR_Profile.bossSelecting];
+		
+		const int FONT_MIN = 80;
+		const int FONT_MAX = 155;
+		const int LENGTH_MIN = 8;
+		const int LENGTH_MAX = 16;
+		txtResultTitle.text = SCR_Profile.bosses[SCR_Profile.bossSelecting].name;
+		int l = txtResultTitle.text.Length;
+		if (l < LENGTH_MIN) l = LENGTH_MIN;
+		if (l > LENGTH_MAX) l = LENGTH_MAX;
+		float r = 1 - (float)(l - LENGTH_MIN) / (LENGTH_MAX - LENGTH_MIN);
+		txtResultTitle.fontSize = (int)(FONT_MIN + (FONT_MAX - FONT_MIN) * r);
 		
 		SCR_WaitMusic.FadeIn();
 		SCR_PunchMusic.FadeOut();
